@@ -22,8 +22,16 @@ class TestTriangleP(unittest.TestCase):
 
 class TestBox(unittest.TestCase):
     def test_properties(self):
-        pass
+        random_sides = np.random.rand(3)
+        box = fcl.Box(*random_sides)
+        np.testing.assert_allclose(box.side, random_sides, rtol=0, atol=0)
+        
+        random_sides = np.random.rand(3)
+        box.side = random_sides
+        np.testing.assert_allclose(box.side, random_sides, rtol=0, atol=0)
 
+        self.assertTrue(box.getNodeType() == 9)
+        print(box.aabb_center)
 
 
 class TestSphere(unittest.TestCase):
@@ -37,6 +45,9 @@ class TestSphere(unittest.TestCase):
         random_radius = np.random.rand()
         sphere.radius = random_radius
         np.testing.assert_allclose(sphere.radius, random_radius, rtol=0, atol=0)
+
+        self.assertTrue(sphere.getNodeType() == 10)
+        print(sphere.aabb_center)
 
 if __name__ == '__main__':
     unittest.main()

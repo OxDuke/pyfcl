@@ -1,11 +1,12 @@
 cimport fcl_defs as defs
 
-ctypedef float Scalar
+ctypedef double Scalar
 
 import numpy
 
 def hello_fcl():
     print("Hello FCL!")
+    return <Scalar?>1.0
 
 cdef class Vector3:
     cdef defs.Vector3[Scalar] c_vector3
@@ -58,22 +59,26 @@ cdef class CollisionGeometry:
         else:
             return None
 
-    # property aabb_center:
-    #     def __get__(self):
-    #         if self.thisptr:
-    #             return vec3f_to_numpy(self.thisptr.aabb_center)
-    #         else:
-    #             return None
-    #     def __set__(self, value):
-    #         if self.thisptr:
-    #             self.thisptr.aabb_center[0] = value[0]
-    #             self.thisptr.aabb_center[1] = value[1]
-    #             self.thisptr.aabb_center[2] = value[2]
-    #         else:
-    #             raise ReferenceError
+    @property
+    def aabb_center(self):
+        if self.thisptr:
+            return vector3_to_numpy(self.thisptr.aabb_center)
+        else:
+            return None
 
-cdef class ShapeBase:
-    cdef defs.ShapeBase[Scalar] *thisptr
+    @aabb_center.setter
+    def aabb_center(self, value):
+        if self.thisptr:
+            self.thisptr.aabb_center[0] = <Scalar?> value[0]
+            self.thisptr.aabb_center[1] = <Scalar?> value[1]
+            self.thisptr.aabb_center[2] = <Scalar?> value[2]
+        else:
+            raise ReferenceError
+
+cdef class ShapeBase(CollisionGeometry):
+    #cdef defs.ShapeBase[Scalar] *thisptr
+    def __cinit__(self):
+        pass
 
 cdef class TriangleP(ShapeBase):
     def __cinit__(self, a, b, c):
@@ -105,6 +110,32 @@ cdef class TriangleP(ShapeBase):
         (<defs.TriangleP[Scalar]*> self.thisptr).c[0] = <Scalar?> value[0]
         (<defs.TriangleP[Scalar]*> self.thisptr).c[1] = <Scalar?> value[1]
         (<defs.TriangleP[Scalar]*> self.thisptr).c[2] = <Scalar?> value[2]
+
+# cdef class Box(CollisionGeometry):
+#     def __cinit__(self, x, y, z):
+#         self.thisptr = new defs.Box(x, y, z)
+
+#     property side:
+#         def __get__(self):
+#             return vec3f_to_numpy((<defs.Box*> self.thisptr).side)
+#         def __set__(self, value):
+#             (<defs.Box*> self.thisptr).side[0] = <double?> value[0]
+#             (<defs.Box*> self.thisptr).side[1] = <double?> value[1]
+#             (<defs.Box*> self.thisptr).side[2] = <double?> value[2]
+
+cdef class Box(ShapeBase):
+    def __cinit__(self, x, y, z):
+        self.thisptr = new defs.Box[Scalar](x, y, z)
+
+    @property
+    def side(self):
+        return vector3_to_numpy((<defs.Box[Scalar]*> self.thisptr).side)
+
+    @side.setter
+    def side(self, value):
+        (<defs.Box[Scalar]*> self.thisptr).side[0] = <Scalar?> value[0]
+        (<defs.Box[Scalar]*> self.thisptr).side[1] = <Scalar?> value[1]
+        (<defs.Box[Scalar]*> self.thisptr).side[2] = <Scalar?> value[2]
 
 cdef class Sphere(ShapeBase):
     def __cinit__(self, Scalar radius):

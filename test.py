@@ -4,17 +4,19 @@ import numpy as np
 
 import unittest
 
-from pyfcl import Vector3, Sphere #TriangleP
+import pyfcl 
 
-v = Vector3(1,2,3)
+v = pyfcl.Vector3(1,2,3)
 print(v[0], v[1], v[2])
 v[0] = 5
 print(v[0])
 
-s = Sphere(3)
+s = pyfcl.Sphere(3)
 print(s.radius)
 s.radius = 1
 print(s.radius)
+
+print(type(pyfcl.hello_fcl()))
 
 # t = TriangleP(np.array([0,0,0]), np.array([1,0,0]), np.array([0,1,0]))
 # print(t.a, t.b, t.c)

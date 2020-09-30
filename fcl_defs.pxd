@@ -211,6 +211,11 @@ cdef extern from "fcl/geometry/shape/triangle_p.h" namespace "fcl":
 #         Box(FCL_REAL x, FCL_REAL y, FCL_REAL z) except +
 #         Vec3f side
 
+cdef extern from "fcl/geometry/shape/box.h" namespace "fcl":
+    cdef cppclass Box[S](ShapeBase[S]):
+        Box(S x, S y, S z) except +
+        Vector3[S] side
+
 cdef extern from "fcl/geometry/shape/sphere.h" namespace "fcl":
     cdef cppclass Sphere[S](ShapeBase[S]):
         Sphere(S radius_) except +
