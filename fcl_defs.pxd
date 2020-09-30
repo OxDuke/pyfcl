@@ -1,48 +1,3 @@
-cdef extern from "fcl/common/types.h" namespace "fcl":
-    cdef cppclass Vector3[S]:
-        Vector3() except +
-        Vector3(S x, S y, S z) except +
-        S& operator[](size_t i)
-
-cdef extern from "fcl/geometry/collision_geometry.h" namespace "fcl":
-    cdef enum OBJECT_TYPE:
-        OT_UNKNOWN, OT_BVH, OT_GEOM, OT_OCTREE, OT_COUNT
-
-    cdef enum NODE_TYPE:
-        BV_UNKNOWN, BV_AABB, BV_OBB, BV_RSS, BV_kIOS, BV_OBBRSS, BV_KDOP16, BV_KDOP18, BV_KDOP24, GEOM_BOX, GEOM_SPHERE, GEOM_ELLIPSOID, GEOM_CAPSULE, GEOM_CONE, GEOM_CYLINDER, GEOM_CONVEX, GEOM_PLANE, GEOM_HALFSPACE, GEOM_TRIANGLE, GEOM_OCTREE, NODE_COUNT
-    
-    cdef cppclass CollisionGeometry[S]:
-        CollisionGeometry() except + 
-        OBJECT_TYPE getObjectType()
-        NODE_TYPE getNodeType()
-        void computeLocalAABB()
-        Vector3[S] aabb_center
-        S aabb_radius
-        S cost_density
-        S threshold_occupied
-        S threshold_free
-
-cdef extern from "fcl/geometry/shape/shape_base.h" namespace "fcl":
-    cdef cppclass ShapeBase[S](CollisionGeometry[S]):
-        ShapeBase() except +
-
-cdef extern from "fcl/geometry/shape/sphere.h" namespace "fcl":
-    cdef cppclass Sphere[S](ShapeBase[S]):
-        Sphere(S radius_) except +
-        S radius
-
-
-
-
-
-
-
-
-
-
-
-
-
 #################################################
 # Below are copied from python-fcl/fcl_defs.pxd #
 #################################################
@@ -70,11 +25,11 @@ cdef extern from "fcl/geometry/shape/sphere.h" namespace "fcl":
 # cdef extern from "fcl/data_types.h" namespace "fcl":
 #     ctypedef double FCL_REAL
 
-# cdef extern from "fcl/math/vec_3f.h" namespace "fcl":
-#     cdef cppclass Vec3f:
-#         Vec3f() except +
-#         Vec3f(FCL_REAL x, FCL_REAL y, FCL_REAL z) except +
-#         FCL_REAL& operator[](size_t i)
+cdef extern from "fcl/common/types.h" namespace "fcl":
+    cdef cppclass Vector3[S]:
+        Vector3() except +
+        Vector3(S x, S y, S z) except +
+        S& operator[](size_t i)
 
 # cdef extern from "fcl/math/matrix_3f.h" namespace "fcl":
 #     cdef cppclass Matrix3f:
@@ -196,24 +151,25 @@ cdef extern from "fcl/geometry/shape/sphere.h" namespace "fcl":
 #         GJKSolverType gjk_solver_type
 #         DistanceRequest(bool enable_nearest_points_, GJKSolverType gjk_solver_type_) except +
 
-# cdef extern from "fcl/collision_object.h" namespace "fcl":
-#     cdef enum OBJECT_TYPE:
-#         OT_UNKNOWN, OT_BVH, OT_GEOM, OT_OCTREE, OT_COUNT
-#     cdef enum NODE_TYPE:
-#         BV_UNKNOWN, BV_AABB, BV_OBB, BV_RSS, BV_kIOS, BV_OBBRSS, BV_KDOP16, BV_KDOP18, BV_KDOP24,
-#         GEOM_BOX, GEOM_SPHERE, GEOM_ELLIPSOID, GEOM_CAPSULE, GEOM_CONE, GEOM_CYLINDER, GEOM_CONVEX,
-#         GEOM_PLANE, GEOM_HALFSPACE, GEOM_TRIANGLE, GEOM_OCTREE, NODE_COUNT
+cdef extern from "fcl/geometry/collision_geometry.h" namespace "fcl":
+    cdef enum OBJECT_TYPE:
+        OT_UNKNOWN, OT_BVH, OT_GEOM, OT_OCTREE, OT_COUNT
 
-#     cdef cppclass CollisionGeometry:
-#         CollisionGeometry() except +
-#         OBJECT_TYPE getObjectType()
-#         NODE_TYPE getNodeType()
-#         void computeLocalAABB()
-#         Vec3f aabb_center
-#         FCL_REAL aabb_radius
-#         FCL_REAL cost_density
-#         FCL_REAL threshold_occupied
-#         FCL_REAL threshold_free
+    cdef enum NODE_TYPE:
+        BV_UNKNOWN, BV_AABB, BV_OBB, BV_RSS, BV_kIOS, BV_OBBRSS, BV_KDOP16, BV_KDOP18, BV_KDOP24, 
+        GEOM_BOX, GEOM_SPHERE, GEOM_ELLIPSOID, GEOM_CAPSULE, GEOM_CONE, GEOM_CYLINDER, GEOM_CONVEX, 
+        GEOM_PLANE, GEOM_HALFSPACE, GEOM_TRIANGLE, GEOM_OCTREE, NODE_COUNT
+  
+    cdef cppclass CollisionGeometry[S]:
+        CollisionGeometry() except + 
+        OBJECT_TYPE getObjectType()
+        NODE_TYPE getNodeType()
+        void computeLocalAABB()
+        Vector3[S] aabb_center
+        S aabb_radius
+        S cost_density
+        S threshold_occupied
+        S threshold_free
 
 #     cdef cppclass CollisionObject:
 #         CollisionObject() except +
@@ -242,9 +198,9 @@ cdef extern from "fcl/geometry/shape/sphere.h" namespace "fcl":
 #     ctypedef CollisionGeometry const_CollisionGeometry "const fcl::CollisionGeometry"
 #     ctypedef CollisionObject const_CollisionObject "const fcl::CollisionObject"
 
-# cdef extern from "fcl/shape/geometric_shapes.h" namespace "fcl":
-#     cdef cppclass ShapeBase(CollisionGeometry):
-#         ShapeBase() except +
+cdef extern from "fcl/geometry/shape/shape_base.h" namespace "fcl":
+    cdef cppclass ShapeBase[S](CollisionGeometry[S]):
+        ShapeBase() except +
 
 #     cdef cppclass TriangleP(ShapeBase):
 #         TriangleP(Vec3f& a_, Vec3f& b_, Vec3f& c_) except +
@@ -254,9 +210,10 @@ cdef extern from "fcl/geometry/shape/sphere.h" namespace "fcl":
 #         Box(FCL_REAL x, FCL_REAL y, FCL_REAL z) except +
 #         Vec3f side
 
-#     cdef cppclass Sphere(ShapeBase):
-#         Sphere(FCL_REAL radius_) except +
-#         FCL_REAL radius
+cdef extern from "fcl/geometry/shape/sphere.h" namespace "fcl":
+    cdef cppclass Sphere[S](ShapeBase[S]):
+        Sphere(S radius_) except +
+        S radius
 
 #     cdef cppclass Ellipsoid(ShapeBase):
 #         Ellipsoid(FCL_REAL a_, FCL_REAL b_, FCL_REAL c_) except +
