@@ -45,8 +45,21 @@ cdef class Quaternion:
     @property
     def w(self):
         return self.c_quaternion.w()
-    
 
+    @property
+    def x(self):
+        return self.c_quaternion.x()
+
+    @property
+    def y(self):
+        return self.c_quaternion.y()
+
+    @property
+    def z(self):
+        return self.c_quaternion.z()
+
+# cdef class Transform:
+#     cdef defs.Transform[Scalar] *thisptr
 
 
 cdef class CollisionGeometry:

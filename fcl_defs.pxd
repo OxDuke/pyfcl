@@ -50,8 +50,7 @@ cdef extern from "fcl/common/types.h" namespace "fcl":
     # @TODO: Quaternion is a little bit hard
     cdef cppclass Quaternion[S]:
         Quaternion() except +
-        Quaternion(S w, S x,
-                     S y, S z) except +
+        Quaternion(S w, S x, S y, S z) except +
         #void fromRotation(Matrix3f& R)
         #void fromAxisAngle(Vec3f& axis, FCL_REAL angle)
         S& w()
@@ -59,6 +58,10 @@ cdef extern from "fcl/common/types.h" namespace "fcl":
         S& y()
         S& z()
 
+    cdef cppclass Transform3[S]:
+        Transform3() except + 
+
+        
 # cdef extern from "fcl/math/transform.h" namespace "fcl":
 #     cdef cppclass Quaternion3f:
 #         Quaternion3f() except +

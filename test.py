@@ -18,5 +18,8 @@ print(s.radius)
 
 print(type(pyfcl.hello_fcl()))
 
+q = pyfcl.Quaternion(1,2,3,4)
+print(q.w,q.x,q.y,q.z)
+
 # t = TriangleP(np.array([0,0,0]), np.array([1,0,0]), np.array([0,1,0]))
 # print(t.a, t.b, t.c)
