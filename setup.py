@@ -7,8 +7,8 @@ from version import __version__
 ext_modules=[
     Extension("pyfcl", ["pyfcl.pyx"], 
     	include_dirs = ['/usr/local/include', '/usr/include/eigen3'],
-        library_dirs = ['/usr/loca/lib'],
-        libraries=["fcl"],
+        library_dirs = ['/usr/lib', '/usr/local/lib'],
+        libraries=["fcl", "stdc++"],
         language="c++",
         extra_compile_args = ["-std=c++11"])]
 
