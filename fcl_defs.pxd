@@ -39,6 +39,13 @@ cdef extern from "fcl/common/types.h" namespace "fcl":
 #                  FCL_REAL zx, FCL_REAL zy, FCL_REAL zz) except +
 #         FCL_REAL operator()(size_t i, size_t j)
 
+    cdef cppclass Matrix3[S]:
+        Matrix3() except +
+        Matrix3(S xx, S xy, S xz,
+                S yx, S yy, S yz,
+                S zx, S zy, S zz) except +
+        S operator()(size_t i, size_t j)
+
 # cdef extern from "fcl/math/transform.h" namespace "fcl":
 #     cdef cppclass Quaternion3f:
 #         Quaternion3f() except +
@@ -206,10 +213,6 @@ cdef extern from "fcl/geometry/shape/triangle_p.h" namespace "fcl":
     cdef cppclass TriangleP[S](ShapeBase[S]):
         TriangleP(Vector3[S]& a_, Vector3[S]& b_, Vector3[S]& c_) except +
         Vector3[S] a, b, c
-
-#     cdef cppclass Box(ShapeBase):
-#         Box(FCL_REAL x, FCL_REAL y, FCL_REAL z) except +
-#         Vec3f side
 
 cdef extern from "fcl/geometry/shape/box.h" namespace "fcl":
     cdef cppclass Box[S](ShapeBase[S]):
