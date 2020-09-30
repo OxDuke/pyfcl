@@ -62,9 +62,12 @@ cdef class Quaternion:
     def z(self):
         return (<defs.Quaternion[Scalar]*>self.thisptr).z()
 
-# cdef class Transform:
-#     cdef defs.Transform[Scalar] *thisptr
+cdef class Transform:
+    cdef defs.Transform3[Scalar] *thisptr
 
+    def __cinit__(self):
+        self.thisptr = new defs.Transform3[Scalar]()
+        
 
 cdef class CollisionGeometry:
     cdef defs.CollisionGeometry[Scalar] *thisptr

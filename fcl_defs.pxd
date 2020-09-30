@@ -60,6 +60,7 @@ cdef extern from "fcl/common/types.h" namespace "fcl":
 
     cdef cppclass Transform3[S]:
         Transform3() except + 
+        # S operator[](size_t i, size_t j)
 
         
 # cdef extern from "fcl/math/transform.h" namespace "fcl":
