@@ -38,25 +38,29 @@ cdef class Vector3:
         self.c_vector3[key] = value
 
 cdef class Quaternion:
-    cdef defs.Quaternion[Scalar] c_quaternion
+    cdef defs.Quaternion[Scalar]* thisptr
     def __cinit__(self, Scalar w, Scalar x, Scalar y, Scalar z):
-        self.c_quaternion = defs.Quaternion[Scalar](w, x, y, z)
+        self.thisptr = new defs.Quaternion[Scalar](w, x, y, z)
+
+    def __dealloc__(self):
+        if self.thisptr:
+            del self.thisptr
 
     @property
     def w(self):
-        return self.c_quaternion.w()
+        return (<defs.Quaternion[Scalar]*>self.thisptr).w()
 
     @property
     def x(self):
-        return self.c_quaternion.x()
+        return (<defs.Quaternion[Scalar]*>self.thisptr).x()
 
     @property
     def y(self):
-        return self.c_quaternion.y()
+        return (<defs.Quaternion[Scalar]*>self.thisptr).y()
 
     @property
     def z(self):
-        return self.c_quaternion.z()
+        return (<defs.Quaternion[Scalar]*>self.thisptr).z()
 
 # cdef class Transform:
 #     cdef defs.Transform[Scalar] *thisptr
