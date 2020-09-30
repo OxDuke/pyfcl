@@ -39,12 +39,25 @@ cdef extern from "fcl/common/types.h" namespace "fcl":
 #                  FCL_REAL zx, FCL_REAL zy, FCL_REAL zz) except +
 #         FCL_REAL operator()(size_t i, size_t j)
 
+    # @TODO: Remove commented original of Matrix3f, Quaternion3f,
     cdef cppclass Matrix3[S]:
         Matrix3() except +
         Matrix3(S xx, S xy, S xz,
                 S yx, S yy, S yz,
                 S zx, S zy, S zz) except +
         S operator()(size_t i, size_t j)
+    
+    # @TODO: Quaternion is a little bit hard
+    cdef cppclass Quaternion[S]:
+        Quaternion() except +
+        Quaternion(S w, S x,
+                     S y, S z) except +
+        #void fromRotation(Matrix3f& R)
+        #void fromAxisAngle(Vec3f& axis, FCL_REAL angle)
+        S& w()
+        S& x()
+        S& y()
+        S& z()
 
 # cdef extern from "fcl/math/transform.h" namespace "fcl":
 #     cdef cppclass Quaternion3f:

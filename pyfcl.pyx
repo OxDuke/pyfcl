@@ -10,7 +10,8 @@ def hello_fcl():
 
 cdef class Vector3:
     cdef defs.Vector3[Scalar] c_vector3
-
+    
+    #@TODO: Do we need explicit type in function parameters?
     def __cinit__(self, Scalar x, Scalar y, Scalar z):
         self.c_vector3 = defs.Vector3[Scalar](x, y, z)
 
@@ -35,6 +36,17 @@ cdef class Vector3:
 
     def __setitem__(self, size_t key, Scalar value):
         self.c_vector3[key] = value
+
+cdef class Quaternion:
+    cdef defs.Quaternion[Scalar] c_quaternion
+    def __cinit__(self, Scalar w, Scalar x, Scalar y, Scalar z):
+        self.c_quaternion = defs.Quaternion[Scalar](w, x, y, z)
+
+    @property
+    def w(self):
+        return self.c_quaternion.w()
+    
+
 
 
 cdef class CollisionGeometry:
