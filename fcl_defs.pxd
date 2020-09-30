@@ -42,10 +42,12 @@ cdef extern from "fcl/common/types.h" namespace "fcl":
     # @TODO: Remove commented original of Matrix3f, Quaternion3f,
     cdef cppclass Matrix3[S]:
         Matrix3() except +
-        Matrix3(S xx, S xy, S xz,
-                S yx, S yy, S yz,
-                S zx, S zy, S zz) except +
-        S operator()(size_t i, size_t j)
+        # @TODO: Remove this constructor
+        # Matrix3(S xx, S xy, S xz,
+        #         S yx, S yy, S yz,
+        #         S zx, S zy, S zz) except +
+        S& operator()(size_t i)         
+        S& operator()(size_t i, size_t j)
     
     # @TODO: Quaternion is a little bit hard
     cdef cppclass Quaternion[S]:

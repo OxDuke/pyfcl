@@ -1,6 +1,9 @@
 cimport fcl_defs as defs
+cimport eigen_wrappers as ew
 
 ctypedef double Scalar
+
+from cython.operator cimport dereference as deref
 
 import numpy
 
@@ -49,6 +52,11 @@ cdef class Quaternion:
     @property
     def w(self):
         return (<defs.Quaternion[Scalar]*>self.thisptr).w()
+   
+    #@TODO: The test was successful
+    # @w.setter
+    # def w(self, value):
+    #     ew.QuaternionSetw[Scalar](deref(self.thisptr), <Scalar?> value)
 
     @property
     def x(self):
@@ -61,6 +69,18 @@ cdef class Quaternion:
     @property
     def z(self):
         return (<defs.Quaternion[Scalar]*>self.thisptr).z()
+
+cdef class Matrix3:
+    cdef defs.Matrix3[Scalar] *thisptr
+
+    def __cinit__(self):
+        self.thisptr = new defs.Matrix3[Scalar]()
+
+    def __getitem__(self, size_t key):
+        return deref(self.thisptr)(key)
+
+    def __setitem__(self, size_t key, Scalar value):
+        ew.Matrix3SetValue[Scalar](deref(self.thisptr), key, value)
 
 cdef class Transform:
     cdef defs.Transform3[Scalar] *thisptr
