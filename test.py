@@ -38,9 +38,15 @@ print("linear:", tf.linear[0], tf.linear[1], tf.linear[2], tf.linear[3], tf.line
 tf.translation = pyfcl.Vector3(10,20,30)
 print("translation: ", tf.translation.x, tf.translation.y, tf.translation.z)
 
-co = pyfcl.CollisionObject(s)
+co = pyfcl.CollisionObject(s, tf)
 print(co.getNodeType())
 print(co.getObjectType())
+
+print("co tr:", co.getTranslation())
+co.setTranslation(np.array([99,98,97]))
+print("co tr:", co.getTranslation())
+
+print("co rot: ", co.getRotation())
 
 # t = TriangleP(np.array([0,0,0]), np.array([1,0,0]), np.array([0,1,0]))
 # print(t.a, t.b, t.c)

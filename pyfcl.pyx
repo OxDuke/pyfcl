@@ -176,15 +176,15 @@ cdef class CollisionObject:
     def getNodeType(self):
         return self.thisptr.getNodeType()
 
-    # def getTranslation(self):
-    #     return vec3f_to_numpy(self.thisptr.getTranslation())
+    def getTranslation(self):
+        return vector3_to_numpy(self.thisptr.getTranslation())
 
-    # def setTranslation(self, vec):
-    #     self.thisptr.setTranslation(numpy_to_vec3f(vec))
-    #     self.thisptr.computeAABB()
+    def setTranslation(self, vec):
+        self.thisptr.setTranslation(numpy_to_vector3(vec))
+        self.thisptr.computeAABB()
 
-    # def getRotation(self):
-    #     return mat3f_to_numpy(self.thisptr.getRotation())
+    def getRotation(self):
+        return matrix3_to_numpy(self.thisptr.getRotation())
 
     # def setRotation(self, mat):
     #     self.thisptr.setRotation(numpy_to_mat3f(mat))
@@ -334,7 +334,7 @@ cdef class ShapeBase(CollisionGeometry):
 
 cdef class TriangleP(ShapeBase):
     def __cinit__(self, a, b, c):
-        self.thisptr = new defs.TriangleP[Scalar](numpy_to_vecor3(a), numpy_to_vecor3(b), numpy_to_vecor3(c))
+        self.thisptr = new defs.TriangleP[Scalar](numpy_to_vector3(a), numpy_to_vector3(b), numpy_to_vector3(c))
     
     @property
     def a(self):
@@ -402,17 +402,27 @@ cdef class Sphere(ShapeBase):
         (<defs.Sphere[Scalar]*> self.thisptr).radius = value
 
 
+# cdef quaternion3f_to_numpy(defs.Quaternion3f q):
+#     return numpy.array([q.getW(), q.getX(), q.getY(), q.getZ()])
+
+# cdef defs.Quaternion3f numpy_to_quaternion3f(a):
+#     return defs.Quaternion3f(<double?> a[0], <double?> a[1], <double?> a[2], <double?> a[3])
+
 cdef vector3_to_numpy(defs.Vector3[Scalar] vec):
     return numpy.array([vec[0], vec[1], vec[2]])
 
-cdef defs.Vector3[Scalar] numpy_to_vecor3(a):
+cdef defs.Vector3[Scalar] numpy_to_vector3(a):
     return defs.Vector3[Scalar](<Scalar?> a[0], <Scalar?> a[1], <Scalar?> a[2])
 
+cdef matrix3_to_numpy(defs.Matrix3[Scalar] m):
+    return numpy.array([[m(0), m(1), m(2)],
+                        [m(3), m(4), m(5)],
+                        [m(6), m(7), m(8)]])
 
-
-
-
-
+# cdef defs.Matrix3[Scalar] numpy_to_matrix3(a):
+#     return defs.Matrix3f[Scalar](<Scalar?> a[0][0], <Scalar?> a[0][1], <Scalar?> a[0][2],
+#                                  <Scalar?> a[1][0], <Scalar?> a[1][1], <Scalar?> a[1][2],
+#                                  <Scalar?> a[2][0], <Scalar?> a[2][1], <Scalar?> a[2][2])
 
 
 
