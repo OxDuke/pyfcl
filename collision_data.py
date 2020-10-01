@@ -12,12 +12,12 @@ class NODE_TYPE:
     GEOM_PLANE, GEOM_HALFSPACE, GEOM_TRIANGLE, GEOM_OCTREE, NODE_COUNT = range(21)
 
 
-class CCDMotionType:
-    CCDM_TRANS, CCDM_LINEAR, CCDM_SCREW, CCDM_SPLINE = range(4)
+# class CCDMotionType:
+#     CCDM_TRANS, CCDM_LINEAR, CCDM_SCREW, CCDM_SPLINE = range(4)
 
 
-class CCDSolverType:
-    CCDC_NAIVE, CCDC_CONSERVATIVE_ADVANCEMENT, CCDC_RAY_SHOOTING, CCDC_POLYNOMIAL_SOLVER = range(4)
+# class CCDSolverType:
+#     CCDC_NAIVE, CCDC_CONSERVATIVE_ADVANCEMENT, CCDC_RAY_SHOOTING, CCDC_POLYNOMIAL_SOLVER = range(4)
 
 
 class GJKSolverType:
@@ -27,6 +27,7 @@ class Contact:
     def __init__(self):
         self.o1 = None
         self.o2 = None
+        # @TODO: self.b1 & b2 should be -1
         self.b1 = 0
         self.b2 = 0
         self.normal = np.array([0.0, 0.0, 0.0])
@@ -39,6 +40,7 @@ class CostSource:
         self.aabb_max = np.array([0.0, 0.0, 0.0])
         self.cost_density = 0.0
         self.total_cost = 0.0
+        # @TODO: operator < is not implemented
 
 class CollisionRequest:
     def __init__(self,
@@ -54,64 +56,70 @@ class CollisionRequest:
         self.enable_cost = enable_cost
         self.use_approximate_cost = use_approximate_cost
         self.gjk_solver_type = gjk_solver_type
+        # @TODO: Not implemented: enable_cached_gjk_guess 
+        # @TODO: Not implemented: cached_gjk_guess 
+        # @TODO: Not implemented: gjk_tolerance
+        # @TODO: Not implemented: isSatisfied()
+
 
 class CollisionResult:
     def __init__(self, is_collision=False):
         self.is_collision = False
         self.contacts = []
         self.cost_sources = []
+        # @TODO: Not implemented: A ton of functions, mainly property getters
 
-class ContinuousCollisionRequest:
-    def __init__(self,
-                 num_max_iterations=10,
-                 toc_err=0.0001,
-                 ccd_motion_type=CCDMotionType.CCDM_TRANS,
-                 gjk_solver_type=GJKSolverType.GST_LIBCCD,
-                 ccd_solver_type=CCDSolverType.CCDC_CONSERVATIVE_ADVANCEMENT):
-        self.num_max_iterations = num_max_iterations
-        self.toc_err = toc_err
-        self.ccd_motion_type = ccd_motion_type
-        self.gjk_solver_type = gjk_solver_type
-        self.ccd_solver_type = ccd_solver_type
+# class ContinuousCollisionRequest:
+#     def __init__(self,
+#                  num_max_iterations=10,
+#                  toc_err=0.0001,
+#                  ccd_motion_type=CCDMotionType.CCDM_TRANS,
+#                  gjk_solver_type=GJKSolverType.GST_LIBCCD,
+#                  ccd_solver_type=CCDSolverType.CCDC_CONSERVATIVE_ADVANCEMENT):
+#         self.num_max_iterations = num_max_iterations
+#         self.toc_err = toc_err
+#         self.ccd_motion_type = ccd_motion_type
+#         self.gjk_solver_type = gjk_solver_type
+#         self.ccd_solver_type = ccd_solver_type
 
-class ContinuousCollisionResult:
-    def __init__(self, is_collide=False, time_of_contact=1.0):
-        self.is_collide = is_collide
-        self.time_of_contact = time_of_contact
+# class ContinuousCollisionResult:
+#     def __init__(self, is_collide=False, time_of_contact=1.0):
+#         self.is_collide = is_collide
+#         self.time_of_contact = time_of_contact
 
-class DistanceRequest:
-    def __init__(self,
-                 enable_nearest_points=False,
-                 gjk_solver_type=GJKSolverType.GST_LIBCCD):
-        self.enable_nearest_points = enable_nearest_points
-        self.gjk_solver_type = gjk_solver_type
+# class DistanceRequest:
+#     def __init__(self,
+#                  enable_nearest_points=False,
+#                  gjk_solver_type=GJKSolverType.GST_LIBCCD):
+#         self.enable_nearest_points = enable_nearest_points
+#         self.gjk_solver_type = gjk_solver_type
 
-class DistanceResult:
-    def __init__(self, min_distance_=sys.float_info.max):
-        self.min_distance = min_distance_
-        self.nearest_points = [None, None]
-        self.o1 = None
-        self.o2 = None
-        self.b1 = -1
-        self.b2 = -1
+# class DistanceResult:
+#     def __init__(self, min_distance_=sys.float_info.max):
+#         self.min_distance = min_distance_
+#         self.nearest_points = [None, None]
+#         self.o1 = None
+#         self.o2 = None
+#         self.b1 = -1
+#         self.b2 = -1
 
-class CollisionData:
-    def __init__(self, request=None, result=None):
-        if request is None:
-            request = CollisionRequest()
-        if result is None:
-            result = CollisionResult()
-        self.request = request
-        self.result = result
-        self.done = False
+# class CollisionData:
+#     def __init__(self, request=None, result=None):
+#         if request is None:
+#             request = CollisionRequest()
+#         if result is None:
+#             result = CollisionResult()
+#         self.request = request
+#         self.result = result
+#         self.done = False
 
-class DistanceData:
-    def __init__(self, request=None, result=None):
-        if request is None:
-            request = DistanceRequest()
-        if result is None:
-            result = DistanceResult()
-        self.request = request
-        self.result = result
-        self.done = False
+# class DistanceData:
+#     def __init__(self, request=None, result=None):
+#         if request is None:
+#             request = DistanceRequest()
+#         if result is None:
+#             result = DistanceResult()
+#         self.request = request
+#         self.result = result
+#         self.done = False
 
