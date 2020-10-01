@@ -5,14 +5,21 @@ from libc.stdlib cimport free
 # from libc.string cimport memcpy
 # import inspect
 
+from cython.operator cimport dereference as deref#, preincrement as inc, address
+# cimport numpy as np
+import numpy
+# ctypedef np.float64_t DOUBLE_t
+
 cimport fcl_defs as defs
+# cimport octomap_defs as octomap 
+# cimport std_defs as std 
+from collision_data import Contact, CostSource, CollisionRequest, CollisionResult
+# from collision_data import Contact, CostSource, CollisionRequest, ContinuousCollisionRequest, CollisionResult, ContinuousCollisionResult, DistanceRequest, DistanceResult
+
 cimport eigen_wrappers as ew
 
 ctypedef double Scalar
 
-from cython.operator cimport dereference as deref
-
-import numpy
 
 def hello_fcl():
     print("Hello FCL!")
@@ -432,6 +439,40 @@ cdef defs.Matrix3[Scalar] numpy_to_matrix3(a):
 
 
 
+# def collide(CollisionObject o1, CollisionObject o2,
+#             request=None, result=None):
+
+#     if request is None:
+#         request = CollisionRequest()
+#     if result is None:
+#         result = CollisionResult()
+
+#     cdef defs.CollisionResult cresult
+
+#     cdef size_t ret = defs.collide(o1.thisptr, o2.thisptr,
+#                                    defs.CollisionRequest(
+#                                        <size_t?> request.num_max_contacts,
+#                                        <bool?> request.enable_contact,
+#                                        <size_t?> request.num_max_cost_sources,
+#                                        <bool> request.enable_cost,
+#                                        <bool> request.use_approximate_cost,
+#                                        <defs.GJKSolverType?> request.gjk_solver_type
+#                                    ),
+#                                    cresult)
+
+#     result.is_collision = result.is_collision or cresult.isCollision()
+
+#     cdef vector[defs.Contact] contacts
+#     cresult.getContacts(contacts)
+#     for idx in range(contacts.size()):
+#         result.contacts.append(c_to_python_contact(contacts[idx], o1, o2))
+
+#     cdef vector[defs.CostSource] costs
+#     cresult.getCostSources(costs)
+#     for idx in range(costs.size()):
+#         result.cost_sources.append(c_to_python_costsource(costs[idx]))
+
+#     return ret
 
 
 #####################

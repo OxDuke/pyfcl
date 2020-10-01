@@ -4,7 +4,7 @@
 
 from libcpp cimport bool
 # from libcpp.string cimport string
-# from libcpp.vector cimport vector
+from libcpp.vector cimport vector
 # from libcpp.set cimport set
 from libcpp.memory cimport shared_ptr
 # cimport octomap_defs as octomap
@@ -136,11 +136,25 @@ cdef extern from "fcl/narrowphase/contact.h" namespace "fcl":
 #                 CollisionGeometry* o2_,
 #                 int b1_, int b2_) except +
 
+cdef extern from "fcl/narrowphase/cost_source.h" namespace "fcl":
+    cdef cppclass CostSource[S]:
+        Vector3[S] aabb_min
+        Vector3[S] aabb_max
+        S cost_density
+        S total_cost
+
 #     cdef cppclass CostSource:
 #         Vec3f aabb_min
 #         Vec3f aabb_max
 #         FCL_REAL cost_density
 #         FCL_REAL total_cost
+
+cdef extern from "fcl/narrowphase/collision_result.h" namespace "fcl":
+    cdef cppclass CollisionResult[S]:
+        CollisionResult() except +
+        bool isCollision()
+        void getContacts(vector[Contact[S]]& contacts_)
+        void getCostSources(vector[CostSource[S]]& cost_sources_)
 
 #     cdef cppclass CollisionResult:
 #         CollisionResult() except +
@@ -153,6 +167,21 @@ cdef extern from "fcl/narrowphase/contact.h" namespace "fcl":
 #         bool is_collide
 #         FCL_REAL time_of_contact
 #         Transform3f contact_tf1, contact_tf2
+
+cdef extern from "fcl/narrowphase/collision_request.h" namespace "fcl":
+    cdef cppclass CollisionRequest[S]:
+        size_t num_max_contacts
+        bool enable_contact
+        size_t num_max_cost_sources
+        bool enable_cost
+        bool use_approximate_cost
+        GJKSolverType gjk_solver_type
+        CollisionRequest(size_t num_max_contacts_,
+                         bool enable_contact_,
+                         size_t num_max_cost_sources_,
+                         bool enable_cost_,
+                         bool use_approximate_cost_,
+                         GJKSolverType gjk_solver_type_)
 
 #     cdef cppclass CollisionRequest:
 #         size_t num_max_contacts
