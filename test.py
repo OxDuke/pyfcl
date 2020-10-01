@@ -29,6 +29,14 @@ m[0] = 1.0
 print(m[0])
 
 tf = pyfcl.Transform()
+tf_trans = tf.translation
+print("linear:", tf.linear[0], tf.linear[1], tf.linear[2], tf.linear[3], tf.linear[4])
+print("translation: ", tf_trans.x, tf_trans.y, tf_trans.z)
+
+tf.linear = [1,2,3,4,5,6,7,8,9]
+print("linear:", tf.linear[0], tf.linear[1], tf.linear[2], tf.linear[3], tf.linear[4])
+tf.translation = pyfcl.Vector3(10,20,30)
+print("translation: ", tf.translation.x, tf.translation.y, tf.translation.z)
 
 co = pyfcl.CollisionObject(s)
 print(co.getNodeType())

@@ -103,6 +103,44 @@ cdef class Transform:
     def __cinit__(self):
         self.thisptr = new defs.Transform3[Scalar]()
 
+    # def linear(self):
+    #     pass
+    @property
+    def linear(self):
+        lin = (<defs.Transform3[Scalar]*> self.thisptr).linear()
+        mat = Matrix3()
+        # @TODO: Make sure that lin is in column major, mat is row major
+        mat[0] = lin(0)
+        mat[1] = lin(3)
+        mat[2] = lin(6)
+        mat[3] = lin(1)
+        mat[4] = lin(4)
+        mat[5] = lin(7)
+        mat[6] = lin(2)
+        mat[7] = lin(5)
+        mat[8] = lin(8)
+        
+        return mat
+    
+    @linear.setter
+    def linear(self, value):
+        ew.Transform3SetLinear[Scalar](deref(self.thisptr), 
+            value[0], value[1], value[2],
+            value[3], value[4], value[5],
+            value[6], value[7], value[8])
+    
+    @property
+    def translation(self):
+        trans = (<defs.Transform3[Scalar]*> self.thisptr).translation()
+        return Vector3(trans[0], trans[1], trans[2])
+
+    @translation.setter
+    def translation(self, Vector3 value):
+        # @TODO: This is a hack
+        ew.Transform3SetTranslation[Scalar](deref(self.thisptr), value[0], value[1], value[2])
+        #mat = <defs.Transform3[Scalar]*> self.thisptr
+        #mat[]
+
 cdef class CollisionObject:
     cdef defs.CollisionObject[Scalar] *thisptr
     # @TODO: can we do defs.CollisionGeometry[Scalar]* geom?

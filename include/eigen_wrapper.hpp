@@ -17,3 +17,21 @@ void QuaternionSetw(fcl::Quaternion<T> & q, const T & w)
 {
   q.w() = w;
 }
+
+template<typename T>
+void Transform3SetLinear(fcl::Transform3<T>& t, 
+	const T& xx, const T& xy , const T& xz,
+	const T& yx, const T& yy , const T& yz,
+	const T& zx, const T& zy , const T& zz)
+{
+	fcl::Matrix3<T> temp_mat;
+	temp_mat << xx, xy , xz, yx, yy , yz, zx, zy , zz;
+	//fcl::Matrix3<T>
+	t.linear() = temp_mat;
+}
+
+template<typename T>
+void Transform3SetTranslation(fcl::Transform3<T>& t, const T& x, const T& y , const T& z)
+{
+	t.translation() = fcl::Vector3<T>(x,y,z);
+}
