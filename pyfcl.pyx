@@ -138,8 +138,6 @@ cdef class Transform:
     def translation(self, Vector3 value):
         # @TODO: This is a hack
         ew.Transform3SetTranslation[Scalar](deref(self.thisptr), value[0], value[1], value[2])
-        #mat = <defs.Transform3[Scalar]*> self.thisptr
-        #mat[]
 
 cdef class CollisionObject:
     cdef defs.CollisionObject[Scalar] *thisptr
@@ -197,14 +195,17 @@ cdef class CollisionObject:
         self.thisptr.setQuatRotation(numpy_to_quaternion(q))
         self.thisptr.computeAABB()
 
-    # def getTransform(self):
-    #     rot = self.getRotation()
-    #     trans = self.getTranslation()
-    #     return Transform(rot, trans)
+    def getTransform(self):
+        tf = Transform()
+        tf.linear = self.getRotation()
+        tf.translation = self.getTranslation()
 
-    # def setTransform(self, tf):
-    #     self.thisptr.setTransform(deref((<Transform> tf).thisptr))
-    #     self.thisptr.computeAABB()
+        #@TODO: Make this a constructor
+        return tf
+
+    def setTransform(self, tf):
+        self.thisptr.setTransform(deref((<Transform> tf).thisptr))
+        self.thisptr.computeAABB()
 
     def isOccupied(self):
         return self.thisptr.isOccupied()
