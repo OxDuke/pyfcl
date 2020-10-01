@@ -2,11 +2,11 @@
 # Below are copied from python-fcl/fcl_defs.pxd #
 #################################################
 
-# from libcpp cimport bool
+from libcpp cimport bool
 # from libcpp.string cimport string
 # from libcpp.vector cimport vector
 # from libcpp.set cimport set
-# from libcpp.memory cimport shared_ptr
+from libcpp.memory cimport shared_ptr
 # cimport octomap_defs as octomap
 
 # cdef extern from "Python.h":
@@ -196,6 +196,32 @@ cdef extern from "fcl/geometry/collision_geometry.h" namespace "fcl":
         S cost_density
         S threshold_occupied
         S threshold_free
+
+cdef extern from "fcl/narrowphase/collision_object.h" namespace "fcl":
+    cdef cppclass CollisionObject[S]:
+        CollisionObject() except +
+        CollisionObject(const shared_ptr[CollisionGeometry[S]]& cgeom_) except +
+        CollisionObject(const shared_ptr[CollisionGeometry[S]]& cgeom_, Transform3[S]& tf) except +
+        # @TODO: There is a  another constructor https://flexible-collision-library.github.io/de/d4f/collision__object_8h_source.html
+        OBJECT_TYPE getObjectType()
+        NODE_TYPE getNodeType()
+        Vector3[S]& getTranslation()
+        Matrix3[S]& getRotation()
+        Quaternion[S]& getQuatRotation()
+        Transform3[S]& getTransform()
+        shared_ptr[CollisionGeometry[S]]& collisionGeometry()
+        void setTranslation(const Vector3[S]& T)
+        void setRotation(const Matrix3[S]& M)
+        void setQuatRotation(const Quaternion[S]& q)
+        void setTransform(const Quaternion[S]& q, const Vector3[S]& T)
+        void setTransform(const Matrix3[S]& R, const Vector3[S]& T)
+        void setTransform(const Transform3[S]& tf)
+        void setUserData(void *data)
+        void computeAABB()
+        void *getUserData()
+        bool isOccupied()
+        bool isFree()
+        bool isUncertain()
 
 #     cdef cppclass CollisionObject:
 #         CollisionObject() except +
