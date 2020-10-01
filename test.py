@@ -47,6 +47,8 @@ co.setTranslation(np.array([99,98,97]))
 print("co tr:", co.getTranslation())
 
 print("co rot: ", co.getRotation())
+co.setRotation(np.random.rand(3,3))
+print("co rot: ", co.getRotation())
 
 # t = TriangleP(np.array([0,0,0]), np.array([1,0,0]), np.array([0,1,0]))
 # print(t.a, t.b, t.c)

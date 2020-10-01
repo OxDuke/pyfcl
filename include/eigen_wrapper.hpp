@@ -1,6 +1,19 @@
 #include "fcl/common/types.h"
 
 template<typename T>
+fcl::Matrix3<T> Matrix3FromNumbers(const T& xx, const T& xy , const T& xz,
+	const T& yx, const T& yy , const T& yz,
+	const T& zx, const T& zy , const T& zz)
+{
+	fcl::Matrix3<T> temp_mat;
+	temp_mat << xx, xy , xz, yx, yy , yz, zx, zy , zz;
+
+	return temp_mat;
+
+}
+    
+
+template<typename T>
 void Matrix3SetValue(fcl::Matrix3<T> & m, size_t index, const T & v)
 {
   m(index) = v;

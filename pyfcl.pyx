@@ -186,9 +186,9 @@ cdef class CollisionObject:
     def getRotation(self):
         return matrix3_to_numpy(self.thisptr.getRotation())
 
-    # def setRotation(self, mat):
-    #     self.thisptr.setRotation(numpy_to_mat3f(mat))
-    #     self.thisptr.computeAABB()
+    def setRotation(self, mat):
+        self.thisptr.setRotation(numpy_to_matrix3(mat))
+        self.thisptr.computeAABB()
 
     # def getQuatRotation(self):
     #     return quaternion3f_to_numpy(self.thisptr.getQuatRotation())
@@ -419,10 +419,10 @@ cdef matrix3_to_numpy(defs.Matrix3[Scalar] m):
                         [m(3), m(4), m(5)],
                         [m(6), m(7), m(8)]])
 
-# cdef defs.Matrix3[Scalar] numpy_to_matrix3(a):
-#     return defs.Matrix3f[Scalar](<Scalar?> a[0][0], <Scalar?> a[0][1], <Scalar?> a[0][2],
-#                                  <Scalar?> a[1][0], <Scalar?> a[1][1], <Scalar?> a[1][2],
-#                                  <Scalar?> a[2][0], <Scalar?> a[2][1], <Scalar?> a[2][2])
+cdef defs.Matrix3[Scalar] numpy_to_matrix3(a):
+    return ew.Matrix3FromNumbers[Scalar](<Scalar?> a[0][0], <Scalar?> a[0][1], <Scalar?> a[0][2],
+                                 <Scalar?> a[1][0], <Scalar?> a[1][1], <Scalar?> a[1][2],
+                                 <Scalar?> a[2][0], <Scalar?> a[2][1], <Scalar?> a[2][2])
 
 
 
