@@ -9,12 +9,13 @@ from libcpp cimport bool
 from libcpp.memory cimport shared_ptr
 # cimport octomap_defs as octomap
 
-# cdef extern from "Python.h":
-#        ctypedef struct PyObject
-#        void Py_INCREF(PyObject *obj)
-#        void Py_DECREF(PyObject *obj)
-#        object PyObject_CallObject(object obj, object args)
-#        object PySequence_Concat(object obj1, object obj2)
+# @TODO: This is for CollisionObject, I want to remove this
+cdef extern from "Python.h":
+       ctypedef struct PyObject
+       void Py_INCREF(PyObject *obj)
+       void Py_DECREF(PyObject *obj)
+       object PyObject_CallObject(object obj, object args)
+       object PySequence_Concat(object obj1, object obj2)
 
 # #cdef extern from "boost/shared_ptr.hpp" namespace "boost":
 # #    cppclass shared_ptr[T]:

@@ -27,7 +27,12 @@ m = pyfcl.Matrix3()
 print(m[0], m[1])
 m[0] = 1.0
 print(m[0])
-#tf = pyfcl.Transform()
+
+tf = pyfcl.Transform()
+
+co = pyfcl.CollisionObject(s)
+print(co.getNodeType())
+print(co.getObjectType())
 
 # t = TriangleP(np.array([0,0,0]), np.array([1,0,0]), np.array([0,1,0]))
 # print(t.a, t.b, t.c)

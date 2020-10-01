@@ -1,3 +1,10 @@
+from libcpp cimport bool
+# from libcpp.string cimport string
+# from libcpp.vector cimport vector
+from libc.stdlib cimport free
+# from libc.string cimport memcpy
+# import inspect
+
 cimport fcl_defs as defs
 cimport eigen_wrappers as ew
 
@@ -30,9 +37,17 @@ cdef class Vector3:
     def y(self):
         return self.c_vector3[1]
 
+    @y.setter
+    def y(self, y):
+        self.c_vector3[1] = y
+
     @property
     def z(self):
         return self.c_vector3[2]
+
+    @z.setter
+    def z(self, z):
+        self.c_vector3[2] = <Scalar?> z
 
     def __getitem__(self, size_t key):
         return self.c_vector3[key]
@@ -87,7 +102,154 @@ cdef class Transform:
 
     def __cinit__(self):
         self.thisptr = new defs.Transform3[Scalar]()
-        
+
+cdef class CollisionObject:
+    cdef defs.CollisionObject[Scalar] *thisptr
+    # @TODO: can we do defs.CollisionGeometry[Scalar]* geom?
+    cdef defs.PyObject *geom
+    # @TODO: _no_instance seems useless, and the class only works when it is set to False
+    cdef bool _no_instance
+
+    def __cinit__(self, CollisionGeometry geom=None, Transform tf=None, _no_instance=False):
+        if geom is None:
+            geom = CollisionGeometry()
+        defs.Py_INCREF(<defs.PyObject*> geom)
+        self.geom = <defs.PyObject*> geom
+        self._no_instance = _no_instance
+        if geom.getNodeType() is not None and not self._no_instance:
+            if tf is not None:
+                self.thisptr = new defs.CollisionObject[Scalar](defs.shared_ptr[defs.CollisionGeometry[Scalar]](geom.thisptr), deref(tf.thisptr))
+            else:
+                self.thisptr = new defs.CollisionObject[Scalar](defs.shared_ptr[defs.CollisionGeometry[Scalar]](geom.thisptr))
+            self.thisptr.setUserData(<void*> self.geom) # Save the python geometry object for later retrieval
+        else:
+            if not self._no_instance:
+                raise ValueError
+
+    def __dealloc__(self):
+        if self.thisptr and not self._no_instance:
+            #@TODO: what's the difference between: del self.thisptr & free(self.thisptr)
+            free(self.thisptr)
+        defs.Py_DECREF(self.geom)
+
+    def getObjectType(self):
+        return self.thisptr.getObjectType()
+
+    def getNodeType(self):
+        return self.thisptr.getNodeType()
+
+    # def getTranslation(self):
+    #     return vec3f_to_numpy(self.thisptr.getTranslation())
+
+    # def setTranslation(self, vec):
+    #     self.thisptr.setTranslation(numpy_to_vec3f(vec))
+    #     self.thisptr.computeAABB()
+
+    # def getRotation(self):
+    #     return mat3f_to_numpy(self.thisptr.getRotation())
+
+    # def setRotation(self, mat):
+    #     self.thisptr.setRotation(numpy_to_mat3f(mat))
+    #     self.thisptr.computeAABB()
+
+    # def getQuatRotation(self):
+    #     return quaternion3f_to_numpy(self.thisptr.getQuatRotation())
+
+    # def setQuatRotation(self, q):
+    #     self.thisptr.setQuatRotation(numpy_to_quaternion3f(q))
+    #     self.thisptr.computeAABB()
+
+    # def getTransform(self):
+    #     rot = self.getRotation()
+    #     trans = self.getTranslation()
+    #     return Transform(rot, trans)
+
+    # def setTransform(self, tf):
+    #     self.thisptr.setTransform(deref((<Transform> tf).thisptr))
+    #     self.thisptr.computeAABB()
+
+    def isOccupied(self):
+        return self.thisptr.isOccupied()
+
+    def isFree(self):
+        return self.thisptr.isFree()
+
+    def isUncertain(self):
+        return self.thisptr.isUncertain()        
+
+
+# cdef class CollisionObject:
+#     cdef defs.CollisionObject *thisptr
+#     cdef defs.PyObject *geom
+#     cdef bool _no_instance
+
+#     def __cinit__(self, CollisionGeometry geom=None, Transform tf=None, _no_instance=False):
+#         if geom is None:
+#             geom = CollisionGeometry()
+#         defs.Py_INCREF(<defs.PyObject*> geom)
+#         self.geom = <defs.PyObject*> geom
+#         self._no_instance = _no_instance
+#         if geom.getNodeType() is not None and not self._no_instance:
+#             if tf is not None:
+#                 self.thisptr = new defs.CollisionObject(defs.shared_ptr[defs.CollisionGeometry](geom.thisptr), deref(tf.thisptr))
+#             else:
+#                 self.thisptr = new defs.CollisionObject(defs.shared_ptr[defs.CollisionGeometry](geom.thisptr))
+#             self.thisptr.setUserData(<void*> self.geom) # Save the python geometry object for later retrieval
+#         else:
+#             if not self._no_instance:
+#                 raise ValueError
+
+#     def __dealloc__(self):
+#         if self.thisptr and not self._no_instance:
+#             free(self.thisptr)
+#         defs.Py_DECREF(self.geom)
+
+#     def getObjectType(self):
+#         return self.thisptr.getObjectType()
+
+#     def getNodeType(self):
+#         return self.thisptr.getNodeType()
+
+#     def getTranslation(self):
+#         return vec3f_to_numpy(self.thisptr.getTranslation())
+
+#     def setTranslation(self, vec):
+#         self.thisptr.setTranslation(numpy_to_vec3f(vec))
+#         self.thisptr.computeAABB()
+
+#     def getRotation(self):
+#         return mat3f_to_numpy(self.thisptr.getRotation())
+
+#     def setRotation(self, mat):
+#         self.thisptr.setRotation(numpy_to_mat3f(mat))
+#         self.thisptr.computeAABB()
+
+#     def getQuatRotation(self):
+#         return quaternion3f_to_numpy(self.thisptr.getQuatRotation())
+
+#     def setQuatRotation(self, q):
+#         self.thisptr.setQuatRotation(numpy_to_quaternion3f(q))
+#         self.thisptr.computeAABB()
+
+#     def getTransform(self):
+#         rot = self.getRotation()
+#         trans = self.getTranslation()
+#         return Transform(rot, trans)
+
+#     def setTransform(self, tf):
+#         self.thisptr.setTransform(deref((<Transform> tf).thisptr))
+#         self.thisptr.computeAABB()
+
+#     def isOccupied(self):
+#         return self.thisptr.isOccupied()
+
+#     def isFree(self):
+#         return self.thisptr.isFree()
+
+#     def isUncertain(self):
+#         return self.thisptr.isUncertain()        
+
+
 
 cdef class CollisionGeometry:
     cdef defs.CollisionGeometry[Scalar] *thisptr
