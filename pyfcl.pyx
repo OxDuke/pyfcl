@@ -190,12 +190,12 @@ cdef class CollisionObject:
         self.thisptr.setRotation(numpy_to_matrix3(mat))
         self.thisptr.computeAABB()
 
-    # def getQuatRotation(self):
-    #     return quaternion3f_to_numpy(self.thisptr.getQuatRotation())
+    def getQuatRotation(self):
+        return quaternion_to_numpy(self.thisptr.getQuatRotation())
 
-    # def setQuatRotation(self, q):
-    #     self.thisptr.setQuatRotation(numpy_to_quaternion3f(q))
-    #     self.thisptr.computeAABB()
+    def setQuatRotation(self, q):
+        self.thisptr.setQuatRotation(numpy_to_quaternion(q))
+        self.thisptr.computeAABB()
 
     # def getTransform(self):
     #     rot = self.getRotation()
@@ -402,11 +402,11 @@ cdef class Sphere(ShapeBase):
         (<defs.Sphere[Scalar]*> self.thisptr).radius = value
 
 
-# cdef quaternion3f_to_numpy(defs.Quaternion3f q):
-#     return numpy.array([q.getW(), q.getX(), q.getY(), q.getZ()])
+cdef quaternion_to_numpy(defs.Quaternion[Scalar] q):
+    return numpy.array([q.w(), q.x(), q.y(), q.z()])
 
-# cdef defs.Quaternion3f numpy_to_quaternion3f(a):
-#     return defs.Quaternion3f(<double?> a[0], <double?> a[1], <double?> a[2], <double?> a[3])
+cdef defs.Quaternion[Scalar] numpy_to_quaternion(a):
+    return defs.Quaternion[Scalar](<Scalar?> a[0], <Scalar?> a[1], <Scalar?> a[2], <Scalar?> a[3])
 
 cdef vector3_to_numpy(defs.Vector3[Scalar] vec):
     return numpy.array([vec[0], vec[1], vec[2]])
