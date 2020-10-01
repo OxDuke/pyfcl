@@ -1,6 +1,6 @@
 from libcpp cimport bool
 # from libcpp.string cimport string
-# from libcpp.vector cimport vector
+from libcpp.vector cimport vector
 from libc.stdlib cimport free
 # from libc.string cimport memcpy
 # import inspect
@@ -437,32 +437,35 @@ cdef defs.Matrix3[Scalar] numpy_to_matrix3(a):
                                  <Scalar?> a[1][0], <Scalar?> a[1][1], <Scalar?> a[1][2],
                                  <Scalar?> a[2][0], <Scalar?> a[2][1], <Scalar?> a[2][2])
 
-# cdef c_to_python_collision_geometry(defs.const_CollisionGeometry[Scalar]*geom, CollisionObject o1, CollisionObject o2):
-#     cdef CollisionGeometry o1_py_geom = <CollisionGeometry> ((<defs.CollisionObject*> o1.thisptr).getUserData())
-#     cdef CollisionGeometry o2_py_geom = <CollisionGeometry> ((<defs.CollisionObject*> o2.thisptr).getUserData())
-#     if geom == <defs.const_CollisionGeometry*> o1_py_geom.thisptr:
-#         return o1_py_geom
-#     else:
-#         return o2_py_geom
+# @TODO: defs.const_CollisionGeometry seems the same as defs.CollisionGeomtry
+# I have moved from defs.const_CollisionGeometry to const defs.CollisionGeometry
+# @TODO: WHy need this function at all? It is just a converter, why need if geom == <defs.const_ ... at all?
+cdef c_to_python_collision_geometry(const defs.CollisionGeometry[Scalar]*geom, CollisionObject o1, CollisionObject o2):
+    cdef CollisionGeometry o1_py_geom = <CollisionGeometry> ((<defs.CollisionObject[Scalar]*> o1.thisptr).getUserData())
+    cdef CollisionGeometry o2_py_geom = <CollisionGeometry> ((<defs.CollisionObject[Scalar]*> o2.thisptr).getUserData())
+    if geom == <const defs.CollisionGeometry[Scalar]*> o1_py_geom.thisptr:
+        return o1_py_geom
+    else:
+        return o2_py_geom
 
-# cdef c_to_python_contact(defs.Contact[S] contact, CollisionObject o1, CollisionObject o2):
-#     c = Contact()
-#     c.o1 = c_to_python_collision_geometry(contact.o1, o1, o2)
-#     c.o2 = c_to_python_collision_geometry(contact.o2, o1, o2)
-#     c.b1 = contact.b1
-#     c.b2 = contact.b2
-#     c.normal = vector3_to_numpy(contact.normal)
-#     c.pos = vector3_to_numpy(contact.pos)
-#     c.penetration_depth = contact.penetration_depth
-#     return c
+cdef c_to_python_contact(defs.Contact[Scalar] contact, CollisionObject o1, CollisionObject o2):
+    c = Contact()
+    c.o1 = c_to_python_collision_geometry(contact.o1, o1, o2)
+    c.o2 = c_to_python_collision_geometry(contact.o2, o1, o2)
+    c.b1 = contact.b1
+    c.b2 = contact.b2
+    c.normal = vector3_to_numpy(contact.normal)
+    c.pos = vector3_to_numpy(contact.pos)
+    c.penetration_depth = contact.penetration_depth
+    return c
 
-# cdef c_to_python_costsource(defs.CostSource[S] cost_source):
-#     c = CostSource()
-#     c.aabb_min = vector3_to_numpy(cost_source.aabb_min)
-#     c.aabb_max = vector3_to_numpy(cost_source.aabb_max)
-#     c.cost_density = cost_source.cost_density
-#     c.total_cost = cost_source.total_cost
-#     return c
+cdef c_to_python_costsource(defs.CostSource[Scalar] cost_source):
+    c = CostSource()
+    c.aabb_min = vector3_to_numpy(cost_source.aabb_min)
+    c.aabb_max = vector3_to_numpy(cost_source.aabb_max)
+    c.cost_density = cost_source.cost_density
+    c.total_cost = cost_source.total_cost
+    return c
 
 
 
@@ -489,15 +492,15 @@ def collide(CollisionObject o1, CollisionObject o2,
 
     result.is_collision = result.is_collision or cresult.isCollision()
 
-    # cdef vector[defs.Contact[S]] contacts
-    # cresult.getContacts(contacts)
-    # for idx in range(contacts.size()):
-    #     result.contacts.append(c_to_python_contact(contacts[idx], o1, o2))
+    cdef vector[defs.Contact[Scalar]] contacts
+    cresult.getContacts(contacts)
+    for idx in range(contacts.size()):
+        result.contacts.append(c_to_python_contact(contacts[idx], o1, o2))
 
-    # cdef vector[defs.CostSource] costs
-    # cresult.getCostSources(costs)
-    # for idx in range(costs.size()):
-    #     result.cost_sources.append(c_to_python_costsource(costs[idx]))
+    cdef vector[defs.CostSource[Scalar]] costs
+    cresult.getCostSources(costs)
+    for idx in range(costs.size()):
+        result.cost_sources.append(c_to_python_costsource(costs[idx]))
 
     return ret
 

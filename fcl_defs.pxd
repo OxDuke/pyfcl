@@ -271,6 +271,11 @@ cdef extern from "fcl/narrowphase/collision_object.h" namespace "fcl":
         bool isOccupied()
         bool isFree()
         bool isUncertain()
+    
+    # @TODO: What does the string inside the "" mean? Seems useless.
+    ctypedef CollisionGeometry const_CollisionGeometry "const fcl::CollisionGeometry"
+    ctypedef CollisionObject const_CollisionObject "const fcl::CollisionObject"
+
 
 #     cdef cppclass CollisionObject:
 #         CollisionObject() except +

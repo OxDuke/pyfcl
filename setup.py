@@ -11,7 +11,7 @@ ext_modules=[
         library_dirs = ['/usr/lib', '/usr/local/lib','/usr/local/lib:/opt/ros/lunar/lib'],
         libraries=["fcl","ccd", "stdc++", "octomap"],
         language="c++",
-        extra_compile_args = ["-std=c++11"])]
+        extra_compile_args = ["-std=c++11", "-O3"])]
 
 setup(
   name = 'PyFCL',

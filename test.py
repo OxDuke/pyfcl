@@ -65,32 +65,42 @@ print("co tf: ", co.getTranslation(), co.getQuatRotation())
 s1 = pyfcl.Sphere(1)
 s2 = pyfcl.Sphere(1)
 
-s1 = pyfcl.Sphere(1)
-s2 = pyfcl.Box(1, 1, 1)
+#s1 = pyfcl.Sphere(1)
+#s2 = pyfcl.Box(1, 1, 1)
 
 tf1 = pyfcl.Transform()
 tf1.linear = np.eye(3)
-tf1.translation = pyfcl.Vector3(0,0,0)
+tf1.translation = [0, 0, 0]
 
 tf2 = pyfcl.Transform()
 tf2.linear = np.eye(3)
-tf2.translation = [1.5,0,0]
+tf2.translation = [1,0,0]
 
 co1 = pyfcl.CollisionObject(s1, tf1)
 co2 = pyfcl.CollisionObject(s2, tf2)
 
-req = pyfcl.CollisionRequest()
+req = pyfcl.CollisionRequest(num_max_contacts = 10, enable_contact=True)
 res = pyfcl.CollisionResult()
 
 ret = pyfcl.collide(co1, co2, req, res)
 
 print("In collision? ", res.is_collision)
+if (res.is_collision):
+    print("geom1, geom2: ", s1, s2)
+    print("Contact info")
+    for cntc in res.contacts:
+        print("o1, o2: ", cntc.o1, cntc.o2)
+        print("PD: ", cntc.penetration_depth)
+    #print("Depth: ", res.penetration_depth)
 
 def kk():
-    req = pyfcl.CollisionRequest()
+    req = pyfcl.CollisionRequest(num_max_contacts = 10, enable_contact=True)
     res = pyfcl.CollisionResult()
 
     ret = pyfcl.collide(co1, co2, req, res)
+
+#%timeit kk
+#%timeit tf.translation = [5,6,7]
 
 # t = TriangleP(np.array([0,0,0]), np.array([1,0,0]), np.array([0,1,0]))
 # print(t.a, t.b, t.c)
