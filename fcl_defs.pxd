@@ -105,8 +105,23 @@ cdef extern from "fcl/common/types.h" namespace "fcl":
 #     cdef enum CCDSolverType:
 #         CCDC_NAIVE, CCDC_CONSERVATIVE_ADVANCEMENT, CCDC_RAY_SHOOTING, CCDC_POLYNOMIAL_SOLVER
 
-#     cdef enum GJKSolverType:
-#         GST_LIBCCD, GST_INDEP
+cdef extern from "fcl/narrowphase/gjk_solver_type.h" namespace "fcl":
+    cdef enum GJKSolverType:
+        GST_LIBCCD, GST_INDEP
+
+cdef extern from "fcl/narrowphase/contact.h" namespace "fcl":
+    cdef cppclass Contact[S]:
+        CollisionGeometry[S] *o1
+        CollisionGeometry[S] *o2
+        int b1
+        int b2
+        Vector3[S] normal
+        Vector3[S] pos
+        S penetration_depth
+        Contact() except +
+        Contact(CollisionGeometry[S]* o1_,
+                CollisionGeometry[S]* o2_,
+                int b1_, int b2_) except +
 
 #     cdef cppclass Contact:
 #         CollisionGeometry *o1
