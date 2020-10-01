@@ -9,7 +9,7 @@ ext_modules=[
       #@TODO: better include for include/eigen_wrapper.h
     	include_dirs = ['/usr/local/include', '/usr/include/eigen3', 'include/'],
         library_dirs = ['/usr/lib', '/usr/local/lib','/usr/local/lib:/opt/ros/lunar/lib'],
-        libraries=["fcl","ccd", "stdc++"],
+        libraries=["fcl","ccd", "stdc++", "octomap"],
         language="c++",
         extra_compile_args = ["-std=c++11"])]
 

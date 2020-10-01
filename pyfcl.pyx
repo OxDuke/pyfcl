@@ -437,6 +437,33 @@ cdef defs.Matrix3[Scalar] numpy_to_matrix3(a):
                                  <Scalar?> a[1][0], <Scalar?> a[1][1], <Scalar?> a[1][2],
                                  <Scalar?> a[2][0], <Scalar?> a[2][1], <Scalar?> a[2][2])
 
+# cdef c_to_python_collision_geometry(defs.const_CollisionGeometry[Scalar]*geom, CollisionObject o1, CollisionObject o2):
+#     cdef CollisionGeometry o1_py_geom = <CollisionGeometry> ((<defs.CollisionObject*> o1.thisptr).getUserData())
+#     cdef CollisionGeometry o2_py_geom = <CollisionGeometry> ((<defs.CollisionObject*> o2.thisptr).getUserData())
+#     if geom == <defs.const_CollisionGeometry*> o1_py_geom.thisptr:
+#         return o1_py_geom
+#     else:
+#         return o2_py_geom
+
+# cdef c_to_python_contact(defs.Contact[S] contact, CollisionObject o1, CollisionObject o2):
+#     c = Contact()
+#     c.o1 = c_to_python_collision_geometry(contact.o1, o1, o2)
+#     c.o2 = c_to_python_collision_geometry(contact.o2, o1, o2)
+#     c.b1 = contact.b1
+#     c.b2 = contact.b2
+#     c.normal = vector3_to_numpy(contact.normal)
+#     c.pos = vector3_to_numpy(contact.pos)
+#     c.penetration_depth = contact.penetration_depth
+#     return c
+
+# cdef c_to_python_costsource(defs.CostSource[S] cost_source):
+#     c = CostSource()
+#     c.aabb_min = vector3_to_numpy(cost_source.aabb_min)
+#     c.aabb_max = vector3_to_numpy(cost_source.aabb_max)
+#     c.cost_density = cost_source.cost_density
+#     c.total_cost = cost_source.total_cost
+#     return c
+
 
 
 def collide(CollisionObject o1, CollisionObject o2,
@@ -450,7 +477,7 @@ def collide(CollisionObject o1, CollisionObject o2,
     cdef defs.CollisionResult[Scalar] cresult
 
     cdef size_t ret = defs.collide(o1.thisptr, o2.thisptr,
-                                   defs.CollisionRequest(
+                                   defs.CollisionRequest[Scalar](
                                        <size_t?> request.num_max_contacts,
                                        <bool?> request.enable_contact,
                                        <size_t?> request.num_max_cost_sources,
@@ -462,15 +489,15 @@ def collide(CollisionObject o1, CollisionObject o2,
 
     result.is_collision = result.is_collision or cresult.isCollision()
 
-    cdef vector[defs.Contact] contacts
-    cresult.getContacts(contacts)
-    for idx in range(contacts.size()):
-        result.contacts.append(c_to_python_contact(contacts[idx], o1, o2))
+    # cdef vector[defs.Contact[S]] contacts
+    # cresult.getContacts(contacts)
+    # for idx in range(contacts.size()):
+    #     result.contacts.append(c_to_python_contact(contacts[idx], o1, o2))
 
-    cdef vector[defs.CostSource] costs
-    cresult.getCostSources(costs)
-    for idx in range(costs.size()):
-        result.cost_sources.append(c_to_python_costsource(costs[idx]))
+    # cdef vector[defs.CostSource] costs
+    # cresult.getCostSources(costs)
+    # for idx in range(costs.size()):
+    #     result.cost_sources.append(c_to_python_costsource(costs[idx]))
 
     return ret
 
