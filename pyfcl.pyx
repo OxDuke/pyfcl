@@ -125,9 +125,9 @@ cdef class Transform:
     @linear.setter
     def linear(self, value):
         ew.Transform3SetLinear[Scalar](deref(self.thisptr), 
-            value[0], value[1], value[2],
-            value[3], value[4], value[5],
-            value[6], value[7], value[8])
+            value[0,0], value[0,1], value[0,2],
+            value[1,0], value[1,1], value[1,1],
+            value[2,0], value[2,1], value[2,2])
     
     @property
     def translation(self):
@@ -135,9 +135,12 @@ cdef class Transform:
         return Vector3(trans[0], trans[1], trans[2])
 
     @translation.setter
-    def translation(self, Vector3 value):
+    def translation(self, value):
         # @TODO: This is a hack
         ew.Transform3SetTranslation[Scalar](deref(self.thisptr), value[0], value[1], value[2])
+
+    # def __repr__(self):
+    #     return "Rot:\n" + self.linear.__repr__
 
 cdef class CollisionObject:
     cdef defs.CollisionObject[Scalar] *thisptr
@@ -198,12 +201,14 @@ cdef class CollisionObject:
     def getTransform(self):
         tf = Transform()
         tf.linear = self.getRotation()
+        #@TODO: remove numpy_to_vector3
         tf.translation = self.getTranslation()
 
         #@TODO: Make this a constructor
         return tf
 
     def setTransform(self, tf):
+        #@TODO: If tf.linear is not a rotation matrix, the transform will not be correct
         self.thisptr.setTransform(deref((<Transform> tf).thisptr))
         self.thisptr.computeAABB()
 

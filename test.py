@@ -33,7 +33,7 @@ tf_trans = tf.translation
 print("linear:", tf.linear[0], tf.linear[1], tf.linear[2], tf.linear[3], tf.linear[4])
 print("translation: ", tf_trans.x, tf_trans.y, tf_trans.z)
 
-tf.linear = [1,2,3,4,5,6,7,8,9]
+tf.linear = np.array([[1,2,3],[4,5,6],[7,8,9]])
 print("linear:", tf.linear[0], tf.linear[1], tf.linear[2], tf.linear[3], tf.linear[4])
 tf.translation = pyfcl.Vector3(10,20,30)
 print("translation: ", tf.translation.x, tf.translation.y, tf.translation.z)
@@ -55,5 +55,13 @@ rquat = np.random.rand(4)
 rquat = rquat / np.linalg.norm(rquat)
 co.setQuatRotation(rquat)
 print("co quat: ", co.getQuatRotation(), rquat)
+
+print("co tf: ", co.getTranslation(), co.getQuatRotation())
+print("tf: ", tf)
+co.setTransform(tf)
+print("co tf: ", co.getTranslation(), co.getQuatRotation())
+
+
+
 # t = TriangleP(np.array([0,0,0]), np.array([1,0,0]), np.array([0,1,0]))
 # print(t.a, t.b, t.c)
