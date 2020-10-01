@@ -386,6 +386,11 @@ cdef extern from "fcl/geometry/shape/sphere.h" namespace "fcl":
 #         bool octree_as_geometry_collide
 #         bool octree_as_geometry_distance
 
+cdef extern from "fcl/narrowphase/collision.h" namespace "fcl":
+    size_t collide[S](CollisionObject[S]* o1, CollisionObject[S]* o2,
+                   CollisionRequest[S]& request,
+                   CollisionResult[S]& result)
+
 # cdef extern from "fcl/collision.h" namespace "fcl":
 #     size_t collide(CollisionObject* o1, CollisionObject* o2,
 #                    CollisionRequest& request,

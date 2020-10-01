@@ -439,40 +439,40 @@ cdef defs.Matrix3[Scalar] numpy_to_matrix3(a):
 
 
 
-# def collide(CollisionObject o1, CollisionObject o2,
-#             request=None, result=None):
+def collide(CollisionObject o1, CollisionObject o2,
+            request=None, result=None):
 
-#     if request is None:
-#         request = CollisionRequest()
-#     if result is None:
-#         result = CollisionResult()
+    if request is None:
+        request = CollisionRequest()
+    if result is None:
+        result = CollisionResult()
 
-#     cdef defs.CollisionResult cresult
+    cdef defs.CollisionResult[Scalar] cresult
 
-#     cdef size_t ret = defs.collide(o1.thisptr, o2.thisptr,
-#                                    defs.CollisionRequest(
-#                                        <size_t?> request.num_max_contacts,
-#                                        <bool?> request.enable_contact,
-#                                        <size_t?> request.num_max_cost_sources,
-#                                        <bool> request.enable_cost,
-#                                        <bool> request.use_approximate_cost,
-#                                        <defs.GJKSolverType?> request.gjk_solver_type
-#                                    ),
-#                                    cresult)
+    cdef size_t ret = defs.collide(o1.thisptr, o2.thisptr,
+                                   defs.CollisionRequest(
+                                       <size_t?> request.num_max_contacts,
+                                       <bool?> request.enable_contact,
+                                       <size_t?> request.num_max_cost_sources,
+                                       <bool> request.enable_cost,
+                                       <bool> request.use_approximate_cost,
+                                       <defs.GJKSolverType?> request.gjk_solver_type
+                                   ),
+                                   cresult)
 
-#     result.is_collision = result.is_collision or cresult.isCollision()
+    result.is_collision = result.is_collision or cresult.isCollision()
 
-#     cdef vector[defs.Contact] contacts
-#     cresult.getContacts(contacts)
-#     for idx in range(contacts.size()):
-#         result.contacts.append(c_to_python_contact(contacts[idx], o1, o2))
+    cdef vector[defs.Contact] contacts
+    cresult.getContacts(contacts)
+    for idx in range(contacts.size()):
+        result.contacts.append(c_to_python_contact(contacts[idx], o1, o2))
 
-#     cdef vector[defs.CostSource] costs
-#     cresult.getCostSources(costs)
-#     for idx in range(costs.size()):
-#         result.cost_sources.append(c_to_python_costsource(costs[idx]))
+    cdef vector[defs.CostSource] costs
+    cresult.getCostSources(costs)
+    for idx in range(costs.size()):
+        result.cost_sources.append(c_to_python_costsource(costs[idx]))
 
-#     return ret
+    return ret
 
 
 #####################
