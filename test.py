@@ -104,3 +104,11 @@ def kk():
 
 # t = TriangleP(np.array([0,0,0]), np.array([1,0,0]), np.array([0,1,0]))
 # print(t.a, t.b, t.c)
+
+import transformations as tfm
+rr = tfm.random_rotation_matrix()
+
+rq = tfm.random_quaternion()
+rv = np.random.rand(3)
+
+tf = pyfcl.Transform(np.roll(rq,1), rv)

@@ -16,9 +16,10 @@ cimport fcl_defs as defs
 from collision_data import Contact, CostSource, CollisionRequest, CollisionResult
 # from collision_data import Contact, CostSource, CollisionRequest, ContinuousCollisionRequest, CollisionResult, ContinuousCollisionResult, DistanceRequest, DistanceResult
 
+ctypedef double Scalar
+
 cimport eigen_wrappers as ew
 
-ctypedef double Scalar
 
 
 def hello_fcl():
@@ -104,14 +105,62 @@ cdef class Matrix3:
     def __setitem__(self, size_t key, Scalar value):
         ew.Matrix3SetValue[Scalar](deref(self.thisptr), key, value)
 
+#@TODO: This class has problems, need to be re-implemented
 cdef class Transform:
     cdef defs.Transform3[Scalar] *thisptr
 
-    def __cinit__(self):
-        self.thisptr = new defs.Transform3[Scalar]()
+    # def __cinit__(self):
+    #     self.thisptr = new defs.Transform3[Scalar]()
 
-    # def linear(self):
-    #     pass
+    def __cinit__(self, *args):
+        if len(args) == 0:
+            self.thisptr = new defs.Transform3[Scalar]()
+        elif len(args) == 1:
+            if isinstance(args[0], Transform):
+                self.thisptr = new defs.Transform3[Scalar](deref((<Transform> args[0]).thisptr))
+            else:
+                data = numpy.array(args[0])
+                if data.shape == (3,3):
+                    #self.thisptr = new defs.Transform3[Scalar](numpy_to_mat3f(data))
+                    self.thisptr = new defs.Transform3[Scalar]()
+                    #@TODO: Make this faster by directly passing components
+                    ew.Transform3FromMatrix3[Scalar](deref(<defs.Transform3[Scalar]*> self.thisptr), numpy_to_matrix3(data))
+                elif data.shape == (4,):
+                    #@TODO: Make this faster by directly passing components
+                    self.thisptr = new defs.Transform3[Scalar]()
+                    ew.Transform3FromQuaternion[Scalar](deref(<defs.Transform3[Scalar]*> self.thisptr), numpy_to_quaternion(data))
+                elif data.shape == (3,):
+                    #self.thisptr = new defs.Transform3[Scalar](numpy_to_vec3f(data))
+                    self.thisptr = new defs.Transform3[Scalar]()
+                    ew.Transform3FromVector3Numbers[Scalar](deref(<defs.Transform3[Scalar]*> self.thisptr), <Scalar?> data[0], <Scalar?> data[1], <Scalar?> data[2])
+                else:
+                    raise ValueError('Invalid input to Transform().')
+        elif len(args) == 2:
+            rot = numpy.array(args[0])
+            trans = numpy.array(args[1]).squeeze()
+            if not trans.shape == (3,):
+                raise ValueError('Translation must be (3,).')
+
+            if rot.shape == (3,3):
+                #@TODO: Make this faster by directly passing components
+                self.thisptr = new defs.Transform3[Scalar]()
+                ew.Transform3FromMatrix3Vector3[Scalar](deref(<defs.Transform3[Scalar]*> self.thisptr), numpy_to_matrix3(rot), numpy_to_vector3(trans))
+                #self.thisptr = new defs.Transform3[Scalar](numpy_to_mat3f(rot), numpy_to_vec3f(trans))
+            elif rot.shape == (4,):
+                #@TODO: Make this faster by directly passing components
+                self.thisptr = new defs.Transform3[Scalar]()
+                ew.Transform3FromQuaternionVector3[Scalar](deref(<defs.Transform3[Scalar]*> self.thisptr), numpy_to_quaternion(rot), numpy_to_vector3(trans))
+                #self.thisptr = new defs.Transform3[Scalar](numpy_to_quaternion3f(rot), numpy_to_vec3f(trans))
+            
+            else:
+                raise ValueError('Invalid input to Transform().')
+        else:
+            raise ValueError('Too many arguments to Transform().')
+
+    def __dealloc__(self):
+        if self.thisptr:
+            free(self.thisptr)
+
     @property
     def linear(self):
         lin = (<defs.Transform3[Scalar]*> self.thisptr).linear()

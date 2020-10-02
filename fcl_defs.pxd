@@ -63,6 +63,7 @@ cdef extern from "fcl/common/types.h" namespace "fcl":
 
     cdef cppclass Transform3[S]:
         Transform3() except + 
+        Transform3(Transform3[S]& tf_)
 
         Matrix3[S]& linear()
         Vector3[S]& translation()
