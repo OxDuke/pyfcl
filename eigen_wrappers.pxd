@@ -11,6 +11,8 @@ cdef extern from "eigen_wrapper.hpp":
     #void Matrix3SetValue[T](Matrix3[T]&, size_t, size_t, const T&)
 
     void QuaternionSetw[T](Quaternion[T]&, const T&)
+
+    void Transform3SetIdentity[T](Transform3[T]& tf)
     
     # @TODO: Currently, these functions are only used for assembling Transform,
     # However, I think they are not direct enough, I will profile these

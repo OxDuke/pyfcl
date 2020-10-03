@@ -32,8 +32,15 @@ void QuaternionSetw(fcl::Quaternion<T> & q, const T & w)
 }
 
 template<typename T>
+void Transform3SetIdentity(fcl::Transform3<T>& tf)
+{
+	tf.setIdentity();
+}
+
+template<typename T>
 void Transform3FromMatrix3Vector3(fcl::Transform3<T>& tf, const fcl::Matrix3<T>& R, const fcl::Vector3<T>& v)
 {
+	tf.setIdentity();
 	tf.linear() = R;
 	tf.translation() = v;
 }
@@ -41,6 +48,7 @@ void Transform3FromMatrix3Vector3(fcl::Transform3<T>& tf, const fcl::Matrix3<T>&
 template<typename T>
 void Transform3FromQuaternionVector3(fcl::Transform3<T>& tf, const fcl::Quaternion<T>& q, const fcl::Vector3<T>& v)
 {
+	tf.setIdentity();
 	tf.linear() = q.toRotationMatrix();
 	tf.translation() = v;
 }
@@ -48,12 +56,14 @@ void Transform3FromQuaternionVector3(fcl::Transform3<T>& tf, const fcl::Quaterni
 template<typename T>
 void Transform3FromMatrix3(fcl::Transform3<T>& tf, const fcl::Matrix3<T>& R)
 {
+	tf.setIdentity();
 	tf.linear() = R;
 }
 
 template<typename T>
 void Transform3FromQuaternion(fcl::Transform3<T>& tf, const fcl::Quaternion<T>& q)
 {
+	tf.setIdentity();
 	tf.linear() = q.toRotationMatrix();
 }
 
@@ -69,6 +79,7 @@ template<typename T>
 fcl::Transform3<T> Transform3FromVector3(const fcl::Vector3<T>& v)
 {
 	fcl::Transform3<T> tf;
+	tf.setIdentity();
 	tf.translation() = v;
 	return tf;
 }
@@ -76,6 +87,7 @@ fcl::Transform3<T> Transform3FromVector3(const fcl::Vector3<T>& v)
 template<typename T>
 void Transform3FromVector3Numbers(fcl::Transform3<T>& tf, const T& x, const T& y, const T& z)
 {
+	tf.setIdentity();
 	tf.translation() = fcl::Vector3<T>(x, y, z);
 }
 

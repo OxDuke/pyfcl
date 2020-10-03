@@ -109,12 +109,10 @@ cdef class Matrix3:
 cdef class Transform:
     cdef defs.Transform3[Scalar] *thisptr
 
-    # def __cinit__(self):
-    #     self.thisptr = new defs.Transform3[Scalar]()
-
     def __cinit__(self, *args):
         if len(args) == 0:
             self.thisptr = new defs.Transform3[Scalar]()
+            ew.Transform3SetIdentity[Scalar](deref(<defs.Transform3[Scalar]*> self.thisptr))
         elif len(args) == 1:
             if isinstance(args[0], Transform):
                 self.thisptr = new defs.Transform3[Scalar](deref((<Transform> args[0]).thisptr))
@@ -194,6 +192,34 @@ cdef class Transform:
     def translation(self, value):
         # @TODO: This is a hack
         ew.Transform3SetTranslation[Scalar](deref(self.thisptr), value[0], value[1], value[2])
+
+    def __getitem__(self, key):
+        if isinstance(key, tuple) and len(key) == 2:
+            
+            # @INFO: According to my profile, having the below index guard
+            # induces a ~50ns overhead. W/o guard, [] takes ~50ns, w/ guard,
+            # [] takes ~100ns.
+            # row, col = key[0]%4, key[1]%4
+            # if row > 3 or col > 3:
+            #     raise IndexError("too many indices for Transform")
+
+            
+            #@TODO: Is the <size_t?> conversion bad? or hard to maintain?
+            #@TODO: Add index guard here: key[0] <= 3 and key[1] <= 3
+            return deref(<defs.Transform3[Scalar]*> self.thisptr)(<size_t?> key[0], <size_t?> key[1])
+        else:
+            raise ReferenceError("Index must be a tuple of length 2. E.g., [1,1]")
+            #return deref(<defs.Transform3[Scalar]*> self.thisptr)(<size_t?> key)
+    
+    def __setitem__(self, key, value):
+        raise NotImplementedError
+
+    def toarray(self):
+        return numpy.array([[self[0,0], self[0,1], self[0,2], self[0,3]],
+                         [self[1,0], self[1,1], self[1,2], self[1,3]],
+                         [self[2,0], self[2,1], self[2,2], self[2,3]],
+                         [self[3,0], self[3,1], self[3,2], self[3,3]]])
+
 
     # def __repr__(self):
     #     return "Rot:\n" + self.linear.__repr__

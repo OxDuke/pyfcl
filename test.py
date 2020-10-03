@@ -109,6 +109,7 @@ import transformations as tfm
 rr = tfm.random_rotation_matrix()
 
 rq = tfm.random_quaternion()
+rqr1 = np.roll(rq,1)
 rv = np.random.rand(3)
 
-tf = pyfcl.Transform(np.roll(rq,1), rv)
+tf = pyfcl.Transform(rqr1, rv)
