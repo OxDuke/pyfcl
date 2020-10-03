@@ -329,10 +329,11 @@ cdef extern from "fcl/geometry/shape/sphere.h" namespace "fcl":
         Ellipsoid(S a_, S b_, S c_) except +
         Vector3[S] radii
 
-#     cdef cppclass Capsule(ShapeBase):
-#         Capsule(FCL_REAL radius_, FCL_REAL lz_) except +
-#         FCL_REAL radius
-#         FCL_REAL lz
+cdef extern from "fcl/geometry/shape/capsule.h" namespace "fcl":
+    cdef cppclass Capsule[S](ShapeBase[S]):
+        Capsule(S radius_, S lz_) except +
+        S radius
+        S lz
 
 #     cdef cppclass Cone(ShapeBase):
 #         Cone(FCL_REAL radius_, FCL_REAL lz_) except +
