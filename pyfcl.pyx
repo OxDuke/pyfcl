@@ -515,37 +515,46 @@ cdef class Capsule(ShapeBase):
     def lz(self, value):
         (<defs.Capsule[Scalar]*> self.thisptr).lz = <Scalar?> value
 
-# cdef class Cone(ShapeBase):
-#     def __cinit__(self, radius, lz):
-#         self.thisptr = new defs.Cone(radius, lz)
+cdef class Cone(ShapeBase):
+    def __cinit__(self, radius, lz):
+        self.thisptr = new defs.Cone[Scalar](<Scalar?> radius, <Scalar?> lz)
 
-#     property radius:
-#         def __get__(self):
-#             return (<defs.Cone*> self.thisptr).radius
-#         def __set__(self, value):
-#             (<defs.Cone*> self.thisptr).radius = <double?> value
+    @property
+    def radius(self):
+        return (<defs.Cone[Scalar]*> self.thisptr).radius
 
-#     property lz:
-#         def __get__(self):
-#             return (<defs.Cone*> self.thisptr).lz
-#         def __set__(self, value):
-#             (<defs.Cone*> self.thisptr).lz = <double?> value
+    @radius.setter
+    def radius(self, value):
+        (<defs.Cone[Scalar]*> self.thisptr).radius = <Scalar?> value
+    
+    @property
+    def lz(self):
+        return (<defs.Cone[Scalar]*> self.thisptr).lz
 
-# cdef class Cylinder(ShapeBase):
-#     def __cinit__(self, radius, lz):
-#         self.thisptr = new defs.Cylinder(radius, lz)
+    @lz.setter
+    def lz(self, value):
+        (<defs.Cone[Scalar]*> self.thisptr).lz = <Scalar?> value
 
-#     property radius:
-#         def __get__(self):
-#             return (<defs.Cylinder*> self.thisptr).radius
-#         def __set__(self, value):
-#             (<defs.Cylinder*> self.thisptr).radius = <double?> value
 
-#     property lz:
-#         def __get__(self):
-#             return (<defs.Cylinder*> self.thisptr).lz
-#         def __set__(self, value):
-#             (<defs.Cylinder*> self.thisptr).lz = <double?> value
+cdef class Cylinder(ShapeBase):
+    def __cinit__(self, radius, lz):
+        self.thisptr = new defs.Cylinder[Scalar](<Scalar?> radius, <Scalar?> lz)
+
+    @property
+    def radius(self):
+        return (<defs.Cylinder[Scalar]*> self.thisptr).radius
+
+    @radius.setter
+    def radius(self, value):
+        (<defs.Cylinder[Scalar]*> self.thisptr).radius = <Scalar?> value
+    
+    @property
+    def lz(self):
+        return (<defs.Cylinder[Scalar]*> self.thisptr).lz
+
+    @lz.setter
+    def lz(self, value):
+        (<defs.Cylinder[Scalar]*> self.thisptr).lz = <Scalar?> value
 
 cdef quaternion_to_numpy(defs.Quaternion[Scalar] q):
     return numpy.array([q.w(), q.x(), q.y(), q.z()])

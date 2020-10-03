@@ -335,15 +335,17 @@ cdef extern from "fcl/geometry/shape/capsule.h" namespace "fcl":
         S radius
         S lz
 
-#     cdef cppclass Cone(ShapeBase):
-#         Cone(FCL_REAL radius_, FCL_REAL lz_) except +
-#         FCL_REAL radius
-#         FCL_REAL lz
+cdef extern from "fcl/geometry/shape/cone.h" namespace "fcl":
+    cdef cppclass Cone[S](ShapeBase[S]):
+        Cone(S radius_, S lz_) except +
+        S radius
+        S lz
 
-#     cdef cppclass Cylinder(ShapeBase):
-#         Cylinder(FCL_REAL radius_, FCL_REAL lz_) except +
-#         FCL_REAL radius
-#         FCL_REAL lz
+cdef extern from "fcl/geometry/shape/cylinder.h" namespace "fcl":
+    cdef cppclass Cylinder[S](ShapeBase[S]):
+        Cylinder(S radius_, S lz_) except +
+        S radius
+        S lz
 
 #     cdef cppclass Convex(ShapeBase):
 #         Convex(Vec3f* plane_nomals_,
