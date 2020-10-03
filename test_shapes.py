@@ -5,6 +5,9 @@ import unittest
 
 import pyfcl as fcl
 
+def nonzero_rand(*args):
+    return np.random.rand(*args) + 0.05
+
 def test_shape_self_collide(shape1, shape2, tf1, tf2, is_in_collision):
     co1 = fcl.CollisionObject(shape1, tf1)
     co2 = fcl.CollisionObject(shape2, tf2)
@@ -29,6 +32,10 @@ class TestTriangleP(unittest.TestCase):
         np.testing.assert_allclose(tri.a, random_vertices[0], rtol=0, atol=0)
         np.testing.assert_allclose(tri.b, random_vertices[1], rtol=0, atol=0)
         np.testing.assert_allclose(tri.c, random_vertices[2], rtol=0, atol=0)
+
+    def test_self_collide(self):
+        pass
+        #raise NotImplementedError
 
 class TestBox(unittest.TestCase):
     def test_properties(self):
@@ -163,7 +170,59 @@ class TestEllipsoid(unittest.TestCase):
             fcl.Transform(rotate_around_x_90_degrees, np.array([0, 5.001, 0])),
             False)
 
+class TestCapsule(unittest.TestCase):
+    def test_properties(self):
+        random_radius= nonzero_rand()
+        random_lz = random_radius * 2 + nonzero_rand()
+        c = fcl.Capsule(random_radius, random_lz)
+        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0)
+        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0)
 
+        random_radius= nonzero_rand()
+        random_lz = random_radius * 2 + nonzero_rand()
+        c.radius = random_radius
+        c.lz = random_lz
+        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0)
+        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0)
+
+    def test_self_collide(self):
+        c1, c2 = fcl.Capsule(0.5, 2), fcl.Capsule(1, 4)
+        
+        test_shape_self_collide(c1, c2,
+            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([0,0,0,1]), np.array([1.499,0,0])),
+            True)
+        test_shape_self_collide(c1, c2,
+            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([0,0,0,1]), np.array([1.501,0,0])),
+            False)
+
+        test_shape_self_collide(c1, c2,
+            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([0,0,0,1]), np.array([0, 0, 2.999])),
+            True)
+        test_shape_self_collide(c1, c2,
+            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([0,0,0,1]), np.array([0, 0, 3.001])),
+            False)
+
+        rotate_around_x_90_degrees = np.array([0.70710678, 0.70710678, 0., 0.])
+        test_shape_self_collide(c1, c2,
+            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(rotate_around_x_90_degrees, np.array([2.499,0,0])),
+            True)
+        test_shape_self_collide(c1, c2,
+            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(rotate_around_x_90_degrees, np.array([2.501, 0, 0])),
+            False)
+
+
+
+
+
+    def test_self_collide(self):
+        pass
+        
         
 
 if __name__ == '__main__':
