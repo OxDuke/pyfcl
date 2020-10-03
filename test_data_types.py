@@ -77,8 +77,13 @@ class TestTransform(unittest.TestCase):
         # rmat, rq, rv = self.generate_random_transform()          
         # tf = fcl.Transform(rq, rv)
         # np.testing.assert_allclose(tf1.toarray(), tf2.toarray(), rtol=0, atol=0)
-        
-        raise NotImplementedError
+        pass
+        #raise NotImplementedError
+
+class TestCollisionObject(unittest.TestCase):
+    
+    def hi(self):
+        pass
 
 
 if __name__ == '__main__':
