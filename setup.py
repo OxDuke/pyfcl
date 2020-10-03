@@ -2,10 +2,10 @@
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 
-from pyfcl.version import __version__
+from version import __version__
 
 ext_modules=[
-    Extension("pyfcl", ["pyfcl/pyfcl.pyx"], 
+    Extension("pyfcl", ["pyfcl.pyx"], 
     #@TODO: better include for include/eigen_wrapper.h
     include_dirs = ['/usr/local/include', '/usr/include/eigen3', 'include/'],
     library_dirs = ['/usr/lib', '/usr/local/lib','/usr/local/lib:/opt/ros/lunar/lib'],

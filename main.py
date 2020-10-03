@@ -20,8 +20,6 @@ print(type(pyfcl.hello_fcl()))
 
 q = pyfcl.Quaternion(1,2,3,4)
 print(q.w,q.x,q.y,q.z)
-#q.w = 5
-#print(q.w)
 
 m = pyfcl.Matrix3()
 print(m[0], m[1])

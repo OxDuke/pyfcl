@@ -20,12 +20,6 @@ ctypedef double Scalar
 
 cimport eigen_wrappers as ew
 
-
-
-def hello_fcl():
-    print("Hello FCL!")
-    return <Scalar?>1.0
-
 cdef class Vector3:
     cdef defs.Vector3[Scalar] c_vector3
     
@@ -478,7 +472,7 @@ cdef class Box(ShapeBase):
         (<defs.Box[Scalar]*> self.thisptr).side[2] = <Scalar?> value[2]
 
 cdef class Sphere(ShapeBase):
-    def __cinit__(self, Scalar radius):
+    def __cinit__(self, radius):
         self.thisptr = new defs.Sphere[Scalar](<Scalar?> radius)
 
     @property
@@ -489,6 +483,17 @@ cdef class Sphere(ShapeBase):
     def radius(self, Scalar value):
         (<defs.Sphere[Scalar]*> self.thisptr).radius = value
 
+cdef class Ellipsoid(ShapeBase):
+    def __cinit__(self, a, b, c):
+        self.thisptr = new defs.Ellipsoid[Scalar](<Scalar?> a, <Scalar?> b, <Scalar?> c)
+
+    @property
+    def radii(self):
+        return vector3_to_numpy((<defs.Ellipsoid[Scalar]*> self.thisptr).radii)
+    
+    @radii.setter
+    def radii(self, values):
+        (<defs.Ellipsoid[Scalar]*> self.thisptr).radii = numpy_to_vector3(values)
 
 cdef quaternion_to_numpy(defs.Quaternion[Scalar] q):
     return numpy.array([q.w(), q.x(), q.y(), q.z()])
