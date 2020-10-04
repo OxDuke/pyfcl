@@ -430,39 +430,50 @@ cdef extern from "fcl/narrowphase/collision.h" namespace "fcl":
 #                       CollisionGeometry* o2, Transform3f& tf2,
 #                       DistanceRequest& request, DistanceResult& result)
 
-# cdef extern from "fcl/BVH/BVH_internal.h" namespace "fcl":
-#     cdef enum BVHModelType:
-#         BVH_MODEL_UNKNOWN,   # unknown model type
-#         BVH_MODEL_TRIANGLES, # triangle model
-#         BVH_MODEL_POINTCLOUD # point cloud model
+cdef extern from "fcl/geometry/bvh/BVH_internal.h" namespace "fcl":
+    cdef enum BVHModelType:
+        BVH_MODEL_UNKNOWN,    # unknown model type
+        BVH_MODEL_TRIANGLES,  # triangle model
+        BVH_MODEL_POINTCLOUD  # point cloud model
 
-# cdef extern from "fcl/BVH/BVH_internal.h" namespace "fcl":
-#     cdef enum  BVHReturnCode:
-#         BVH_OK = 0,                              # BVH is valid
-#         BVH_ERR_MODEL_OUT_OF_MEMORY = -1,        # Cannot allocate memory for vertices and triangles
-#         BVH_ERR_BUILD_OUT_OF_SEQUENCE = -2,      # BVH construction does not follow correct sequence
-#         BVH_ERR_BUILD_EMPTY_MODEL = -3,          # BVH geometry is not prepared
-#         BVH_ERR_BUILD_EMPTY_PREVIOUS_FRAME = -4, # BVH geometry in previous frame is not prepared
-#         BVH_ERR_UNSUPPORTED_FUNCTION = -5,       # BVH funtion is not supported
-#         BVH_ERR_UNUPDATED_MODEL = -6,            # BVH model update failed
-#         BVH_ERR_INCORRECT_DATA = -7,             # BVH data is not valid
-#         BVH_ERR_UNKNOWN = -8                     # Unknown failure
+    cdef enum  BVHReturnCode:
+        BVH_OK = 0,                              # BVH is valid
+        BVH_ERR_MODEL_OUT_OF_MEMORY = -1,        # Cannot allocate memory for vertices and triangles
+        BVH_ERR_BUILD_OUT_OF_SEQUENCE = -2,      # BVH construction does not follow correct sequence
+        BVH_ERR_BUILD_EMPTY_MODEL = -3,          # BVH geometry is not prepared
+        BVH_ERR_BUILD_EMPTY_PREVIOUS_FRAME = -4, # BVH geometry in previous frame is not prepared
+        BVH_ERR_UNSUPPORTED_FUNCTION = -5,       # BVH funtion is not supported
+        BVH_ERR_UNUPDATED_MODEL = -6,            # BVH model update failed
+        BVH_ERR_INCORRECT_DATA = -7,             # BVH data is not valid
+        BVH_ERR_UNKNOWN = -8                     # Unknown failure
 
+    cdef enum BVHBuildState:
+        BVH_BUILD_STATE_EMPTY,         # empty state, immediately after constructor
+        BVH_BUILD_STATE_BEGUN,         # after beginModel(), state for adding geometry primitives
+        BVH_BUILD_STATE_PROCESSED,     # after tree has been build, ready for cd use
+        BVH_BUILD_STATE_UPDATE_BEGUN,  # after beginUpdateModel(), state for updating geometry primitives
+        BVH_BUILD_STATE_UPDATED,       # after tree has been build for updated geometry, ready for ccd use
+        BVH_BUILD_STATE_REPLACE_BEGUN, # after beginReplaceModel(), state for replacing geometry primitives
 
-# cdef extern from "fcl/BVH/BVH_internal.h" namespace "fcl":
-#     cdef enum BVHBuildState:
-#         BVH_BUILD_STATE_EMPTY,         # empty state, immediately after constructor
-#         BVH_BUILD_STATE_BEGUN,         # after beginModel(), state for adding geometry primitives
-#         BVH_BUILD_STATE_PROCESSED,     # after tree has been build, ready for cd use
-#         BVH_BUILD_STATE_UPDATE_BEGUN,  # after beginUpdateModel(), state for updating geometry primitives
-#         BVH_BUILD_STATE_UPDATED,       # after tree has been build for updated geometry, ready for ccd use
-#         BVH_BUILD_STATE_REPLACE_BEGUN, # after beginReplaceModel(), state for replacing geometry primitives
+cdef extern from "fcl/math/triangle.h" namespace "fcl":
+    cdef cppclass Triangle:
+        Triangle() except +
+        Triangle(size_t p1, size_t p2, size_t p3) except +
+        size_t vids[3]
 
 # cdef extern from "fcl/data_types.h" namespace "fcl":
 #     cdef cppclass Triangle:
 #         Triangle() except +
 #         Triangle(size_t p1, size_t p2, size_t p3) except +
 #         size_t vids[3]
+
+cdef extern from "fcl/geometry/bvh/detail/BV_splitter_base.h" namespace "fcl::detail":
+    cdef cppclass BVSplitterBase:
+        pass
+
+cdef extern from "fcl/geometry/bvh/detail/BV_fitter_base.h" namespace "fcl::detail":
+    cdef cppclass BVFitterBase:
+        pass
 
 # cdef extern from "fcl/BVH/BV_splitter.h" namespace "fcl":
 #     cdef cppclass BVSplitterBase:
@@ -471,6 +482,58 @@ cdef extern from "fcl/narrowphase/collision.h" namespace "fcl":
 # cdef extern from "fcl/BVH/BV_fitter.h" namespace "fcl":
 #     cdef cppclass BVFitterBase:
 #         pass
+
+# cdef extern from "fcl/geometry/bvh/BVH_model.h" namespace "fcl":
+#     # Cython only accepts type template parameters.
+#     # see https://groups.google.com/forum/#!topic/cython-users/xAZxdCFw6Xs
+#     cdef cppclass BVHModel "fcl::BVHModel<fcl::OBBRSS>" ( CollisionGeometry ):
+#         # Constructing an empty BVH
+#         BVHModel() except +
+#         BVHModel(BVHModel& other) except +
+#         #
+#         #Geometry point data
+#         Vec3f* vertices
+#         #
+#         #Geometry triangle index data, will be NULL for point clouds
+#         Triangle* tri_indices
+#         #
+#         #Geometry point data in previous frame
+#         Vec3f* prev_vertices
+#         #
+#         #Number of triangles
+#         int num_tris
+#         #
+#         #Number of points
+#         int num_vertices
+#         #
+#         #The state of BVH building process
+#         BVHBuildState build_state
+#         #
+#         # # #Split rule to split one BV node into two children
+#         #
+#         # boost::shared_ptr<BVSplitterBase<BV> > bv_splitter
+#         shared_ptr[BVSplitterBase] bv_splitter
+#         # boost::shared_ptr<BVFitterBase<BV> > bv_fitter
+#         shared_ptr[BVFitterBase] bv_fitter
+
+#         int beginModel(int num_tris_, int num_vertices_)
+
+#         int addVertex(const Vec3f& p)
+
+#         int addTriangle(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3)
+
+#         #int addSubModel(const std::vector<Vec3f>& ps)
+#         # void getCostSources(vector[CostSource]& cost_sources_)
+
+#         #int addSubModel(const vector[Vec3f]& ps)
+#         #
+#         int addSubModel(const vector[Vec3f]& ps, const vector[Triangle]& ts)
+
+#         int endModel()
+
+#         int buildTree()
+
+#         # void computeLocalAABB()
 
 # cdef extern from "fcl/BVH/BVH_model.h" namespace "fcl":
 #     # Cython only accepts type template parameters.
