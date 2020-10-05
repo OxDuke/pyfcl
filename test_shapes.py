@@ -269,7 +269,6 @@ class TestCone(unittest.TestCase):
             fcl.Transform(rotate_around_x_180_degrees, np.array([0,1.001,1])),
             False)
 
-
 class TestCylinder(unittest.TestCase):
     def test_properties(self):
         random_radius, random_lz= nonzero_rand(), nonzero_rand()
@@ -317,6 +316,16 @@ class TestCylinder(unittest.TestCase):
             fcl.Transform(np.array([0,0,0,1]), np.array([0,3.501,0])),
             False) 
 
+class TestBVHModel(unittest.TestCase):
+    def test_properties(self):
+        
+        pass
+
+    def test_self_collide(self):
+        pass
+
+    #@TODO: Add tests here, we need a more complex mesh.
+        
 
 if __name__ == '__main__':
     unittest.main()
