@@ -215,6 +215,26 @@ cdef extern from "fcl/narrowphase/collision_request.h" namespace "fcl":
 #                              GJKSolverType gjk_solver_type_,
 #                              CCDSolverType ccd_solver_type_ )
 
+cdef extern from "fcl/narrowphase/distance_result.h" namespace "fcl":
+    cdef cppclass DistanceResult[S]:
+        S min_distance
+        # @TODO: nearest_points
+        Vec3f* nearest_points
+        CollisionGeometry[S]* o1
+        CollisionGeometry[S]* o2
+        int b1
+        int b2
+        DistanceResult(S min_distance_) except +
+        DistanceResult() except +
+
+cdef extern from "fcl/narrowphase/distance_request.h" namespace "fcl":
+    cdef cppclass DistanceRequest[S]:
+        bool enable_nearest_points[S]
+        GJKSolverType gjk_solver_type
+        # @TODO: There are more parameters
+        DistanceRequest(bool enable_nearest_points_, GJKSolverType gjk_solver_type_) except +
+
+
 #     cdef cppclass DistanceResult:
 #         FCL_REAL min_distance
 #         Vec3f* nearest_points
