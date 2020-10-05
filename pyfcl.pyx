@@ -16,7 +16,7 @@ cimport fcl_defs as defs
 from collision_data import Contact, CostSource, CollisionRequest, CollisionResult
 # from collision_data import Contact, CostSource, CollisionRequest, ContinuousCollisionRequest, CollisionResult, ContinuousCollisionResult, DistanceRequest, DistanceResult
 
-ctypedef double Scalar
+from fcl_defs cimport Scalar
 
 cimport eigen_wrappers as ew
 
@@ -555,6 +555,129 @@ cdef class Cylinder(ShapeBase):
     @lz.setter
     def lz(self, value):
         (<defs.Cylinder[Scalar]*> self.thisptr).lz = <Scalar?> value
+
+# cdef class Cylinder(CollisionGeometry):
+#     def __cinit__(self, radius, lz):
+#         self.thisptr = new defs.Cylinder(radius, lz)
+
+#     property radius:
+#         def __get__(self):
+#             return (<defs.Cylinder*> self.thisptr).radius
+#         def __set__(self, value):
+#             (<defs.Cylinder*> self.thisptr).radius = <double?> value
+
+#     property lz:
+#         def __get__(self):
+#             return (<defs.Cylinder*> self.thisptr).lz
+#         def __set__(self, value):
+#             (<defs.Cylinder*> self.thisptr).lz = <double?> value
+
+# cdef class Halfspace(CollisionGeometry):
+#     def __cinit__(self, n, d):
+#         self.thisptr = new defs.Halfspace(defs.Vec3f(<double?> n[0],
+#                                                      <double?> n[1],
+#                                                      <double?> n[2]),
+#                                           <double?> d)
+
+#     property n:
+#         def __get__(self):
+#             return vec3f_to_numpy((<defs.Halfspace*> self.thisptr).n)
+#         def __set__(self, value):
+#             (<defs.Halfspace*> self.thisptr).n[0] = <double?> value[0]
+#             (<defs.Halfspace*> self.thisptr).n[1] = <double?> value[1]
+#             (<defs.Halfspace*> self.thisptr).n[2] = <double?> value[2]
+
+#     property d:
+#         def __get__(self):
+#             return (<defs.Halfspace*> self.thisptr).d
+#         def __set__(self, value):
+#             (<defs.Halfspace*> self.thisptr).d = <double?> value
+
+# cdef class Plane(CollisionGeometry):
+#     def __cinit__(self, n, d):
+#         self.thisptr = new defs.Plane(defs.Vec3f(<double?> n[0],
+#                                                  <double?> n[1],
+#                                                  <double?> n[2]),
+#                                       <double?> d)
+
+#     property n:
+#         def __get__(self):
+#             return vec3f_to_numpy((<defs.Plane*> self.thisptr).n)
+#         def __set__(self, value):
+#             (<defs.Plane*> self.thisptr).n[0] = <double?> value[0]
+#             (<defs.Plane*> self.thisptr).n[1] = <double?> value[1]
+#             (<defs.Plane*> self.thisptr).n[2] = <double?> value[2]
+
+#     property d:
+#         def __get__(self):
+#             return (<defs.Plane*> self.thisptr).d
+#         def __set__(self, value):
+#             (<defs.Plane*> self.thisptr).d = <double?> value
+
+cdef class BVHModel(CollisionGeometry):
+    def __cinit__(self):
+        # @TODO: the pointer conversion is a hack,
+        # I have no idea why you cannot directly assign it
+        self.thisptr = <defs.CollisionGeometry[Scalar]*?> new defs.BVHModel[defs.OBBRSS[Scalar]]()
+
+    def num_tries_(self):
+        return (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).num_tris
+
+    def buildState(self):
+        return (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).build_state
+    
+    # @TODO: remove trailing underscore: num_tris_
+    def beginModel(self, num_tris_=0, num_vertices_=0):
+        n = (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).beginModel(<int?> num_tris_, <int?> num_vertices_)
+        return n
+
+    def endModel(self):
+        n = (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).endModel()
+        return n
+
+#     def addVertex(self, x, y, z):
+#         n = (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).addVertex(defs.Vec3f(<double?> x, <double?> y, <double?> z))
+#         return self._check_ret_value(n)
+
+#     def addTriangle(self, v1, v2, v3):
+#         n = (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).addTriangle(numpy_to_vec3f(v1),
+#                                                         numpy_to_vec3f(v2),
+#                                                         numpy_to_vec3f(v3))
+#         return self._check_ret_value(n)
+
+    def addSubModel(self, verts, triangles):
+        cdef vector[defs.Vector3[Scalar]] ps
+        cdef vector[defs.Triangle] tris
+        for vert in verts:
+            ps.push_back(defs.Vector3[Scalar](<Scalar?> vert[0], <Scalar?> vert[1], <Scalar?> vert[2]))
+        for tri in triangles:
+            tris.push_back(defs.Triangle(<size_t?> tri[0], <size_t?> tri[1], <size_t?> tri[2]))
+        # @TODO: Type casting is a mess here
+        n = (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).addSubModel(<vector[defs.Vector3[defs.BV_S]]?>ps, tris)
+        return self._check_ret_value(n)
+
+    def _check_ret_value(self, n):
+        if n == defs.BVH_OK:
+            return True
+        elif n == defs.BVH_ERR_MODEL_OUT_OF_MEMORY:
+            raise MemoryError("Cannot allocate memory for vertices and triangles")
+        elif n == defs.BVH_ERR_BUILD_OUT_OF_SEQUENCE:
+            raise ValueError("BVH construction does not follow correct sequence")
+        elif n == defs.BVH_ERR_BUILD_EMPTY_MODEL:
+            raise ValueError("BVH geometry is not prepared")
+        elif n == defs.BVH_ERR_BUILD_EMPTY_PREVIOUS_FRAME:
+            raise ValueError("BVH geometry in previous frame is not prepared")
+        elif n == defs.BVH_ERR_UNSUPPORTED_FUNCTION:
+            raise ValueError("BVH funtion is not supported")
+        elif n == defs.BVH_ERR_UNUPDATED_MODEL:
+            raise ValueError("BVH model update failed")
+        elif n == defs.BVH_ERR_INCORRECT_DATA:
+            raise ValueError("BVH data is not valid")
+        elif n == defs.BVH_ERR_UNKNOWN:
+            raise ValueError("Unknown failure")
+        else:
+            return False
+
 
 cdef quaternion_to_numpy(defs.Quaternion[Scalar] q):
     return numpy.array([q.w(), q.x(), q.y(), q.z()])

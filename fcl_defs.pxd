@@ -9,6 +9,9 @@ from libcpp.vector cimport vector
 from libcpp.memory cimport shared_ptr
 # cimport octomap_defs as octomap
 
+ctypedef double Scalar
+cdef cppclass BV_S "double"
+
 # @TODO: This is for CollisionObject, I want to remove this
 cdef extern from "Python.h":
        ctypedef struct PyObject
@@ -468,11 +471,11 @@ cdef extern from "fcl/math/triangle.h" namespace "fcl":
 #         size_t vids[3]
 
 cdef extern from "fcl/geometry/bvh/detail/BV_splitter_base.h" namespace "fcl::detail":
-    cdef cppclass BVSplitterBase:
+    cdef cppclass BVSplitterBase[BV]:
         pass
 
 cdef extern from "fcl/geometry/bvh/detail/BV_fitter_base.h" namespace "fcl::detail":
-    cdef cppclass BVFitterBase:
+    cdef cppclass BVFitterBase[BV]:
         pass
 
 # cdef extern from "fcl/BVH/BV_splitter.h" namespace "fcl":
@@ -483,57 +486,64 @@ cdef extern from "fcl/geometry/bvh/detail/BV_fitter_base.h" namespace "fcl::deta
 #     cdef cppclass BVFitterBase:
 #         pass
 
-# cdef extern from "fcl/geometry/bvh/BVH_model.h" namespace "fcl":
-#     # Cython only accepts type template parameters.
-#     # see https://groups.google.com/forum/#!topic/cython-users/xAZxdCFw6Xs
-#     cdef cppclass BVHModel "fcl::BVHModel<fcl::OBBRSS>" ( CollisionGeometry ):
-#         # Constructing an empty BVH
-#         BVHModel() except +
-#         BVHModel(BVHModel& other) except +
-#         #
-#         #Geometry point data
-#         Vec3f* vertices
-#         #
-#         #Geometry triangle index data, will be NULL for point clouds
-#         Triangle* tri_indices
-#         #
-#         #Geometry point data in previous frame
-#         Vec3f* prev_vertices
-#         #
-#         #Number of triangles
-#         int num_tris
-#         #
-#         #Number of points
-#         int num_vertices
-#         #
-#         #The state of BVH building process
-#         BVHBuildState build_state
-#         #
-#         # # #Split rule to split one BV node into two children
-#         #
-#         # boost::shared_ptr<BVSplitterBase<BV> > bv_splitter
-#         shared_ptr[BVSplitterBase] bv_splitter
-#         # boost::shared_ptr<BVFitterBase<BV> > bv_fitter
-#         shared_ptr[BVFitterBase] bv_fitter
+# @TODO: Define some BVS, BVs are not complete
+cdef extern from "fcl/math/bv/OBBRSS.h" namespace "fcl":
+    cdef cppclass OBBRSS[S]:
+        pass
 
-#         int beginModel(int num_tris_, int num_vertices_)
+cdef extern from "fcl/geometry/bvh/BVH_model.h" namespace "fcl":
+    # Cython only accepts type template parameters.
+    # see https://groups.google.com/forum/#!topic/cython-users/xAZxdCFw6Xs
+    # @TODO: more links on stack-overflow coming
 
-#         int addVertex(const Vec3f& p)
+    cdef cppclass BVHModel[BV](CollisionGeometry[BV_S]):
+        # Constructing an empty BVH
+        BVHModel() except +
+        BVHModel(BVHModel& other) except +
+        #
+        #Geometry point data
+        Vector3[BV_S]* vertices
+        #
+        #Geometry triangle index data, will be NULL for point clouds
+        Triangle* tri_indices
+        #
+        #Geometry point data in previous frame
+        Vector3[BV_S]* prev_vertices
+        #
+        #Number of triangles
+        int num_tris
+        #
+        #Number of points
+        int num_vertices
+        #
+        #The state of BVH building process
+        BVHBuildState build_state
+        #
+        # # #Split rule to split one BV node into two children
+        #
+        # boost::shared_ptr<BVSplitterBase<BV> > bv_splitter
+        shared_ptr[BVSplitterBase[BV]] bv_splitter
+        # boost::shared_ptr<BVFitterBase<BV> > bv_fitter
+        shared_ptr[BVFitterBase[BV]] bv_fitter
 
-#         int addTriangle(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3)
+        int beginModel(int num_tris_, int num_vertices_)
 
-#         #int addSubModel(const std::vector<Vec3f>& ps)
-#         # void getCostSources(vector[CostSource]& cost_sources_)
+        int addVertex(const Vector3[BV_S]& p)
 
-#         #int addSubModel(const vector[Vec3f]& ps)
-#         #
-#         int addSubModel(const vector[Vec3f]& ps, const vector[Triangle]& ts)
+        int addTriangle(const Vector3[BV_S]& p1, const Vector3[BV_S]& p2, const Vector3[BV_S]& p3)
 
-#         int endModel()
+        #int addSubModel(const std::vector<Vector3[BV_S]>& ps)
+        # void getCostSources(vector[CostSource]& cost_sources_)
 
-#         int buildTree()
+        #int addSubModel(const vector[Vector3[BV_S]]& ps)
+        #
+        int addSubModel(const vector[Vector3[BV_S]]& ps, const vector[Triangle]& ts)
 
-#         # void computeLocalAABB()
+        int endModel()
+
+        int buildTree()
+
+        # void computeLocalAABB()
 
 # cdef extern from "fcl/BVH/BVH_model.h" namespace "fcl":
 #     # Cython only accepts type template parameters.

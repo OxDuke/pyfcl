@@ -1,8 +1,9 @@
 from __future__ import print_function, division
 
 import numpy as np
-
 import unittest
+
+import trimesh
 
 import pyfcl 
 
@@ -15,8 +16,6 @@ s = pyfcl.Sphere(3)
 print(s.radius)
 s.radius = 1
 print(s.radius)
-
-print(type(pyfcl.hello_fcl()))
 
 q = pyfcl.Quaternion(1,2,3,4)
 print(q.w,q.x,q.y,q.z)
@@ -103,3 +102,29 @@ def kk():
 # t = TriangleP(np.array([0,0,0]), np.array([1,0,0]), np.array([0,1,0]))
 # print(t.a, t.b, t.c)
 
+
+# Mesh
+mesh = trimesh.Trimesh(vertices=[[0, 0, 0], [0, 0, 1], [0, 1, 0]],
+                       faces=[[0, 1, 2]])
+
+mesh = trimesh.Trimesh(vertices=[[0, 0, 1],[0, 0, 0], [0, 1, 0], [1, 0, 0]],
+                       faces=[[2,1,0],[0,1,3],[0,3,2],[1,2,3]])
+
+verts = np.array(mesh.vertices)
+tris = np.array(mesh.faces)
+
+bvh = pyfcl.BVHModel()
+bvh.beginModel(len(tris), len(verts))
+bvh.addSubModel(verts, tris)
+bvh.endModel()
+
+print(bvh.num_tries_())
+print(bvh.buildState())
+
+mesh_co = pyfcl.CollisionObject(bvh, pyfcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])))
+sphere_co = pyfcl.CollisionObject(pyfcl.Box(1,1,1), pyfcl.Transform(np.array([1,0,0,0]), np.array([0,1.49,0])))
+req = pyfcl.CollisionRequest(num_max_contacts = 10, enable_contact=True)
+res = pyfcl.CollisionResult()
+
+ret = pyfcl.collide(mesh_co, sphere_co, req, res)
+print("in collision: ", res.is_collision)
