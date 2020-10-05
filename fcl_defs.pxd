@@ -277,8 +277,8 @@ cdef extern from "fcl/narrowphase/collision_object.h" namespace "fcl":
         bool isUncertain()
     
     # @TODO: What does the string inside the "" mean? Seems useless.
-    ctypedef CollisionGeometry const_CollisionGeometry "const fcl::CollisionGeometry"
-    ctypedef CollisionObject const_CollisionObject "const fcl::CollisionObject"
+    # ctypedef CollisionGeometry const_CollisionGeometry "const fcl::CollisionGeometry"
+    # ctypedef CollisionObject const_CollisionObject "const fcl::CollisionObject"
 
 
 #     cdef cppclass CollisionObject:
@@ -401,6 +401,12 @@ cdef extern from "fcl/geometry/shape/cylinder.h" namespace "fcl":
 
 cdef extern from "fcl/narrowphase/collision.h" namespace "fcl":
     size_t collide[S](CollisionObject[S]* o1, CollisionObject[S]* o2,
+                   CollisionRequest[S]& request,
+                   CollisionResult[S]& result)
+    
+    # @TODO: This function seems never used
+    size_t collide[S](CollisionGeometry[S]* o1, Transform3[S]& tf1,
+                   CollisionGeometry[S]* o2, Transform3[S]& tf2,
                    CollisionRequest[S]& request,
                    CollisionResult[S]& result)
 
