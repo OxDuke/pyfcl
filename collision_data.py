@@ -2,6 +2,7 @@ import sys
 
 import numpy as np
 
+# @TODO: Can we those definitions in the pyfcl.pyx? These defs are redundant.
 class OBJECT_TYPE:
     OT_UNKNOWN, OT_BVH, OT_GEOM, OT_OCTREE, OT_COUNT = range(5)
 
@@ -87,21 +88,21 @@ class CollisionResult:
 #         self.is_collide = is_collide
 #         self.time_of_contact = time_of_contact
 
-# class DistanceRequest:
-#     def __init__(self,
-#                  enable_nearest_points=False,
-#                  gjk_solver_type=GJKSolverType.GST_LIBCCD):
-#         self.enable_nearest_points = enable_nearest_points
-#         self.gjk_solver_type = gjk_solver_type
+class DistanceRequest:
+    def __init__(self,
+                 enable_nearest_points=False,
+                 gjk_solver_type=GJKSolverType.GST_LIBCCD):
+        self.enable_nearest_points = enable_nearest_points
+        self.gjk_solver_type = gjk_solver_type
 
-# class DistanceResult:
-#     def __init__(self, min_distance_=sys.float_info.max):
-#         self.min_distance = min_distance_
-#         self.nearest_points = [None, None]
-#         self.o1 = None
-#         self.o2 = None
-#         self.b1 = -1
-#         self.b2 = -1
+class DistanceResult:
+    def __init__(self, min_distance_=sys.float_info.max):
+        self.min_distance = min_distance_
+        self.nearest_points = [None, None]
+        self.o1 = None
+        self.o2 = None
+        self.b1 = -1
+        self.b2 = -1
 
 # class CollisionData:
 #     def __init__(self, request=None, result=None):
