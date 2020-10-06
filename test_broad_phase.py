@@ -1,0 +1,52 @@
+"""
+  @AUTHOR: Weidong Sun
+  @EMAIL: swdswd28@foxmail.com
+"""
+
+from __future__ import print_function, division
+
+import numpy as np
+import unittest
+
+import pyfcl as fcl
+
+class TestBroadPhaseCC(unittest.TestCase):
+
+    def construct_manager(self):
+
+        # co3 collides with co1
+        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])))
+        co2 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([0,0,0,1]), np.array([0,3,0])))
+        co3 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([0,0,0,1]), np.array([0,4,0])))
+        
+        manager = fcl.DynamicAABBTreeCollisionManager()
+        manager.registerObjects([co1, co2, co3])
+        manager.setup()
+
+        return manager
+
+    def test_self_collision(self):
+
+        manager = self.construct_manager()
+
+        cdata = fcl.CollisionData()
+        manager.collide(cdata, fcl.defaultCollisionCallback)
+        self.assertTrue(cdata.result.is_collision == True)
+
+    def test_one2many_collision(self):
+        manager = self.construct_manager()
+
+        sphere_object1 = fcl.CollisionObject(fcl.Sphere(0.51), fcl.Transform(np.array([0,0,0,1]), np.array([0,1.5,0])))
+        sphere_object2 = fcl.CollisionObject(fcl.Sphere(0.49), fcl.Transform(np.array([0,0,0,1]), np.array([0,1.5,0])))
+
+        cdata = fcl.CollisionData()
+        manager.collide(sphere_object1, cdata, fcl.defaultCollisionCallback)
+        self.assertTrue(cdata.result.is_collision == True)
+
+        cdata = fcl.CollisionData()
+        manager.collide(sphere_object2, cdata, fcl.defaultCollisionCallback)
+        self.assertTrue(cdata.result.is_collision == False)
+
+if __name__ == '__main__':
+    unittest.main()
+    
