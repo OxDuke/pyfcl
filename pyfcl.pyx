@@ -556,22 +556,6 @@ cdef class Cylinder(ShapeBase):
     def lz(self, value):
         (<defs.Cylinder[Scalar]*> self.thisptr).lz = <Scalar?> value
 
-# cdef class Cylinder(CollisionGeometry):
-#     def __cinit__(self, radius, lz):
-#         self.thisptr = new defs.Cylinder(radius, lz)
-
-#     property radius:
-#         def __get__(self):
-#             return (<defs.Cylinder*> self.thisptr).radius
-#         def __set__(self, value):
-#             (<defs.Cylinder*> self.thisptr).radius = <double?> value
-
-#     property lz:
-#         def __get__(self):
-#             return (<defs.Cylinder*> self.thisptr).lz
-#         def __set__(self, value):
-#             (<defs.Cylinder*> self.thisptr).lz = <double?> value
-
 # cdef class Halfspace(CollisionGeometry):
 #     def __cinit__(self, n, d):
 #         self.thisptr = new defs.Halfspace(defs.Vec3f(<double?> n[0],
@@ -657,6 +641,7 @@ cdef class BVHModel(CollisionGeometry):
         return self._check_ret_value(n)
 
     def _check_ret_value(self, n):
+        # @TODO: The correct way might be: defs.BVHReturnCode.BVH_OK
         if n == defs.BVH_OK:
             return True
         elif n == defs.BVH_ERR_MODEL_OUT_OF_MEMORY:
@@ -731,6 +716,128 @@ cdef c_to_python_costsource(defs.CostSource[Scalar] cost_source):
     c.total_cost = cost_source.total_cost
     return c
 
+
+# cdef class DynamicAABBTreeCollisionManager:
+#     cdef defs.DynamicAABBTreeCollisionManager[Scalar] *thisptr
+#     cdef list objs
+
+#     def __cinit__(self):
+#         self.thisptr = new defs.DynamicAABBTreeCollisionManager()
+#         self.objs = []
+
+#     def __dealloc__(self):
+#         if self.thisptr:
+#             del self.thisptr
+
+#     def registerObjects(self, other_objs):
+#         cdef vector[defs.CollisionObject*] pobjs
+#         for obj in other_objs:
+#             self.objs.append(obj)
+#             pobjs.push_back((<CollisionObject?> obj).thisptr)
+#         self.thisptr.registerObjects(pobjs)
+
+#     def registerObject(self, obj):
+#         self.objs.append(obj)
+#         self.thisptr.registerObject((<CollisionObject?> obj).thisptr)
+
+#     def unregisterObject(self, obj):
+#         if obj in self.objs:
+#             self.objs.remove(obj)
+#             self.thisptr.unregisterObject((<CollisionObject?> obj).thisptr)
+
+#     def setup(self):
+#         self.thisptr.setup()
+
+#     def update(self, arg=None):
+#         cdef vector[defs.CollisionObject*] objs
+#         if hasattr(arg, "__len__"):
+#             for a in arg:
+#                 objs.push_back((<CollisionObject?> a).thisptr)
+#             self.thisptr.update(objs)
+#         elif arg is None:
+#             self.thisptr.update()
+#         else:
+#             self.thisptr.update((<CollisionObject?> arg).thisptr)
+
+#     def getObjects(self):
+#         return list(self.objs)
+
+#     def collide(self, *args):
+#         if len(args) == 2 and inspect.isroutine(args[1]):
+#             fn = CollisionFunction(args[1], args[0])
+#             self.thisptr.collide(<void*> fn, CollisionCallBack)
+#         elif len(args) == 3 and isinstance(args[0], DynamicAABBTreeCollisionManager):
+#             fn = CollisionFunction(args[2], args[1])
+#             self.thisptr.collide((<DynamicAABBTreeCollisionManager?> args[0]).thisptr, <void*> fn, CollisionCallBack)
+#         elif len(args) == 3 and inspect.isroutine(args[2]):
+#             fn = CollisionFunction(args[2], args[1])
+#             self.thisptr.collide((<CollisionObject?> args[0]).thisptr, <void*> fn, CollisionCallBack)
+#         else:
+#             raise ValueError
+
+#     def distance(self, *args):
+#         if len(args) == 2 and inspect.isroutine(args[1]):
+#             fn = DistanceFunction(args[1], args[0])
+#             self.thisptr.distance(<void*> fn, DistanceCallBack)
+#         elif len(args) == 3 and isinstance(args[0], DynamicAABBTreeCollisionManager):
+#             fn = DistanceFunction(args[2], args[1])
+#             self.thisptr.distance((<DynamicAABBTreeCollisionManager?> args[0]).thisptr, <void*> fn, DistanceCallBack)
+#         elif len(args) == 3 and inspect.isroutine(args[2]):
+#             fn = DistanceFunction(args[2], args[1])
+#             self.thisptr.distance((<CollisionObject?> args[0]).thisptr, <void*> fn, DistanceCallBack)
+#         else:
+#             raise ValueError
+
+#     def clear(self):
+#         self.thisptr.clear()
+
+#     def empty(self):
+#         return self.thisptr.empty()
+
+#     def size(self):
+#         return self.thisptr.size()
+
+#     property max_tree_nonbalanced_level:
+#         def __get__(self):
+#             return self.thisptr.max_tree_nonbalanced_level
+#         def __set__(self, value):
+#             self.thisptr.max_tree_nonbalanced_level = <int?> value
+
+#     property tree_incremental_balance_pass:
+#         def __get__(self):
+#             return self.thisptr.tree_incremental_balance_pass
+#         def __set__(self, value):
+#             self.thisptr.tree_incremental_balance_pass = <int?> value
+
+#     property tree_topdown_balance_threshold:
+#         def __get__(self):
+#             return self.thisptr.tree_topdown_balance_threshold
+#         def __set__(self, value):
+#             self.thisptr.tree_topdown_balance_threshold = <int?> value
+
+#     property tree_topdown_level:
+#         def __get__(self):
+#             return self.thisptr.tree_topdown_level
+#         def __set__(self, value):
+#             self.thisptr.tree_topdown_level = <int?> value
+
+#     property tree_init_level:
+#         def __get__(self):
+#             return self.thisptr.tree_init_level
+#         def __set__(self, value):
+#             self.thisptr.tree_init_level = <int?> value
+
+#     property octree_as_geometry_collide:
+#         def __get__(self):
+#             return self.thisptr.octree_as_geometry_collide
+#         def __set__(self, value):
+#             self.thisptr.octree_as_geometry_collide = <bool?> value
+
+#     property octree_as_geometry_distance:
+#         def __get__(self):
+#             return self.thisptr.octree_as_geometry_distance
+#         def __set__(self, value):
+#             self.thisptr.octree_as_geometry_distance = <bool?> value
 
 
 def collide(CollisionObject o1, CollisionObject o2,

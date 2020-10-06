@@ -11,6 +11,14 @@ from libcpp.memory cimport shared_ptr
 
 ctypedef double Scalar
 cdef cppclass BV_S "double"
+# @TODO: This is a hack
+# Because if you do vector[CollisionObject[S]*], cython will raise error:
+# The error message is: Expected an identifier or literal
+cdef cppclass CollisionObjectPointer "fcl::CollisionObject<double>*"
+
+cdef cppclass CollisionCallBack "bool (*)(fcl::CollisionObject<double>* o1, fcl::CollisionObject<double>* o2, void* cdata)"
+cdef cppclass DistanceCallBack "bool (*)(fcl::CollisionObject<double>* o1, fcl::CollisionObject<double>* o2, void* cdata, double& dist)"
+
 
 # @TODO: This is for CollisionObject, I want to remove this
 cdef extern from "Python.h":
@@ -389,57 +397,49 @@ cdef extern from "fcl/geometry/shape/cylinder.h" namespace "fcl":
 #         Vec3f n
 #         FCL_REAL d
 
-# cdef extern from "fcl/broadphase/broadphase.h" namespace "fcl":
-#     ctypedef bool (*CollisionCallBack)(CollisionObject* o1, CollisionObject* o2, void* cdata)
-#     ctypedef bool (*DistanceCallBack)(CollisionObject* o1, CollisionObject* o2, void* cdata, FCL_REAL& dist)
+# @TODO: The 3 lines of code below are useless, I have declared them at the start of this file.
+# cdef extern from "fcl/broadphase/broadphase_collision_manager.h" namespace "fcl":
+#     ctypedef bool (*CollisionCallBack[S])(CollisionObject[S]* o1, CollisionObject[S]* o2, void* cdata)
+#     ctypedef bool (*DistanceCallBack[S])(CollisionObject[S]* o1, CollisionObject[S]* o2, void* cdata, S& dist)
 
-# cdef extern from "fcl/broadphase/broadphase_dynamic_AABB_tree.h" namespace "fcl":
-#     cdef cppclass DynamicAABBTreeCollisionManager:
-#         DynamicAABBTreeCollisionManager() except +
-#         void registerObjects(vector[CollisionObject*]& other_objs)
-#         void registerObject(CollisionObject* obj)
-#         void unregisterObject(CollisionObject* obj)
-#         void collide(DynamicAABBTreeCollisionManager* mgr, void* cdata, CollisionCallBack callback)
-#         void distance(DynamicAABBTreeCollisionManager* mgr, void* cdata, DistanceCallBack callback)
-#         void collide(CollisionObject* obj, void* cdata, CollisionCallBack callback)
-#         void distance(CollisionObject* obj, void* cdata, DistanceCallBack callback)
-#         void collide(void* cdata, CollisionCallBack callback)
-#         void distance(void* cdata, DistanceCallBack callback)
-#         void setup()
-#         void update()
-#         void update(CollisionObject* updated_obj)
-#         void update(vector[CollisionObject*] updated_objs)
-#         void clear()
-#         bool empty()
-#         size_t size()
-#         int max_tree_nonbalanced_level
-#         int tree_incremental_balance_pass
-#         int& tree_topdown_balance_threshold
-#         int& tree_topdown_level
-#         int tree_init_level
-#         bool octree_as_geometry_collide
-#         bool octree_as_geometry_distance
+cdef extern from "fcl/broadphase/broadphase_dynamic_AABB_tree.h" namespace "fcl":
+    
+    cdef cppclass DynamicAABBTreeCollisionManager[S]:
+        DynamicAABBTreeCollisionManager() except +
+        void registerObjects(vector[CollisionObjectPointer]& other_objs)
+        void registerObject(CollisionObject[S]* obj)
+        void unregisterObject(CollisionObject[S]* obj)
+        void collide(DynamicAABBTreeCollisionManager[S]* mgr, void* cdata, CollisionCallBack callback)
+        void distance(DynamicAABBTreeCollisionManager[S]* mgr, void* cdata, DistanceCallBack callback)
+        void collide(CollisionObject[S]* obj, void* cdata, CollisionCallBack callback)
+        void distance(CollisionObject[S]* obj, void* cdata, DistanceCallBack callback)
+        void collide(void* cdata, CollisionCallBack callback)
+        void distance(void* cdata, DistanceCallBack callback)
+        void setup()
+        void update()
+        void update(CollisionObject[S]* updated_obj)
+        void update(vector[CollisionObjectPointer] updated_objs)
+        void clear()
+        bool empty()
+        size_t size()
+        int max_tree_nonbalanced_level
+        int tree_incremental_balance_pass
+        int& tree_topdown_balance_threshold
+        int& tree_topdown_level
+        int tree_init_level
+        bool octree_as_geometry_collide
+        bool octree_as_geometry_distance
 
 cdef extern from "fcl/narrowphase/collision.h" namespace "fcl":
     size_t collide[S](CollisionObject[S]* o1, CollisionObject[S]* o2,
                    CollisionRequest[S]& request,
                    CollisionResult[S]& result)
     
-    # @TODO: This function seems never used
+    # # @TODO: This function seems never used
     # size_t collide[S](CollisionGeometry[S]* o1, Transform3[S]& tf1,
     #                CollisionGeometry[S]* o2, Transform3[S]& tf2,
     #                CollisionRequest[S]& request,
     #                CollisionResult[S]& result)
-
-# cdef extern from "fcl/collision.h" namespace "fcl":
-#     size_t collide(CollisionObject* o1, CollisionObject* o2,
-#                    CollisionRequest& request,
-#                    CollisionResult& result)
-
-#     size_t collide(CollisionGeometry* o1, Transform3f& tf1,
-#                    CollisionGeometry* o2, Transform3f& tf2,
-#                    CollisionRequest& request,
-#                    CollisionResult& result)
 
 # cdef extern from "fcl/continuous_collision.h" namespace "fcl":
 #     FCL_REAL continuousCollide(CollisionGeometry* o1, Transform3f& tf1_beg, Transform3f& tf1_end,
@@ -461,12 +461,6 @@ cdef extern from "fcl/narrowphase/distance.h" namespace "fcl":
     #             CollisionGeometry[S]* o2, Transform3[S]& tf2,
     #             DistanceRequest[S]& request, DistanceResult[S]& result)
 
-# cdef extern from "fcl/distance.h" namespace "fcl":
-#     FCL_REAL distance(CollisionObject* o1, CollisionObject* o2,
-#                       DistanceRequest& request, DistanceResult& result)
-#     FCL_REAL distance(CollisionGeometry* o1, Transform3f& tf1,
-#                       CollisionGeometry* o2, Transform3f& tf2,
-#                       DistanceRequest& request, DistanceResult& result)
 
 cdef extern from "fcl/geometry/bvh/BVH_internal.h" namespace "fcl":
     cdef enum BVHModelType:
@@ -512,14 +506,6 @@ cdef extern from "fcl/geometry/bvh/detail/BV_splitter_base.h" namespace "fcl::de
 cdef extern from "fcl/geometry/bvh/detail/BV_fitter_base.h" namespace "fcl::detail":
     cdef cppclass BVFitterBase[BV]:
         pass
-
-# cdef extern from "fcl/BVH/BV_splitter.h" namespace "fcl":
-#     cdef cppclass BVSplitterBase:
-#         pass
-
-# cdef extern from "fcl/BVH/BV_fitter.h" namespace "fcl":
-#     cdef cppclass BVFitterBase:
-#         pass
 
 # @TODO: Define some BVS, BVs are not complete
 cdef extern from "fcl/math/bv/OBBRSS.h" namespace "fcl":
