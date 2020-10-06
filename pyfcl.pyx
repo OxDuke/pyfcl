@@ -3,7 +3,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 from libc.stdlib cimport free
 # from libc.string cimport memcpy
-# import inspect
+import inspect
 
 from cython.operator cimport dereference as deref#, preincrement as inc, address
 # cimport numpy as np
@@ -716,64 +716,70 @@ cdef c_to_python_costsource(defs.CostSource[Scalar] cost_source):
     c.total_cost = cost_source.total_cost
     return c
 
+cdef copy_ptr_collision_object(defs.CollisionObject[Scalar]* cobj):
+    geom = <CollisionGeometry> cobj.getUserData()
+    co = CollisionObject(geom, _no_instance=True)
+    (<CollisionObject> co).thisptr = cobj
+    return co
 
-# cdef class DynamicAABBTreeCollisionManager:
-#     cdef defs.DynamicAABBTreeCollisionManager[Scalar] *thisptr
-#     cdef list objs
 
-#     def __cinit__(self):
-#         self.thisptr = new defs.DynamicAABBTreeCollisionManager()
-#         self.objs = []
+cdef class DynamicAABBTreeCollisionManager:
+    cdef defs.DynamicAABBTreeCollisionManager[Scalar] *thisptr
+    cdef list objs
 
-#     def __dealloc__(self):
-#         if self.thisptr:
-#             del self.thisptr
+    def __cinit__(self):
+        self.thisptr = new defs.DynamicAABBTreeCollisionManager[Scalar]()
+        self.objs = []
 
-#     def registerObjects(self, other_objs):
-#         cdef vector[defs.CollisionObject*] pobjs
-#         for obj in other_objs:
-#             self.objs.append(obj)
-#             pobjs.push_back((<CollisionObject?> obj).thisptr)
-#         self.thisptr.registerObjects(pobjs)
+    def __dealloc__(self):
+        if self.thisptr:
+            del self.thisptr
 
-#     def registerObject(self, obj):
-#         self.objs.append(obj)
-#         self.thisptr.registerObject((<CollisionObject?> obj).thisptr)
+    def registerObjects(self, other_objs):
+        cdef vector[defs.CollisionObjectPointer] pobjs
+        for obj in other_objs:
+            self.objs.append(obj)
+            pobjs.push_back(<defs.CollisionObjectPointer?>(<CollisionObject[Scalar]?> obj).thisptr)
+        self.thisptr.registerObjects(pobjs)
 
-#     def unregisterObject(self, obj):
-#         if obj in self.objs:
-#             self.objs.remove(obj)
-#             self.thisptr.unregisterObject((<CollisionObject?> obj).thisptr)
+    def registerObject(self, obj):
+        self.objs.append(obj)
+        self.thisptr.registerObject((<CollisionObject[Scalar]?> obj).thisptr)
 
-#     def setup(self):
-#         self.thisptr.setup()
+    def unregisterObject(self, obj):
+        if obj in self.objs:
+            self.objs.remove(obj)
+            self.thisptr.unregisterObject((<CollisionObject[Scalar]?> obj).thisptr)
 
-#     def update(self, arg=None):
-#         cdef vector[defs.CollisionObject*] objs
-#         if hasattr(arg, "__len__"):
-#             for a in arg:
-#                 objs.push_back((<CollisionObject?> a).thisptr)
-#             self.thisptr.update(objs)
-#         elif arg is None:
-#             self.thisptr.update()
-#         else:
-#             self.thisptr.update((<CollisionObject?> arg).thisptr)
+    def setup(self):
+        self.thisptr.setup()
 
-#     def getObjects(self):
-#         return list(self.objs)
+    def update(self, arg=None):
+        cdef vector[defs.CollisionObjectPointer] objs
+        if hasattr(arg, "__len__"):
+            for a in arg:
+                objs.push_back(<defs.CollisionObjectPointer?> (<CollisionObject[Scalar]?> a).thisptr)
+            self.thisptr.update(objs)
+        elif arg is None:
+            self.thisptr.update()
+        else:
+            self.thisptr.update((<CollisionObject[Scalar]?> arg).thisptr)
 
-#     def collide(self, *args):
-#         if len(args) == 2 and inspect.isroutine(args[1]):
-#             fn = CollisionFunction(args[1], args[0])
-#             self.thisptr.collide(<void*> fn, CollisionCallBack)
-#         elif len(args) == 3 and isinstance(args[0], DynamicAABBTreeCollisionManager):
-#             fn = CollisionFunction(args[2], args[1])
-#             self.thisptr.collide((<DynamicAABBTreeCollisionManager?> args[0]).thisptr, <void*> fn, CollisionCallBack)
-#         elif len(args) == 3 and inspect.isroutine(args[2]):
-#             fn = CollisionFunction(args[2], args[1])
-#             self.thisptr.collide((<CollisionObject?> args[0]).thisptr, <void*> fn, CollisionCallBack)
-#         else:
-#             raise ValueError
+    def getObjects(self):
+        return list(self.objs)
+
+    def collide(self, *args):
+        if len(args) == 2 and inspect.isroutine(args[1]):
+            fn = CollisionFunction(args[1], args[0])
+            self.thisptr.collide(<void*> fn, <defs.CollisionCallBack?> CollisionCallBack)
+        elif len(args) == 3 and isinstance(args[0], DynamicAABBTreeCollisionManager):
+            fn = CollisionFunction(args[2], args[1])
+            self.thisptr.collide((<DynamicAABBTreeCollisionManager?> args[0]).thisptr, <void*> fn, <defs.CollisionCallBack?> CollisionCallBack)
+        elif len(args) == 3 and inspect.isroutine(args[2]):
+            fn = CollisionFunction(args[2], args[1])
+            self.thisptr.collide((<CollisionObject?> args[0]).thisptr, <void*> fn, <defs.CollisionCallBack?> CollisionCallBack)
+        else:
+            raise ValueError
 
 #     def distance(self, *args):
 #         if len(args) == 2 and inspect.isroutine(args[1]):
@@ -788,14 +794,14 @@ cdef c_to_python_costsource(defs.CostSource[Scalar] cost_source):
 #         else:
 #             raise ValueError
 
-#     def clear(self):
-#         self.thisptr.clear()
+    def clear(self):
+        self.thisptr.clear()
 
-#     def empty(self):
-#         return self.thisptr.empty()
+    def empty(self):
+        return self.thisptr.empty()
 
-#     def size(self):
-#         return self.thisptr.size()
+    def size(self):
+        return self.thisptr.size()
 
 #     property max_tree_nonbalanced_level:
 #         def __get__(self):
@@ -928,6 +934,77 @@ def distance(CollisionObject o1, CollisionObject o2,
     result.b1 = cresult.b1
     result.b2 = cresult.b2
     return dis
+
+def defaultCollisionCallback(CollisionObject o1, CollisionObject o2, cdata):
+    request = cdata.request
+    result = cdata.result
+
+    if cdata.done:
+        return True
+
+    collide(o1, o2, request, result)
+
+    if (not request.enable_cost and result.is_collision and len(result.contacts) > request.num_max_contacts):
+        cdata.done = True
+
+    return cdata.done
+
+# def defaultDistanceCallback(CollisionObject o1, CollisionObject o2, cdata):
+#     request = cdata.request
+#     result = cdata.result
+
+#     if cdata.done:
+#         return True, result.min_distance
+
+#     distance(o1, o2, request, result)
+
+#     dist = result.min_distance
+
+#     if dist <= 0:
+#         return True, dist
+
+#     return cdata.done, dist
+
+# @TODO: Not sure what's going on inside this function:
+cdef class CollisionFunction:
+    cdef:
+        object py_func
+        object py_args
+
+    def __init__(self, py_func, py_args):
+        self.py_func = py_func
+        self.py_args = py_args
+
+    cdef bool eval_func(self, defs.CollisionObject[Scalar]* o1, defs.CollisionObject[Scalar]* o2):
+        cdef object py_r = defs.PyObject_CallObject(self.py_func,
+                                                    (copy_ptr_collision_object(o1),
+                                                     copy_ptr_collision_object(o2),
+                                                     self.py_args))
+        return <bool?> py_r
+
+# cdef class DistanceFunction:
+#     cdef:
+#         object py_func
+#         object py_args
+
+#     def __init__(self, py_func, py_args):
+#         self.py_func = py_func
+#         self.py_args = py_args
+
+#     cdef bool eval_func(self, defs.CollisionObject*o1, defs.CollisionObject*o2, defs.FCL_REAL& dist):
+#         cdef object py_r = defs.PyObject_CallObject(self.py_func,
+#                                                     (copy_ptr_collision_object(o1),
+#                                                      copy_ptr_collision_object(o2),
+#                                                      self.py_args))
+#         (&dist)[0] = <defs.FCL_REAL?> py_r[1]
+#         return <bool?> py_r[0]
+
+cdef inline bool CollisionCallBack(defs.CollisionObject[Scalar]* o1, defs.CollisionObject[Scalar]* o2, void* cdata):
+    return (<CollisionFunction> cdata).eval_func(o1, o2)
+
+# cdef inline bool DistanceCallBack(defs.CollisionObject*o1, defs.CollisionObject*o2, void*cdata, defs.FCL_REAL& dist):
+#     return (<DistanceFunction> cdata).eval_func(o1, o2, dist)
+
 
 
 #####################
