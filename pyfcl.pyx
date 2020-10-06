@@ -13,7 +13,7 @@ import numpy
 cimport fcl_defs as defs
 # cimport octomap_defs as octomap 
 # cimport std_defs as std 
-from collision_data import Contact, CostSource, CollisionRequest, CollisionResult
+from collision_data import Contact, CostSource, CollisionRequest, CollisionResult, DistanceRequest, DistanceResult
 # from collision_data import Contact, CostSource, CollisionRequest, ContinuousCollisionRequest, CollisionResult, ContinuousCollisionResult, DistanceRequest, DistanceResult
 
 from fcl_defs cimport Scalar
@@ -803,18 +803,19 @@ def distance(CollisionObject o1, CollisionObject o2,
     if result is None:
         result = DistanceResult()
 
-    cdef defs.DistanceResult cresult
+    cdef defs.DistanceResult[Scalar] cresult
 
-    cdef double dis = defs.distance(o1.thisptr, o2.thisptr,
-                                    defs.DistanceRequest(
+    cdef double dis = defs.distance[Scalar](o1.thisptr, o2.thisptr,
+                                    defs.DistanceRequest[Scalar](
                                         <bool?> request.enable_nearest_points,
                                         <defs.GJKSolverType?> request.gjk_solver_type
                                     ),
                                     cresult)
 
     result.min_distance = min(cresult.min_distance, result.min_distance)
-    result.nearest_points = [vec3f_to_numpy(cresult.nearest_points[0]),
-                             vec3f_to_numpy(cresult.nearest_points[1])]
+    # @TODO: No need to return nearest points if not enabled.
+    result.nearest_points = [vector3_to_numpy(cresult.nearest_points[0]),
+                             vector3_to_numpy(cresult.nearest_points[1])]
     result.o1 = c_to_python_collision_geometry(cresult.o1, o1, o2)
     result.o2 = c_to_python_collision_geometry(cresult.o2, o1, o2)
     result.b1 = cresult.b1

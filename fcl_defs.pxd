@@ -219,7 +219,7 @@ cdef extern from "fcl/narrowphase/distance_result.h" namespace "fcl":
     cdef cppclass DistanceResult[S]:
         S min_distance
         # @TODO: nearest_points
-        Vec3f* nearest_points
+        Vector3[S]* nearest_points
         CollisionGeometry[S]* o1
         CollisionGeometry[S]* o2
         int b1
@@ -229,9 +229,10 @@ cdef extern from "fcl/narrowphase/distance_result.h" namespace "fcl":
 
 cdef extern from "fcl/narrowphase/distance_request.h" namespace "fcl":
     cdef cppclass DistanceRequest[S]:
-        bool enable_nearest_points[S]
-        GJKSolverType gjk_solver_type
         # @TODO: There are more parameters
+        bool enable_nearest_points
+        GJKSolverType gjk_solver_type
+        # @TODO: Remove trailing underscore
         DistanceRequest(bool enable_nearest_points_, GJKSolverType gjk_solver_type_) except +
 
 
@@ -425,10 +426,10 @@ cdef extern from "fcl/narrowphase/collision.h" namespace "fcl":
                    CollisionResult[S]& result)
     
     # @TODO: This function seems never used
-    size_t collide[S](CollisionGeometry[S]* o1, Transform3[S]& tf1,
-                   CollisionGeometry[S]* o2, Transform3[S]& tf2,
-                   CollisionRequest[S]& request,
-                   CollisionResult[S]& result)
+    # size_t collide[S](CollisionGeometry[S]* o1, Transform3[S]& tf1,
+    #                CollisionGeometry[S]* o2, Transform3[S]& tf2,
+    #                CollisionRequest[S]& request,
+    #                CollisionResult[S]& result)
 
 # cdef extern from "fcl/collision.h" namespace "fcl":
 #     size_t collide(CollisionObject* o1, CollisionObject* o2,
@@ -451,6 +452,14 @@ cdef extern from "fcl/narrowphase/collision.h" namespace "fcl":
 #                                ContinuousCollisionRequest& request,
 #                                ContinuousCollisionResult& result)
 
+
+cdef extern from "fcl/narrowphase/distance.h" namespace "fcl":
+    S distance[S](CollisionObject[S]* o1, CollisionObject[S]* o2,
+                DistanceRequest[S]& request, DistanceResult[S]& result)
+    
+    # S distance[S](CollisionGeometry[S]* o1, Transform3[S]& tf1,
+    #             CollisionGeometry[S]* o2, Transform3[S]& tf2,
+    #             DistanceRequest[S]& request, DistanceResult[S]& result)
 
 # cdef extern from "fcl/distance.h" namespace "fcl":
 #     FCL_REAL distance(CollisionObject* o1, CollisionObject* o2,
