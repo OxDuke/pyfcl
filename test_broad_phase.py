@@ -85,6 +85,16 @@ class TestBroadPhaseCC(unittest.TestCase):
         manager.collide(sphere_object, cdata, fcl.defaultCollisionCallback)
         self.assertTrue(cdata.result.is_collision == True)
 
+    def test_clear_and_empty_and_size(self):
+        manager = self.construct_manager()
+
+        self.assertTrue(manager.size() == 3)
+        self.assertTrue(manager.empty() == False)
+
+        manager.clear()
+        self.assertTrue(manager.size() == 0)
+        self.assertTrue(manager.empty() == True)
+
     def test_self_collision(self):
         manager = self.construct_manager()
 
