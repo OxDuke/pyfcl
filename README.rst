@@ -10,6 +10,7 @@ Major Upgrades
 - Support FCL 0.6.0.
 - Scalar type: float or double
 - The original interface was supported. The only difference is `import pyfcl as fcl`
+- No need for id(geom) if you want to extract objects that are in collision.
 
 Differences
 ***********
