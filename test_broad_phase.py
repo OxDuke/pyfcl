@@ -10,6 +10,8 @@ import unittest
 
 import pyfcl as fcl
 
+# @TODO: Need to test 3 types of overloading of the manager.collide & manager.distance
+
 class TestBroadPhaseCC(unittest.TestCase):
 
     def construct_manager(self):
@@ -115,6 +117,11 @@ class TestBroadPhaseCC(unittest.TestCase):
         cdata = fcl.CollisionData()
         manager.collide(sphere_object2, cdata, fcl.defaultCollisionCallback)
         self.assertTrue(cdata.result.is_collision == False)
+
+
+    def test_self_distance(self):
+        pass
+        # manager = self.construct_manager()
 
 if __name__ == '__main__':
     unittest.main()

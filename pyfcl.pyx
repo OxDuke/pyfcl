@@ -784,18 +784,18 @@ cdef class DynamicAABBTreeCollisionManager:
         else:
             raise ValueError
 
-#     def distance(self, *args):
-#         if len(args) == 2 and inspect.isroutine(args[1]):
-#             fn = DistanceFunction(args[1], args[0])
-#             self.thisptr.distance(<void*> fn, DistanceCallBack)
-#         elif len(args) == 3 and isinstance(args[0], DynamicAABBTreeCollisionManager):
-#             fn = DistanceFunction(args[2], args[1])
-#             self.thisptr.distance((<DynamicAABBTreeCollisionManager?> args[0]).thisptr, <void*> fn, DistanceCallBack)
-#         elif len(args) == 3 and inspect.isroutine(args[2]):
-#             fn = DistanceFunction(args[2], args[1])
-#             self.thisptr.distance((<CollisionObject?> args[0]).thisptr, <void*> fn, DistanceCallBack)
-#         else:
-#             raise ValueError
+    def distance(self, *args):
+        if len(args) == 2 and inspect.isroutine(args[1]):
+            fn = DistanceFunction(args[1], args[0])
+            self.thisptr.distance(<void*> fn, <defs.DistanceCallBack?> DistanceCallBack)
+        elif len(args) == 3 and isinstance(args[0], DynamicAABBTreeCollisionManager):
+            fn = DistanceFunction(args[2], args[1])
+            self.thisptr.distance((<DynamicAABBTreeCollisionManager?> args[0]).thisptr, <void*> fn, <defs.DistanceCallBack?> DistanceCallBack)
+        elif len(args) == 3 and inspect.isroutine(args[2]):
+            fn = DistanceFunction(args[2], args[1])
+            self.thisptr.distance((<CollisionObject?> args[0]).thisptr, <void*> fn, <defs.DistanceCallBack?> DistanceCallBack)
+        else:
+            raise ValueError
 
     def clear(self):
         self.thisptr.clear()
@@ -952,21 +952,21 @@ def defaultCollisionCallback(CollisionObject o1, CollisionObject o2, cdata):
 
     return cdata.done
 
-# def defaultDistanceCallback(CollisionObject o1, CollisionObject o2, cdata):
-#     request = cdata.request
-#     result = cdata.result
+def defaultDistanceCallback(CollisionObject o1, CollisionObject o2, cdata):
+    request = cdata.request
+    result = cdata.result
 
-#     if cdata.done:
-#         return True, result.min_distance
+    if cdata.done:
+        return True, result.min_distance
 
-#     distance(o1, o2, request, result)
+    distance(o1, o2, request, result)
 
-#     dist = result.min_distance
+    dist = result.min_distance
 
-#     if dist <= 0:
-#         return True, dist
+    if dist <= 0:
+        return True, dist
 
-#     return cdata.done, dist
+    return cdata.done, dist
 
 # @TODO: Not sure what's going on inside this function:
 cdef class CollisionFunction:
@@ -985,28 +985,29 @@ cdef class CollisionFunction:
                                                      self.py_args))
         return <bool?> py_r
 
-# cdef class DistanceFunction:
-#     cdef:
-#         object py_func
-#         object py_args
+# @TODO: Not sure what's going on inside this function:
+cdef class DistanceFunction:
+    cdef:
+        object py_func
+        object py_args
 
-#     def __init__(self, py_func, py_args):
-#         self.py_func = py_func
-#         self.py_args = py_args
+    def __init__(self, py_func, py_args):
+        self.py_func = py_func
+        self.py_args = py_args
 
-#     cdef bool eval_func(self, defs.CollisionObject*o1, defs.CollisionObject*o2, defs.FCL_REAL& dist):
-#         cdef object py_r = defs.PyObject_CallObject(self.py_func,
-#                                                     (copy_ptr_collision_object(o1),
-#                                                      copy_ptr_collision_object(o2),
-#                                                      self.py_args))
-#         (&dist)[0] = <defs.FCL_REAL?> py_r[1]
-#         return <bool?> py_r[0]
+    cdef bool eval_func(self, defs.CollisionObject[Scalar]* o1, defs.CollisionObject[Scalar]* o2, Scalar& dist):
+        cdef object py_r = defs.PyObject_CallObject(self.py_func,
+                                                    (copy_ptr_collision_object(o1),
+                                                     copy_ptr_collision_object(o2),
+                                                     self.py_args))
+        (&dist)[0] = <Scalar?> py_r[1]
+        return <bool?> py_r[0]
 
 cdef inline bool CollisionCallBack(defs.CollisionObject[Scalar]* o1, defs.CollisionObject[Scalar]* o2, void* cdata):
     return (<CollisionFunction> cdata).eval_func(o1, o2)
 
-# cdef inline bool DistanceCallBack(defs.CollisionObject*o1, defs.CollisionObject*o2, void*cdata, defs.FCL_REAL& dist):
-#     return (<DistanceFunction> cdata).eval_func(o1, o2, dist)
+cdef inline bool DistanceCallBack(defs.CollisionObject[Scalar]* o1, defs.CollisionObject[Scalar]* o2, void* cdata, Scalar& dist):
+    return (<DistanceFunction> cdata).eval_func(o1, o2, dist)
 
 
 

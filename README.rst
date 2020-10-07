@@ -9,6 +9,7 @@ Major Upgrades
 ==============
 - Support FCL 0.6.0.
 - Scalar type: float or double
+- The original interface was supported. The only difference is `import pyfcl as fcl`
 
 Differences
 ***********
