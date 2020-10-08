@@ -5,13 +5,13 @@ from Cython.Build import cythonize
 from version import __version__
 
 ext_modules=[
-    Extension("pyfcl", ["pyfcl.pyx"], 
+    Extension("pyfcl", ["pyfcl.pyx"],
     #@TODO: better include for include/eigen_wrapper.h
-    include_dirs = ['/usr/local/include', '/usr/include/eigen3', 'include/'],
+    include_dirs = ['/usr/local/include', '/usr/include/eigen3', 'include/', '/usr/local/include/eigen3'],
     library_dirs = ['/usr/lib', '/usr/local/lib','/usr/local/lib:/opt/ros/lunar/lib'],
     libraries=["fcl","ccd", "stdc++", "octomap"],
     language="c++",
-    extra_compile_args = ["-std=c++14", "-O3"])]
+    extra_compile_args = ["-std=c++11"])]
 
 setup(
   name = 'PyFCL',

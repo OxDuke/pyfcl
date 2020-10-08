@@ -81,7 +81,8 @@ class TestBox(unittest.TestCase):
         np.testing.assert_allclose(box.side, random_sides, rtol=0, atol=0)
 
         self.assertTrue(box.getNodeType() == 9)
-        print(box.aabb_center)
+        
+        # @TODO: test aabb's center
 
     def test_self_collide(self):
         # Seperate on X axis
@@ -389,7 +390,7 @@ class TestCone(unittest.TestCase):
         test_shape_self_distance(c1, c2,
             fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
             fcl.Transform(np.array([0,0,0,1]), np.array([0,4,1])),
-            1.)
+            1., 1e-6)
         test_shape_self_distance(c1, c2,
             fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
             fcl.Transform(np.array([0,0,0,1]), np.array([0,0,4])),
