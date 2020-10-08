@@ -559,26 +559,30 @@ cdef class Cylinder(ShapeBase):
     def lz(self, value):
         (<defs.Cylinder[Scalar]*> self.thisptr).lz = <Scalar?> value
 
-# cdef class Halfspace(CollisionGeometry):
-#     def __cinit__(self, n, d):
-#         self.thisptr = new defs.Halfspace(defs.Vec3f(<double?> n[0],
-#                                                      <double?> n[1],
-#                                                      <double?> n[2]),
-#                                           <double?> d)
+cdef class Halfspace(ShapeBase):
+    def __cinit__(self, n, d):
+        self.thisptr = new defs.Halfspace[Scalar](defs.Vector3[Scalar](<Scalar?> n[0],
+                                                     <Scalar?> n[1],
+                                                     <Scalar?> n[2]),
+                                          <Scalar?> d)
 
-#     property n:
-#         def __get__(self):
-#             return vec3f_to_numpy((<defs.Halfspace*> self.thisptr).n)
-#         def __set__(self, value):
-#             (<defs.Halfspace*> self.thisptr).n[0] = <double?> value[0]
-#             (<defs.Halfspace*> self.thisptr).n[1] = <double?> value[1]
-#             (<defs.Halfspace*> self.thisptr).n[2] = <double?> value[2]
+    @property
+    def n(self):
+        return vector3_to_numpy((<defs.Halfspace[Scalar]*> self.thisptr).n)
 
-#     property d:
-#         def __get__(self):
-#             return (<defs.Halfspace*> self.thisptr).d
-#         def __set__(self, value):
-#             (<defs.Halfspace*> self.thisptr).d = <double?> value
+    @n.setter
+    def n(self, value):
+        (<defs.Halfspace[Scalar]*> self.thisptr).n[0] = <Scalar?> value[0]
+        (<defs.Halfspace[Scalar]*> self.thisptr).n[1] = <Scalar?> value[1]
+        (<defs.Halfspace[Scalar]*> self.thisptr).n[2] = <Scalar?> value[2]
+
+    @property
+    def d(self):
+        return (<defs.Halfspace[Scalar]*> self.thisptr).d
+
+    @d.setter
+    def d(self, value):
+        (<defs.Halfspace[Scalar]*> self.thisptr).d = <Scalar?> value
 
 # cdef class Plane(CollisionGeometry):
 #     def __cinit__(self, n, d):

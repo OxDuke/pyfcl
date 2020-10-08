@@ -23,6 +23,8 @@ Things to improve
 =================
 Since Cython was initially designed to bridge between Python and C, not C++. We have to use hacks and walkarounds to cope with C++, especially for features introduced after C++11. I plan to rewrite this package with pybind11.
 
+BVHModel only support fcl::OBBRSS, we need to more bounding volumes.
+
 Upgrade progress
 ================
 working on:

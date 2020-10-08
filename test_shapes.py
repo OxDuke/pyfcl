@@ -459,6 +459,39 @@ class TestCylinder(unittest.TestCase):
             fcl.Transform(np.array([0,0,0,1]), np.array([0,0,3])),
             0.5)
 
+
+class TestHalfspace(unittest.TestCase):
+    def test_properties(self):
+        random_normal, random_d = nonzero_rand(3), nonzero_rand()
+        random_normal /= np.linalg.norm(random_normal)
+        h = fcl.Halfspace(random_normal, random_d)
+        np.testing.assert_allclose(h.n, random_normal, rtol=0, atol=1e-15)
+        np.testing.assert_allclose(h.d, random_d, rtol=0, atol=1e-15)
+
+        random_normal, random_d = nonzero_rand(3), nonzero_rand()
+        random_normal /= np.linalg.norm(random_normal)
+        h.n = random_normal
+        h.d = random_d
+        np.testing.assert_allclose(h.n, random_normal, rtol=0, atol=1e-15)
+        np.testing.assert_allclose(h.d, random_d, rtol=0, atol=1e-15)
+
+    def test_self_collide(self):
+        h1, h2 = fcl.Halfspace(np.array([0,0,1]), -1), fcl.Halfspace(np.array([0,0,-1]), 2)
+        
+        # @TODO: I am not quite sure what is the correct way to do Halfspace self-collide.
+
+    def test_self_distance(self):
+        h1, h2 = fcl.Halfspace(np.array([0,0,1]), -1), fcl.Halfspace(np.array([0,0,1]), 2)
+
+        # @TODO: can't do self distance, will raise segmentation fault
+        # test_shape_self_distance(h1, h2,
+        #     fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+        #     fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+        #     0.5)
+
+
+
+
 class TestBVHModel(unittest.TestCase):
     def test_properties(self):
         

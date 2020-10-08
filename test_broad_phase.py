@@ -12,7 +12,7 @@ import pyfcl as fcl
 
 # @TODO: Need to test 3 types of overloading of the manager.collide & manager.distance
 
-class TestBroadPhaseCC(unittest.TestCase):
+class TestDynamicAABBTreeCollisionManager(unittest.TestCase):
 
     def construct_manager(self):
         # co3 collides with co1
@@ -147,7 +147,3 @@ class TestBroadPhaseCC(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
-    tbp = TestBroadPhaseCC()
-    tbp.test_registerObject()
-    

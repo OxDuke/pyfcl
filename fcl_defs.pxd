@@ -387,10 +387,11 @@ cdef extern from "fcl/geometry/shape/cylinder.h" namespace "fcl":
 #                int num_points_,
 #                int* polygons_) except +
 
-#     cdef cppclass Halfspace(ShapeBase):
-#         Halfspace(Vec3f& n_, FCL_REAL d_) except +
-#         Vec3f n
-#         FCL_REAL d
+cdef extern from "fcl/geometry/shape/halfspace.h" namespace "fcl":
+    cdef cppclass Halfspace[S](ShapeBase[S]):
+        Halfspace(Vector3[S]& n_, S d_) except +
+        Vector3[S] n
+        S d
 
 #     cdef cppclass Plane(ShapeBase):
 #         Plane(Vec3f& n_, FCL_REAL d_) except +
