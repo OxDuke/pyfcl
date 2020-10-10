@@ -393,10 +393,11 @@ cdef extern from "fcl/geometry/shape/halfspace.h" namespace "fcl":
         Vector3[S] n
         S d
 
-#     cdef cppclass Plane(ShapeBase):
-#         Plane(Vec3f& n_, FCL_REAL d_) except +
-#         Vec3f n
-#         FCL_REAL d
+cdef extern from "fcl/geometry/shape/plane.h" namespace "fcl":
+    cdef cppclass Plane[S](ShapeBase[S]):
+        Plane(Vector3[S]& n_, S d_) except +
+        Vector3[S] n
+        S d
 
 # @TODO: The 3 lines of code below are useless, I have declared them at the start of this file.
 # cdef extern from "fcl/broadphase/broadphase_collision_manager.h" namespace "fcl":

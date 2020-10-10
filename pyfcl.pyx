@@ -584,26 +584,30 @@ cdef class Halfspace(ShapeBase):
     def d(self, value):
         (<defs.Halfspace[Scalar]*> self.thisptr).d = <Scalar?> value
 
-# cdef class Plane(CollisionGeometry):
-#     def __cinit__(self, n, d):
-#         self.thisptr = new defs.Plane(defs.Vec3f(<double?> n[0],
-#                                                  <double?> n[1],
-#                                                  <double?> n[2]),
-#                                       <double?> d)
+cdef class Plane(ShapeBase):
+    def __cinit__(self, n, d):
+        self.thisptr = new defs.Plane[Scalar](defs.Vector3[Scalar](<Scalar?> n[0],
+                                                 <Scalar?> n[1],
+                                                 <Scalar?> n[2]),
+                                      <Scalar?> d)
 
-#     property n:
-#         def __get__(self):
-#             return vec3f_to_numpy((<defs.Plane*> self.thisptr).n)
-#         def __set__(self, value):
-#             (<defs.Plane*> self.thisptr).n[0] = <double?> value[0]
-#             (<defs.Plane*> self.thisptr).n[1] = <double?> value[1]
-#             (<defs.Plane*> self.thisptr).n[2] = <double?> value[2]
+    @property 
+    def n(self):
+        return vector3_to_numpy((<defs.Plane[Scalar]*> self.thisptr).n)
+    
+    @n.setter
+    def n(self, value):
+        (<defs.Plane[Scalar]*> self.thisptr).n[0] = <Scalar?> value[0]
+        (<defs.Plane[Scalar]*> self.thisptr).n[1] = <Scalar?> value[1]
+        (<defs.Plane[Scalar]*> self.thisptr).n[2] = <Scalar?> value[2]
 
-#     property d:
-#         def __get__(self):
-#             return (<defs.Plane*> self.thisptr).d
-#         def __set__(self, value):
-#             (<defs.Plane*> self.thisptr).d = <double?> value
+    @property
+    def d(self):
+        return (<defs.Plane[Scalar]*> self.thisptr).d
+
+    @d.setter
+    def d(self, value):
+        (<defs.Plane[Scalar]*> self.thisptr).d = <Scalar?> value
 
 cdef class BVHModel(CollisionGeometry):
     def __cinit__(self):
