@@ -489,7 +489,17 @@ class TestHalfspace(unittest.TestCase):
         #     fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
         #     0.5)
 
+class TestPlane(unittest.TestCase):
+    
+    def test_properties(self):
+        pass
 
+    def test_self_collide(self):
+        pass
+
+    def test_self_distance(self):
+        pass
+    
 
 
 class TestBVHModel(unittest.TestCase):

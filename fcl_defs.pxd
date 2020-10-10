@@ -379,13 +379,11 @@ cdef extern from "fcl/geometry/shape/cylinder.h" namespace "fcl":
         S radius
         S lz
 
-#     cdef cppclass Convex(ShapeBase):
-#         Convex(Vec3f* plane_nomals_,
-#                FCL_REAL* plane_dis_,
-#                int num_planes,
-#                Vec3f* points_,
-#                int num_points_,
-#                int* polygons_) except +
+# cdef extern from "fcl/geometry/shape/convex.h" namespace "fcl":
+#     cdef cppclass Convex[S](ShapeBase[S]):
+#         Convex(const shared_ptr[const vector[Vector3[S]]]& vertices, 
+#             int num_faces, 
+#             const shared_ptr[const vector[int]]& faces) except +
 
 cdef extern from "fcl/geometry/shape/halfspace.h" namespace "fcl":
     cdef cppclass Halfspace[S](ShapeBase[S]):
