@@ -35,4 +35,4 @@ RUN pip install numpy cython
 
 # build the python-fcl module
 COPY . /python_fcl
-RUN cd /python_fcl && python setup.py build_ext --inplace
+RUN cd /python_fcl && python setup.py build_ext
