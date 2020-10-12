@@ -481,13 +481,9 @@ class TestHalfspace(unittest.TestCase):
         # @TODO: I am not quite sure what is the correct way to do Halfspace self-collide.
 
     def test_self_distance(self):
-        h1, h2 = fcl.Halfspace(np.array([0,0,1]), -1), fcl.Halfspace(np.array([0,0,1]), 2)
+        pass
+        # @TODO: can't do self distance on HalfSpace, will raise segmentation fault
 
-        # @TODO: can't do self distance, will raise segmentation fault
-        # test_shape_self_distance(h1, h2,
-        #     fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-        #     fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-        #     0.5)
 
 class TestPlane(unittest.TestCase):
     
@@ -500,7 +496,6 @@ class TestPlane(unittest.TestCase):
     def test_self_distance(self):
         pass
     
-
 
 class TestBVHModel(unittest.TestCase):
     def test_properties(self):
