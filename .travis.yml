@@ -1,3 +1,4 @@
+language: python
 dist: trusty
 script:
   - cmake --version
