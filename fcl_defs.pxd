@@ -109,6 +109,13 @@ cdef extern from "fcl/common/types.h" namespace "fcl":
 #         void setTranslation(Vec3f& T_)
 #         void setQuatRotation(Quaternion3f & q_)
 
+cdef extern from "fcl/narrowphase/continuous_collision_request.h" namespace "fcl":
+    cdef enum CCDMotionType:
+        CCDM_TRANS, CCDM_LINEAR, CCDM_SCREW, CCDM_SPLINE
+
+    cdef enum CCDSolverType:
+        CCDC_NAIVE, CCDC_CONSERVATIVE_ADVANCEMENT, CCDC_RAY_SHOOTING, CCDC_POLYNOMIAL_SOLVER
+
 # cdef extern from "fcl/collision_data.h" namespace "fcl":
 
 #     cdef enum CCDMotionType:
