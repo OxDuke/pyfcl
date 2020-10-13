@@ -9,3 +9,5 @@ script:
   - cd requirements && bash clone.bash && bash build.bash && cd ..
 
   - python3 -m pip install numpy cython
+
+  - python3 setup.py build_ext --inplace && python3 -m unittest discover .
