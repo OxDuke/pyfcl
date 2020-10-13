@@ -11,7 +11,7 @@ sudo make install
 cd ..
 
 cd fcl
-cmake .
+cmake -DBUILD_TESTING=OFF .
 make -j4
 sudo make install
 cd ..
