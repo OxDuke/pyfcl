@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 rm -rf libccd
 git clone https://github.com/danfis/libccd.git
