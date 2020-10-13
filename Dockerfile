@@ -52,3 +52,16 @@ RUN bash requirements/build.bash
 
 # sudo apt update
 # sudo apt install python3.7
+
+
+
+
+
+
+# apt-get install -y software-properties-common
+# add-apt-repository ppa:deadsnakes/ppa
+# apt-get update
+# apt-get install -y build-essential python3.7 python3.7-dev python3-pip python3.7-venv
+
+# python3.7 -m pip install pip --upgrade
+# python3.7 -m pip install wheel
