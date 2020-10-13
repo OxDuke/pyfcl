@@ -34,10 +34,10 @@ RUN bash requirements/install_eigen3.bash
 RUN bash requirements/build.bash
 
 # Install python3.7 & pip
-RUN apt-get install -y python3.7-dev
-RUN python3.7 -m pip install pip
-RUN python3.7 -m pip install --upgrade pip
-RUN python3.7 -m pip install numpy cython
+#RUN apt-get install -y python3.7-dev
+#RUN python3.7 -m pip install pip
+#RUN python3.7 -m pip install --upgrade pip
+#RUN python3.7 -m pip install numpy cython
 
 # python3.7 -m pip install pip
 #RUN python --version
