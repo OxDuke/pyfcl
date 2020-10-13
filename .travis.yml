@@ -20,7 +20,7 @@ install:
 
 script:
 
-  - cd requirements && bash clone.bash && bash build.bash && cd ..
+  - cd requirements && bash clone.bash && sudo bash build.bash && cd ..
 
   - export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
