@@ -1,5 +1,7 @@
+sudo: required
+language: cpp
 script:
   - python3 --version
   - g++ --version
   - cmake --version
-  - cd requirements && bash clone.bash && bash build.bash && cd ..
+  - cd requirements && bash clone.bash && sudo bash build.bash && cd ..
