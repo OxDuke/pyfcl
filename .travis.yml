@@ -1,6 +1,6 @@
 os: linux
 dist: xenial
-language: cpp
+language: python
 script:
   - python3 --version
   - g++ --version
