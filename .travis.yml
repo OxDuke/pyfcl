@@ -6,7 +6,7 @@ script:
   - g++ --version
   - cmake --version
   - sudo apt-get install -y libeigen3-dev
-  - cd requirements && bash clone.bash && sudo bash build.bash && cd ..
+  - cd requirements && bash clone.bash && bash build.bash && cd ..
 
   - python3 -m pip install numpy cython
 
