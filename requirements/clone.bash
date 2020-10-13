@@ -1,3 +1,5 @@
+#!/bin/bash
+
 rm -rf libccd
 git clone https://github.com/danfis/libccd.git
 cd libccd

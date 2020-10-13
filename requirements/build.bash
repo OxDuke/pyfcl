@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd libccd
 cmake .
 make -j4
