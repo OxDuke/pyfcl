@@ -8,4 +8,4 @@ script:
   # - sudo apt-get install -y libeigen3-dev
   # - cd requirements && bash clone.bash && bash build.bash && cd ..
 
-  - python3 -m pip install cython
+  - python3 -m pip install numpy cython
