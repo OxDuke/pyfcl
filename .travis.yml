@@ -11,14 +11,15 @@ python:
   - "3.7"
   - "3.8"
 
+install:
+  - pip install numpy cython
+
 script:
   - python3 --version
   - g++ --version
   - cmake --version
   - sudo apt-get install -y libeigen3-dev
   - cd requirements && bash clone.bash && bash build.bash && cd ..
-
-  - python3 -m pip install numpy cython
 
   - export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
