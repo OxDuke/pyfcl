@@ -4,4 +4,5 @@ script:
   - python3 --version
   - g++ --version
   - cmake --version
+  - sudo apt-get install libeigen3-dev
   - cd requirements && bash clone.bash && bash build.bash && cd ..
