@@ -16,8 +16,26 @@ ext_modules=[
 setup(
   name = 'PyFCL',
   version = __version__,
+  description = "FCL Python wrappers",
+  long_description = "Python wrappers for the Flexible Collision Library",
+  url="https://github.com/OxDuke/pyfcl",
   author='Weidong Sun',
-  author_email='me@weidongsun.com',
+  author_email='swdswd28@foxmail.com',
+  license = "BSD",
+  classifiers=[
+      'Development Status :: 2 - Pre-Alpha',
+      'License :: OSI Approved :: BSD License',
+      'Operating System :: POSIX :: Linux',
+      'Programming Language :: Python :: 2',
+      'Programming Language :: Python :: 2.7',
+      'Programming Language :: Python :: 3',
+      'Programming Language :: Python :: 3.5',
+      'Programming Language :: Python :: 3.6',
+      'Programming Language :: Python :: 3.7',
+      'Programming Language :: Python :: 3.8',
+  ],
+
+  
   ext_modules = cythonize(ext_modules),
   zip_safe=False
 )
