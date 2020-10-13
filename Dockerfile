@@ -14,7 +14,7 @@ COPY . .
 # python, numpy
 
 RUN apt-get update
-RUN apt-get install -y g++ git cmake
+RUN apt-get install -y g++ git cmake sudo 
 RUN apt-get install -y libeigen3-dev
 
 # Check version
