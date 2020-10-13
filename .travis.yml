@@ -1,0 +1,5 @@
+script:
+  - python3 --version
+  - g++ --version
+  - cmake --version
+  
