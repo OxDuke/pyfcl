@@ -24,16 +24,17 @@ RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update
 RUN apt-get install -y build-essential python3.7 python3.7-dev python3-pip
 
-RUN python3.7 -m pip install pip --upgrade
+RUN python3.7 -m pip install --upgrade pip
 RUN python3.7 -m pip install wheel
 RUN python3.7 -m pip install numpy cython
 
-
 # Copy files
-WORKDIR /usr/src/pyfcl
+WORKDIR /usr/src/app/pyfcl
 COPY . .
 
+# Set a directory
+WORKDIR /usr/src/app
 # Download & build & install dependencies
-RUN bash requirements/clone.bash
-RUN bash requirements/install_eigen3.bash
-RUN bash requirements/build.bash
+RUN bash pyfcl/requirements/clone.bash
+RUN bash pyfcl/requirements/install_eigen3.bash
+RUN bash pyfcl/requirements/build.bash
