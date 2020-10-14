@@ -1,11 +1,21 @@
+import os
+import sys
+import inspect
 
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 
-from version import __version__
+# get current directory of file in case someone
+# called setup.py from elsewhere
+cwd = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
+
+# load __version__
+exec(open(os.path.join(cwd,
+                       'pyfcl/version.py'), 'r').read())
 
 ext_modules=[
-    Extension("pyfcl", ["pyfcl.pyx"],
+    Extension("pyfcl.pyfcl", ["pyfcl/pyfcl.pyx"],
     #@TODO: better include for include/eigen_wrapper.h
     include_dirs = ['/usr/local/include', '/usr/include/eigen3', 'include/', '/usr/local/include/eigen3'],
     library_dirs = ['/usr/lib', '/usr/local/lib','/usr/local/lib:/opt/ros/lunar/lib'],
@@ -20,7 +30,7 @@ setup(
   long_description = "Python wrappers for the Flexible Collision Library",
   url="https://github.com/OxDuke/pyfcl",
   author='Weidong Sun',
-  author_email='swdswd28@foxmail.com',
+  author_email='464604837@qq.com',
   license = "BSD",
   classifiers=[
       'Development Status :: 2 - Pre-Alpha',
