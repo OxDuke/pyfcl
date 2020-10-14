@@ -38,7 +38,6 @@ setup(
   packages=['pyfcl'],
   setup_requires=['cython'],
   install_requires=['numpy', 'cython'],
-
   
   ext_modules = cythonize(ext_modules),
   zip_safe=False
