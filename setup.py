@@ -18,6 +18,7 @@ ext_modules=[
     Extension("pyfcl.pyfcl", ["pyfcl/pyfcl.pyx"],
     #@TODO: better include for include/eigen_wrapper.h
     include_dirs = ['/usr/local/include', '/usr/include/eigen3', 'include/', '/usr/local/include/eigen3'],
+    #@TODO: remove: '/usr/local/lib:/opt/ros/lunar/lib'
     library_dirs = ['/usr/lib', '/usr/local/lib','/usr/local/lib:/opt/ros/lunar/lib'],
     libraries=["fcl","ccd"],
     language="c++",
@@ -48,6 +49,9 @@ setup(
   packages=['pyfcl'],
   setup_requires=['cython'],
   install_requires=['numpy', 'cython'],
+
+  # Support Python2.7 & All Python3 start from Python3.5
+  python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*,<4',
   
   ext_modules = cythonize(ext_modules),
   zip_safe=False
