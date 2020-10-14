@@ -14,7 +14,7 @@ ext_modules=[
     extra_compile_args = ["-std=c++11"])]
 
 setup(
-  name = 'PyFCL',
+  name = 'pyfcl',
   version = __version__,
   description = "FCL Python wrappers",
   long_description = "Python wrappers for the Flexible Collision Library",
@@ -34,6 +34,10 @@ setup(
       'Programming Language :: Python :: 3.7',
       'Programming Language :: Python :: 3.8',
   ],
+  keywords='fcl collision distance',
+  packages=['pyfcl'],
+  setup_requires=['cython'],
+  install_requires=['numpy', 'cython'],
 
   
   ext_modules = cythonize(ext_modules),
