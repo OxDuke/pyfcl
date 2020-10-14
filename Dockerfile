@@ -33,35 +33,12 @@ RUN bash requirements/install_eigen3.bash
 # COPY requirements/build.bash .
 RUN bash requirements/build.bash
 
-# Install python3.7 & pip
-#RUN apt-get install -y python3.7-dev
-#RUN python3.7 -m pip install pip
-#RUN python3.7 -m pip install --upgrade pip
-#RUN python3.7 -m pip install numpy cython
 
-# python3.7 -m pip install pip
-#RUN python --version
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update
+RUN apt-get install -y build-essential python3.7 python3.7-dev python3-pip
 
-
-########## Below to install python3.7
-# sudo apt update
-# sudo apt install software-properties-common
-
-# sudo add-apt-repository ppa:deadsnakes/ppa
-
-
-# sudo apt update
-# sudo apt install python3.7
-
-
-
-
-
-
-# apt-get install -y software-properties-common
-# add-apt-repository ppa:deadsnakes/ppa
-# apt-get update
-# apt-get install -y build-essential python3.7 python3.7-dev python3-pip python3.7-venv
-
-# python3.7 -m pip install pip --upgrade
-# python3.7 -m pip install wheel
+RUN python3.7 -m pip install pip --upgrade
+RUN python3.7 -m pip install wheel
+RUN python3.7 -m pip install numpy cython

@@ -9,7 +9,7 @@ Major Upgrades
 ==============
 - Support FCL 0.6.0.
 - Scalar type: float or double
-- The original interface was supported. The only difference is `import pyfcl as fcl`
+- Mos of the interface provided by [] is supported. The only difference is `import pyfcl as fcl`
 - No need for id(geom) if you want to extract objects that are in collision.
 
 Differences
@@ -18,6 +18,11 @@ Differences
 
 - Template: FCL 0.6.0 allows user to choose between `float` and `double` by employing templates in almost all of its APIs. This package also allows user to switch between `float` & `double` for performance or precision. Note that `float` is used by default.
 
+
+Transition from python-fcl
+==========================
+The transition from 
+- 
 
 Things to improve
 =================
