@@ -561,7 +561,19 @@ cdef class Cylinder(ShapeBase):
 
 cdef class Convex(ShapeBase):
     def __cinit__(self, vertices, num_faces, faces):
-        cdef vector[defs.CollisionObjectPointer] vfaces
+        cdef vector[defs.Vector3[Scalar]]* pvs
+        cdef vector[int]* pfs
+
+        for vert in vertices:
+            deref(pvs).push_back(defs.Vector3[Scalar](<Scalar?> vert[0], <Scalar?> vert[1], <Scalar?> vert[2]))
+        for face in faces:
+            # @TODO: using as_vector() might be faster: https://dmtn-013.lsst.io/#containers
+            deref(pfs).push_back(<int?> face)
+
+        self.thisptr = new defs.Convex[Scalar](
+            defs.shared_ptr[const vector[Vector3[Scalar]]](pvs), 
+            <int?> num_faces, 
+            defs.shared_ptr[const vector[int]](pfs))
 
 cdef class Halfspace(ShapeBase):
     def __cinit__(self, n, d):
