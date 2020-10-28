@@ -7,13 +7,13 @@ git pull
 git checkout v2.1
 cd ..
 
-rm -rf octomap 
-git clone https://github.com/OctoMap/octomap.git
-cd octomap
-git pull
-# I have tried v.1.9.5, didn't work: https://github.com/flexible-collision-library/fcl/issues/210
-git checkout v1.8.1
-cd ..
+# rm -rf octomap 
+# git clone https://github.com/OctoMap/octomap.git
+# cd octomap
+# git pull
+# # I have tried v.1.9.5, didn't work: https://github.com/flexible-collision-library/fcl/issues/210
+# git checkout v1.8.1
+# cd ..
 
 rm -rf fcl
 git clone https://github.com/flexible-collision-library/fcl.git

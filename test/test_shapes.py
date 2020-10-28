@@ -10,6 +10,8 @@ import unittest
 
 import pyfcl as fcl
 
+double_float_difference = 1e-7
+
 def nonzero_rand(*args):
     return np.random.rand(*args) + 0.05
 
@@ -39,15 +41,15 @@ class TestTriangleP(unittest.TestCase):
     def test_properties(self):        
         random_vertices = [np.random.rand(3)for i in range(3)]
         tri = fcl.TriangleP(*random_vertices)
-        np.testing.assert_allclose(tri.a, random_vertices[0], rtol=0, atol=0)
-        np.testing.assert_allclose(tri.b, random_vertices[1], rtol=0, atol=0)
-        np.testing.assert_allclose(tri.c, random_vertices[2], rtol=0, atol=0)
+        np.testing.assert_allclose(tri.a, random_vertices[0], rtol=0, atol=0+double_float_difference)
+        np.testing.assert_allclose(tri.b, random_vertices[1], rtol=0, atol=0+double_float_difference)
+        np.testing.assert_allclose(tri.c, random_vertices[2], rtol=0, atol=0+double_float_difference)
 
         random_vertices = [np.random.rand(3)for i in range(3)]
         tri.a, tri.b, tri.c = random_vertices
-        np.testing.assert_allclose(tri.a, random_vertices[0], rtol=0, atol=0)
-        np.testing.assert_allclose(tri.b, random_vertices[1], rtol=0, atol=0)
-        np.testing.assert_allclose(tri.c, random_vertices[2], rtol=0, atol=0)
+        np.testing.assert_allclose(tri.a, random_vertices[0], rtol=0, atol=0+double_float_difference)
+        np.testing.assert_allclose(tri.b, random_vertices[1], rtol=0, atol=0+double_float_difference)
+        np.testing.assert_allclose(tri.c, random_vertices[2], rtol=0, atol=0+double_float_difference)
 
     def test_self_collide(self):
         # t1 = fcl.TriangleP(*np.array([[0,0,0],[1,0,0],[0,1,0]]))
@@ -74,11 +76,11 @@ class TestBox(unittest.TestCase):
     def test_properties(self):
         random_sides = np.random.rand(3)
         box = fcl.Box(*random_sides)
-        np.testing.assert_allclose(box.side, random_sides, rtol=0, atol=0)
+        np.testing.assert_allclose(box.side, random_sides, rtol=0, atol=0+double_float_difference)
         
         random_sides = np.random.rand(3)
         box.side = random_sides
-        np.testing.assert_allclose(box.side, random_sides, rtol=0, atol=0)
+        np.testing.assert_allclose(box.side, random_sides, rtol=0, atol=0+double_float_difference)
 
         self.assertTrue(box.getNodeType() == 9)
         
@@ -158,11 +160,11 @@ class TestSphere(unittest.TestCase):
     def test_properties(self):
         random_radius = np.random.rand()
         sphere = fcl.Sphere(random_radius)
-        np.testing.assert_allclose(sphere.radius, random_radius, rtol=0, atol=0)
+        np.testing.assert_allclose(sphere.radius, random_radius, rtol=0, atol=0+double_float_difference)
 
         random_radius = np.random.rand()
         sphere.radius = random_radius
-        np.testing.assert_allclose(sphere.radius, random_radius, rtol=0, atol=0)
+        np.testing.assert_allclose(sphere.radius, random_radius, rtol=0, atol=0+double_float_difference)
 
         self.assertTrue(sphere.getNodeType() == 10)
 
@@ -192,11 +194,11 @@ class TestEllipsoid(unittest.TestCase):
     def test_properties(self):
         random_radii = np.random.rand(3)
         ellipsoid = fcl.Ellipsoid(random_radii[0], random_radii[1], random_radii[2])
-        np.testing.assert_allclose(ellipsoid.radii, random_radii, rtol=0, atol=0)
+        np.testing.assert_allclose(ellipsoid.radii, random_radii, rtol=0, atol=0+double_float_difference)
 
         random_radii = np.random.rand(3)
         ellipsoid.radii = random_radii
-        np.testing.assert_allclose(ellipsoid.radii, random_radii, rtol=0, atol=0)
+        np.testing.assert_allclose(ellipsoid.radii, random_radii, rtol=0, atol=0+double_float_difference)
 
     def test_self_collide(self):
         e1, e2 = fcl.Ellipsoid(1, 2, 3), fcl.Ellipsoid(1, 2, 3)
@@ -264,14 +266,14 @@ class TestCapsule(unittest.TestCase):
     def test_properties(self):
         random_radius, random_lz= nonzero_rand(), nonzero_rand()
         c = fcl.Capsule(random_radius, random_lz)
-        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0)
-        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0)
+        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0+double_float_difference)
+        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0+double_float_difference)
 
         random_radius, random_lz= nonzero_rand(), nonzero_rand()
         c.radius = random_radius
         c.lz = random_lz
-        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0)
-        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0)
+        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0+double_float_difference)
+        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0+double_float_difference)
 
     def test_self_collide(self):
         c1, c2 = fcl.Capsule(0.5, 2), fcl.Capsule(1, 4)
@@ -337,14 +339,14 @@ class TestCone(unittest.TestCase):
     def test_properties(self):
         random_radius, random_lz= nonzero_rand(), nonzero_rand()
         c = fcl.Cone(random_radius, random_lz)
-        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0)
-        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0)
+        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0+double_float_difference)
+        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0+double_float_difference)
 
         random_radius, random_lz= nonzero_rand(), nonzero_rand()
         c.radius = random_radius
         c.lz = random_lz
-        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0)
-        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0)
+        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0+double_float_difference)
+        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0+double_float_difference)
 
     def test_self_collide(self):
         c1, c2 = fcl.Cone(1, 2), fcl.Cone(2, 4)
@@ -400,14 +402,14 @@ class TestCylinder(unittest.TestCase):
     def test_properties(self):
         random_radius, random_lz= nonzero_rand(), nonzero_rand()
         c = fcl.Cylinder(random_radius, random_lz)
-        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0)
-        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0)
+        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0+double_float_difference)
+        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0+double_float_difference)
 
         random_radius, random_lz= nonzero_rand(), nonzero_rand()
         c.radius = random_radius
         c.lz = random_lz
-        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0)
-        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0)
+        np.testing.assert_allclose(c.radius, random_radius, rtol=0, atol=0+double_float_difference)
+        np.testing.assert_allclose(c.lz, random_lz, rtol=0, atol=0+double_float_difference)
 
     def test_self_collide(self):
         c1, c2 = fcl.Cylinder(0.5, 1), fcl.Cylinder(2, 4)
@@ -465,15 +467,15 @@ class TestHalfspace(unittest.TestCase):
         random_normal, random_d = nonzero_rand(3), nonzero_rand()
         random_normal /= np.linalg.norm(random_normal)
         h = fcl.Halfspace(random_normal, random_d)
-        np.testing.assert_allclose(h.n, random_normal, rtol=0, atol=1e-15)
-        np.testing.assert_allclose(h.d, random_d, rtol=0, atol=1e-15)
+        np.testing.assert_allclose(h.n, random_normal, rtol=0, atol=1e-15+double_float_difference)
+        np.testing.assert_allclose(h.d, random_d, rtol=0, atol=1e-15+double_float_difference)
 
         random_normal, random_d = nonzero_rand(3), nonzero_rand()
         random_normal /= np.linalg.norm(random_normal)
         h.n = random_normal
         h.d = random_d
-        np.testing.assert_allclose(h.n, random_normal, rtol=0, atol=1e-15)
-        np.testing.assert_allclose(h.d, random_d, rtol=0, atol=1e-15)
+        np.testing.assert_allclose(h.n, random_normal, rtol=0, atol=1e-15+double_float_difference)
+        np.testing.assert_allclose(h.d, random_d, rtol=0, atol=1e-15+double_float_difference)
 
     def test_self_collide(self):
         h1, h2 = fcl.Halfspace(np.array([0,0,1]), -1), fcl.Halfspace(np.array([0,0,-1]), 2)
