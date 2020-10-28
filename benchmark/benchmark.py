@@ -2,7 +2,9 @@
 
 # 3rd imports
 import os
+import timeit
 import numpy as np
+
 import trimesh
 
 import pyfcl as fcl
@@ -20,7 +22,10 @@ def build_bvh_outof_trimesh(mesh):
 	return bvh
 
 if __name__ == '__main__':
-
 	mesh = trimesh.load(os.path.join(os.path.dirname(__file__), 'ur5_forearm.stl'))
 
-	build_bvh_outof_trimesh(mesh)
+	f = lambda : build_bvh_outof_trimesh(mesh)
+
+	print(timeit.timeit(f, number=1000))
+
+	
