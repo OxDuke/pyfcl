@@ -56,7 +56,7 @@ class TestDynamicAABBTreeCollisionManager(unittest.TestCase):
         # sphere_object's distance to co1 is 0.5m.
         ddata = fcl.DistanceData()
         manager.distance(sphere_object, ddata, fcl.defaultDistanceCallback)
-        np.testing.assert_allclose(ddata.result.min_distance, 0.5, rtol=0, atol=0)
+        np.testing.assert_allclose(ddata.result.min_distance, 0.5, rtol=5*1e-6, atol=0)
 
         # Let's add co2 back to manager, so that sphere_object collides with it
         manager.registerObject(co2)

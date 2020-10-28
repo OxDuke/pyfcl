@@ -35,7 +35,7 @@ def test_shape_self_distance(shape1, shape2, tf1, tf2, expected_distance, atol=0
 
     ret = fcl.distance(co1, co2, req, res)
 
-    np.testing.assert_allclose(res.min_distance, expected_distance, rtol=0, atol=atol)
+    np.testing.assert_allclose(res.min_distance, expected_distance, rtol=5*1e-6, atol=atol)
 
 class TestTriangleP(unittest.TestCase):
     def test_properties(self):        

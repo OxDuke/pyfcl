@@ -20,7 +20,7 @@ ext_modules=[
     include_dirs = ['/usr/local/include', '/usr/include/eigen3', 'include/', '/usr/local/include/eigen3'],
     #@TODO: remove: '/usr/local/lib:/opt/ros/lunar/lib'
     library_dirs = ['/usr/lib', '/usr/local/lib','/usr/local/lib:/opt/ros/lunar/lib'],
-    libraries=["fcl","ccd"],
+    libraries=[":libfcl.so.0.6.1","ccd"],
     language="c++",
     extra_compile_args = ["-std=c++11"])]
 

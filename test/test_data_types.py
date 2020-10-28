@@ -31,7 +31,7 @@ class TestTransform(unittest.TestCase):
         return random_homogeneous_matrix, random_quaternion_wxyz, random_translation
 
     def is_transform_close(self, transform, ground_truth_transform):
-        np.testing.assert_allclose(transform.toarray(), ground_truth_transform, rtol=0, atol=3*sys.float_info.epsilon)
+        np.testing.assert_allclose(transform.toarray(), ground_truth_transform, rtol=5*1e-6, atol=3*sys.float_info.epsilon)
 
     def test_default_constructor(self):
         tf = fcl.Transform()
@@ -70,13 +70,13 @@ class TestTransform(unittest.TestCase):
         rmat, rq, rv = self.generate_random_transform()          
         tf1 = fcl.Transform(rq, rv)
         tf2 = fcl.Transform(tf1)
-        np.testing.assert_allclose(tf1.toarray(), tf2.toarray(), rtol=0, atol=0)
+        np.testing.assert_allclose(tf1.toarray(), tf2.toarray(), rtol=5*1e-6, atol=0)
 
 
     def test_linear_and_translation(self):
         # rmat, rq, rv = self.generate_random_transform()          
         # tf = fcl.Transform(rq, rv)
-        # np.testing.assert_allclose(tf1.toarray(), tf2.toarray(), rtol=0, atol=0)
+        # np.testing.assert_allclose(tf1.toarray(), tf2.toarray(), rtol=5*1e-6, atol=0)
         pass
         #raise NotImplementedError
 

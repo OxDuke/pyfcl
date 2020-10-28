@@ -13,7 +13,7 @@ import numpy
 cimport fcl_defs as defs
 # cimport octomap_defs as octomap 
 # cimport std_defs as std 
-from collision_data import Contact, CostSource, CollisionRequest, CollisionResult, DistanceRequest, DistanceResult
+from collision_data import Contact, CostSource, CollisionRequest, ContinuousCollisionRequest, CollisionResult, ContinuousCollisionResult, DistanceRequest, DistanceResult
 # from collision_data import Contact, CostSource, CollisionRequest, ContinuousCollisionRequest, CollisionResult, ContinuousCollisionResult, DistanceRequest, DistanceResult
 
 # @TODO: This is a hack import, remove this one and import in __init__.py
@@ -866,8 +866,9 @@ def collide(CollisionObject o1, CollisionObject o2,
         result = CollisionResult()
 
     cdef defs.CollisionResult[Scalar] cresult
-
-    cdef size_t ret = defs.collide(o1.thisptr, o2.thisptr,
+    
+    # @TODO: Do we need [Scalar] here in defs.collide[Scalar] ?
+    cdef size_t ret = defs.collide[Scalar](o1.thisptr, o2.thisptr,
                                    defs.CollisionRequest[Scalar](
                                        <size_t?> request.num_max_contacts,
                                        <bool?> request.enable_contact,
@@ -890,6 +891,33 @@ def collide(CollisionObject o1, CollisionObject o2,
     for idx in range(costs.size()):
         result.cost_sources.append(c_to_python_costsource(costs[idx]))
 
+    return ret
+
+def continuousCollide(CollisionObject o1, Transform tf1_end,
+                      CollisionObject o2, Transform tf2_end,
+                      request = None, result = None):
+
+    if request is None:
+        request = ContinuousCollisionRequest()
+    if result is None:
+        result = ContinuousCollisionResult()
+
+    cdef defs.ContinuousCollisionResult[Scalar] cresult
+
+    cdef defs.Scalar ret = defs.continuousCollide[Scalar](o1.thisptr, deref(tf1_end.thisptr),
+                                                    o2.thisptr, deref(tf2_end.thisptr),
+                                                    defs.ContinuousCollisionRequest[Scalar](
+                                                        <size_t?>             request.num_max_iterations,
+                                                        <defs.Scalar?>      request.toc_err,
+                                                        <defs.CCDMotionType?> request.ccd_motion_type,
+                                                        <defs.GJKSolverType?> request.gjk_solver_type,
+                                                        <defs.CCDSolverType?> request.ccd_solver_type,
+
+                                                    ),
+                                                    cresult)
+
+    result.is_collide = result.is_collide or cresult.is_collide
+    result.time_of_contact = min(cresult.time_of_contact, result.time_of_contact)
     return ret
 
 # def continuousCollide(CollisionObject o1, Transform tf1_end,

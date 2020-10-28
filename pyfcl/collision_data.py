@@ -13,12 +13,12 @@ class NODE_TYPE:
     GEOM_PLANE, GEOM_HALFSPACE, GEOM_TRIANGLE, GEOM_OCTREE, NODE_COUNT = range(21)
 
 
-# class CCDMotionType:
-#     CCDM_TRANS, CCDM_LINEAR, CCDM_SCREW, CCDM_SPLINE = range(4)
+class CCDMotionType:
+    CCDM_TRANS, CCDM_LINEAR, CCDM_SCREW, CCDM_SPLINE = range(4)
 
 
-# class CCDSolverType:
-#     CCDC_NAIVE, CCDC_CONSERVATIVE_ADVANCEMENT, CCDC_RAY_SHOOTING, CCDC_POLYNOMIAL_SOLVER = range(4)
+class CCDSolverType:
+    CCDC_NAIVE, CCDC_CONSERVATIVE_ADVANCEMENT, CCDC_RAY_SHOOTING, CCDC_POLYNOMIAL_SOLVER = range(4)
 
 
 class GJKSolverType:
@@ -70,23 +70,23 @@ class CollisionResult:
         self.cost_sources = []
         # @TODO: Not implemented: A ton of functions, mainly property getters
 
-# class ContinuousCollisionRequest:
-#     def __init__(self,
-#                  num_max_iterations=10,
-#                  toc_err=0.0001,
-#                  ccd_motion_type=CCDMotionType.CCDM_TRANS,
-#                  gjk_solver_type=GJKSolverType.GST_LIBCCD,
-#                  ccd_solver_type=CCDSolverType.CCDC_CONSERVATIVE_ADVANCEMENT):
-#         self.num_max_iterations = num_max_iterations
-#         self.toc_err = toc_err
-#         self.ccd_motion_type = ccd_motion_type
-#         self.gjk_solver_type = gjk_solver_type
-#         self.ccd_solver_type = ccd_solver_type
+class ContinuousCollisionRequest:
+    def __init__(self,
+                 num_max_iterations=10,
+                 toc_err=0.0001,
+                 ccd_motion_type=CCDMotionType.CCDM_TRANS,
+                 gjk_solver_type=GJKSolverType.GST_LIBCCD,
+                 ccd_solver_type=CCDSolverType.CCDC_CONSERVATIVE_ADVANCEMENT):
+        self.num_max_iterations = num_max_iterations
+        self.toc_err = toc_err
+        self.ccd_motion_type = ccd_motion_type
+        self.gjk_solver_type = gjk_solver_type
+        self.ccd_solver_type = ccd_solver_type
 
-# class ContinuousCollisionResult:
-#     def __init__(self, is_collide=False, time_of_contact=1.0):
-#         self.is_collide = is_collide
-#         self.time_of_contact = time_of_contact
+class ContinuousCollisionResult:
+    def __init__(self, is_collide=False, time_of_contact=1.0):
+        self.is_collide = is_collide
+        self.time_of_contact = time_of_contact
 
 class DistanceRequest:
     def __init__(self,

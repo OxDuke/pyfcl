@@ -9,15 +9,15 @@ from libcpp.vector cimport vector
 from libcpp.memory cimport shared_ptr
 # cimport octomap_defs as octomap
 
-ctypedef double Scalar
-cdef cppclass BV_S "double"
+ctypedef float Scalar
+cdef cppclass BV_S "float"
 # @TODO: This is a hack
 # Because if you do vector[CollisionObject[S]*], cython will raise error:
 # The error message is: Expected an identifier or literal
-cdef cppclass CollisionObjectPointer "fcl::CollisionObject<double>*"
+cdef cppclass CollisionObjectPointer "fcl::CollisionObject<float>*"
 
-cdef cppclass CollisionCallBack "bool (*)(fcl::CollisionObject<double>* o1, fcl::CollisionObject<double>* o2, void* cdata)"
-cdef cppclass DistanceCallBack "bool (*)(fcl::CollisionObject<double>* o1, fcl::CollisionObject<double>* o2, void* cdata, double& dist)"
+cdef cppclass CollisionCallBack "bool (*)(fcl::CollisionObject<float>* o1, fcl::CollisionObject<float>* o2, void* cdata)"
+cdef cppclass DistanceCallBack "bool (*)(fcl::CollisionObject<float>* o1, fcl::CollisionObject<float>* o2, void* cdata, float& dist)"
 
 
 # @TODO: This is for CollisionObject, I want to remove this
@@ -181,6 +181,13 @@ cdef extern from "fcl/narrowphase/collision_result.h" namespace "fcl":
 #         void getContacts(vector[Contact]& contacts_)
 #         void getCostSources(vector[CostSource]& cost_sources_)
 
+cdef extern from "fcl/narrowphase/continuous_collision_result.h" namespace "fcl":
+    cdef cppclass ContinuousCollisionResult[S]:
+        ContinuousCollisionResult() except +
+        bool is_collide
+        S time_of_contact
+        Transform3[S] contact_tf1, contact_tf2
+
 #     cdef cppclass ContinuousCollisionResult:
 #         ContinuousCollisionResult() except +
 #         bool is_collide
@@ -215,6 +222,22 @@ cdef extern from "fcl/narrowphase/collision_request.h" namespace "fcl":
 #                          bool enable_cost_,
 #                          bool use_approximate_cost_,
 #                          GJKSolverType gjk_solver_type_)
+
+cdef extern from "fcl/narrowphase/continuous_collision_request.h" namespace "fcl":
+    cdef cppclass ContinuousCollisionRequest[S]:
+        # @TODO: remove trailing underscore
+        size_t num_max_iterations_,
+        S toc_err_,
+        CCDMotionType ccd_motion_type_,
+        GJKSolverType gjk_solver_type_,
+        GJKSolverType ccd_solver_type_
+
+        ContinuousCollisionRequest(
+                            size_t num_max_iterations_,
+                            S toc_err_,
+                            CCDMotionType ccd_motion_type_,
+                            GJKSolverType gjk_solver_type_,
+                            CCDSolverType ccd_solver_type_ )
 
 #     cdef cppclass ContinuousCollisionRequest:
 #          size_t num_max_iterations_,
@@ -448,16 +471,16 @@ cdef extern from "fcl/narrowphase/collision.h" namespace "fcl":
     #                CollisionRequest[S]& request,
     #                CollisionResult[S]& result)
 
-# cdef extern from "fcl/continuous_collision.h" namespace "fcl":
-#     FCL_REAL continuousCollide(CollisionGeometry* o1, Transform3f& tf1_beg, Transform3f& tf1_end,
-#                                CollisionGeometry* o2, Transform3f& tf2_beg, Transform3f& tf2_end,
-#                                ContinuousCollisionRequest& request,
-#                                ContinuousCollisionResult& result)
+cdef extern from "fcl/narrowphase/continuous_collision.h" namespace "fcl":
+    # S continuousCollide[S](CollisionGeometry[S]* o1, Transform3[S]& tf1_beg, Transform3[S]& tf1_end,
+    #                            CollisionGeometry[S]* o2, Transform3[S]& tf2_beg, Transform3[S]& tf2_end,
+    #                            ContinuousCollisionRequest[S]& request,
+    #                            ContinuousCollisionResult[S]& result)
 
-#     FCL_REAL continuousCollide(CollisionObject* o1, Transform3f& tf1_end,
-#                                CollisionObject* o2, Transform3f& tf2_end,
-#                                ContinuousCollisionRequest& request,
-#                                ContinuousCollisionResult& result)
+    S continuousCollide[S](CollisionObject[S]* o1, Transform3[S]& tf1_end,
+                               CollisionObject[S]* o2, Transform3[S]& tf2_end,
+                               ContinuousCollisionRequest[S]& request,
+                               ContinuousCollisionResult[S]& result)
 
 
 cdef extern from "fcl/narrowphase/distance.h" namespace "fcl":
