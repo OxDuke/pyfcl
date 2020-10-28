@@ -462,6 +462,41 @@ class TestCylinder(unittest.TestCase):
             0.5)
 
 class TestConvex(unittest.TestCase):
+
+    def setUp(self):
+        vertices = np.array([[0,0,1],
+                      [0,0,0],
+                      [0,1,0],
+                      [1,0,0]])
+
+        faces = [[0,2,1],[0,1,3],[0,3,2],[1,2,3]]
+        
+        nfaces = [len(face) for face in faces]
+        cfaces = [[pair[0]] + pair[1] for pair in zip(nfaces,faces)]
+        cfaces = [item for sublist in cfaces for item in sublist]
+        
+        c1 = fcl.Convex(vertices, 4, cfaces)
+        self.tetrahedron1 = c1
+
+        vertices = np.array([[0,0,1],
+                      [0,0,0],
+                      [-1,0,0],
+                      [0,1,0]])
+        c2 = fcl.Convex(vertices, 4, cfaces)
+        self.tetrahedron2 = c2
+
+    def test_self_collide(self):
+        c1, c2 = self.tetrahedron1, self.tetrahedron2
+
+        test_shape_self_collide(c1, c2,
+            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([0,0,0,1]), np.array([-0.001,0,0])),
+            True)
+        test_shape_self_collide(c1, c2,
+            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([0,0,0,1]), np.array([0.001,0,0])),
+            False)
+
     def test_properties(self):
         vertices = np.array([[0,0,1],
                       [0,0,0],
