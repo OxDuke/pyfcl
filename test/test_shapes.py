@@ -461,6 +461,23 @@ class TestCylinder(unittest.TestCase):
             fcl.Transform(np.array([0,0,0,1]), np.array([0,0,3])),
             0.5)
 
+class TestConvex(unittest.TestCase):
+    def test_properties(self):
+        vertices = np.array([[0,0,1],
+                      [0,0,0],
+                      [0,1,0],
+                      [1,0,0]])
+
+        faces = [[0,2,1],[0,1,3],[0,3,2],[1,2,3]]
+        
+        nfaces = [len(face) for face in faces]
+        cfaces = [[pair[0]] + pair[1] for pair in zip(nfaces,faces)]
+        cfaces = [item for sublist in cfaces for item in sublist]
+        
+        c = fcl.Convex(vertices, 4, cfaces)
+        
+        
+
 
 class TestHalfspace(unittest.TestCase):
     def test_properties(self):

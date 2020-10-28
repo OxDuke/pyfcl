@@ -1,6 +1,6 @@
 
 from .pyfcl import Transform, CollisionGeometry, CollisionObject
-from .pyfcl import TriangleP, Box, Sphere, Ellipsoid, Capsule, Cone, Cylinder, Halfspace, Plane, BVHModel
+from .pyfcl import TriangleP, Box, Sphere, Ellipsoid, Capsule, Cone, Cylinder, Convex, Halfspace, Plane, BVHModel
 # from .pyfcl import OcTree, 
 from .pyfcl import collide, distance
 #from .pyfcl import continuousCollide

@@ -6,7 +6,7 @@ from libcpp cimport bool
 # from libcpp.string cimport string
 from libcpp.vector cimport vector
 # from libcpp.set cimport set
-from libcpp.memory cimport shared_ptr
+from libcpp.memory cimport shared_ptr, make_shared
 # cimport octomap_defs as octomap
 
 ctypedef double Scalar
