@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
 # 3rd imports
+import os
 import numpy as np
 import trimesh
 
-#import pyfcl as fcl
-import fcl
+import pyfcl as fcl
+#import fcl
 
 def build_bvh_outof_trimesh(mesh):
 	verts = np.array(mesh.vertices)
@@ -19,6 +20,7 @@ def build_bvh_outof_trimesh(mesh):
 	return bvh
 
 if __name__ == '__main__':
-	mesh = trimesh.load('./ur5_forearm.stl')
+
+	mesh = trimesh.load(os.path.join(os.path.dirname(__file__), 'ur5_forearm.stl'))
 
 	build_bvh_outof_trimesh(mesh)
