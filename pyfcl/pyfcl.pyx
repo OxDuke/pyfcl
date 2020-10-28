@@ -559,6 +559,10 @@ cdef class Cylinder(ShapeBase):
     def lz(self, value):
         (<defs.Cylinder[Scalar]*> self.thisptr).lz = <Scalar?> value
 
+cdef class Convex(ShapeBase):
+    def __cinit__(self, vertices, num_faces, faces):
+        cdef vector[defs.CollisionObjectPointer] vfaces
+
 cdef class Halfspace(ShapeBase):
     def __cinit__(self, n, d):
         self.thisptr = new defs.Halfspace[Scalar](defs.Vector3[Scalar](<Scalar?> n[0],
