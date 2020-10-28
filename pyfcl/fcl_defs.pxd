@@ -9,15 +9,15 @@ from libcpp.vector cimport vector
 from libcpp.memory cimport shared_ptr
 # cimport octomap_defs as octomap
 
-ctypedef float Scalar
-cdef cppclass BV_S "float"
+ctypedef double Scalar
+cdef cppclass BV_S "double"
 # @TODO: This is a hack
 # Because if you do vector[CollisionObject[S]*], cython will raise error:
 # The error message is: Expected an identifier or literal
-cdef cppclass CollisionObjectPointer "fcl::CollisionObject<float>*"
+cdef cppclass CollisionObjectPointer "fcl::CollisionObject<double>*"
 
-cdef cppclass CollisionCallBack "bool (*)(fcl::CollisionObject<float>* o1, fcl::CollisionObject<float>* o2, void* cdata)"
-cdef cppclass DistanceCallBack "bool (*)(fcl::CollisionObject<float>* o1, fcl::CollisionObject<float>* o2, void* cdata, float& dist)"
+cdef cppclass CollisionCallBack "bool (*)(fcl::CollisionObject<double>* o1, fcl::CollisionObject<double>* o2, void* cdata)"
+cdef cppclass DistanceCallBack "bool (*)(fcl::CollisionObject<double>* o1, fcl::CollisionObject<double>* o2, void* cdata, double& dist)"
 
 
 # @TODO: This is for CollisionObject, I want to remove this

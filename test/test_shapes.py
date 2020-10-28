@@ -10,7 +10,7 @@ import unittest
 
 import pyfcl as fcl
 
-double_float_difference = 1e-7
+from common_utils import double_float_difference
 
 def nonzero_rand(*args):
     return np.random.rand(*args) + 0.05
