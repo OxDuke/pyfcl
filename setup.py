@@ -12,10 +12,10 @@ cwd = os.path.dirname(os.path.abspath(
 
 # load __version__
 exec(open(os.path.join(cwd,
-                       'pyfcl/version.py'), 'r').read())
+                       'fcl/version.py'), 'r').read())
 
 ext_modules=[
-    Extension("pyfcl.pyfcl", ["pyfcl/pyfcl.pyx"],
+    Extension("fcl.fcl", ["fcl/fcl.pyx"],
     #@TODO: better include for include/eigen_wrapper.h
     include_dirs = ['/usr/local/include', '/usr/include/eigen3', 'include/', '/usr/local/include/eigen3'],
     #@TODO: remove: '/usr/local/lib:/opt/ros/lunar/lib'
@@ -46,7 +46,7 @@ setup(
       'Programming Language :: Python :: 3.8',
   ],
   keywords='fcl collision distance',
-  packages=['pyfcl'],
+  packages=['fcl'],
   setup_requires=['cython'],
   install_requires=['numpy', 'cython'],
 
