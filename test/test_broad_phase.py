@@ -16,9 +16,9 @@ class TestDynamicAABBTreeCollisionManager(unittest.TestCase):
 
     def construct_manager(self):
         # co3 collides with co1
-        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])))
-        co2 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([0,0,0,1]), np.array([0,3,0])))
-        co3 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([0,0,0,1]), np.array([0,4,0])))
+        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,0,0])))
+        co2 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,3,0])))
+        co3 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,4,0])))
         
         manager = fcl.DynamicAABBTreeCollisionManager()
         manager.registerObjects([co1, co2, co3])
@@ -27,15 +27,15 @@ class TestDynamicAABBTreeCollisionManager(unittest.TestCase):
         return manager
 
     def test_register_and_unregisterObject(self):
-        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])))
-        co2 = fcl.CollisionObject(fcl.Sphere(2), fcl.Transform(np.array([0,0,0,1]), np.array([0,4,0])))
-        co3 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([0,0,0,1]), np.array([0,5,0])))
+        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,0,0])))
+        co2 = fcl.CollisionObject(fcl.Sphere(2), fcl.Transform(np.array([1, 0,0,0]), np.array([0,4,0])))
+        co3 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,5,0])))
 
         manager = fcl.DynamicAABBTreeCollisionManager()
         manager.registerObjects([co1, co2, co3])
         manager.setup()
 
-        sphere_object = fcl.CollisionObject(fcl.Sphere(0.5), fcl.Transform(np.array([0,0,0,1]), np.array([0,2,0])))
+        sphere_object = fcl.CollisionObject(fcl.Sphere(0.5), fcl.Transform(np.array([1, 0,0,0]), np.array([0,2,0])))
         cdata = fcl.CollisionData()
         manager.collide(sphere_object, cdata, fcl.defaultCollisionCallback)
         self.assertTrue(cdata.result.is_collision == True)
@@ -88,8 +88,8 @@ class TestDynamicAABBTreeCollisionManager(unittest.TestCase):
     def test_one2many_collision(self):
         manager = self.construct_manager()
 
-        sphere_object1 = fcl.CollisionObject(fcl.Sphere(0.51), fcl.Transform(np.array([0,0,0,1]), np.array([0,1.5,0])))
-        sphere_object2 = fcl.CollisionObject(fcl.Sphere(0.49), fcl.Transform(np.array([0,0,0,1]), np.array([0,1.5,0])))
+        sphere_object1 = fcl.CollisionObject(fcl.Sphere(0.51), fcl.Transform(np.array([1, 0,0,0]), np.array([0,1.5,0])))
+        sphere_object2 = fcl.CollisionObject(fcl.Sphere(0.49), fcl.Transform(np.array([1, 0,0,0]), np.array([0,1.5,0])))
 
         cdata = fcl.CollisionData()
         manager.collide(sphere_object1, cdata, fcl.defaultCollisionCallback)
@@ -102,8 +102,8 @@ class TestDynamicAABBTreeCollisionManager(unittest.TestCase):
 
     def test_self_distance(self):
         # @TODO: use a helper function to assemble manager
-        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])))
-        co2 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([0,0,0,1]), np.array([0,4,0])))
+        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,0,0])))
+        co2 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,4,0])))
         
         manager = fcl.DynamicAABBTreeCollisionManager()
         manager.registerObjects([co1, co2])
@@ -114,28 +114,28 @@ class TestDynamicAABBTreeCollisionManager(unittest.TestCase):
         np.testing.assert_allclose(ddata.result.min_distance, 2.5)
 
     def test_one2many_distance(self):
-        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])))
-        co2 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([0,0,0,1]), np.array([0,4,0])))
+        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,0,0])))
+        co2 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,4,0])))
         
         manager1 = fcl.DynamicAABBTreeCollisionManager()
         manager1.registerObjects([co1, co2])
         manager1.setup()
 
-        sphere_object = fcl.CollisionObject(fcl.Sphere(0.5), fcl.Transform(np.array([0,0,0,1]), np.array([0,2,0])))
+        sphere_object = fcl.CollisionObject(fcl.Sphere(0.5), fcl.Transform(np.array([1, 0,0,0]), np.array([0,2,0])))
 
         ddata = fcl.DistanceData()
         manager1.distance(sphere_object, ddata, fcl.defaultDistanceCallback)
         np.testing.assert_allclose(ddata.result.min_distance, 0.5)
 
     def test_many2many_distance(self):
-        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])))
-        co2 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([0,0,0,1]), np.array([0,4,0])))
+        co1 = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,0,0])))
+        co2 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,4,0])))
         manager1 = fcl.DynamicAABBTreeCollisionManager()
         manager1.registerObjects([co1, co2])
         manager1.setup()
 
-        co3 = fcl.CollisionObject(fcl.Sphere(0.5), fcl.Transform(np.array([0,0,0,1]), np.array([0,2,0])))
-        co4 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([0,0,0,1]), np.array([0,4,10])))
+        co3 = fcl.CollisionObject(fcl.Sphere(0.5), fcl.Transform(np.array([1, 0,0,0]), np.array([0,2,0])))
+        co4 = fcl.CollisionObject(fcl.Box(1,1,1), fcl.Transform(np.array([1, 0,0,0]), np.array([0,4,10])))
         manager2 = fcl.DynamicAABBTreeCollisionManager()
         manager2.registerObjects([co3, co4])
         manager2.setup()

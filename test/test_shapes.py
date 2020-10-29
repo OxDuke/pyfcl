@@ -56,13 +56,13 @@ class TestTriangleP(unittest.TestCase):
         # t2 = fcl.TriangleP(*np.array([[0,1,0],[-1,0,0],[1,0,0]]))
         
         # test_shape_self_collide(t1, t2,
-        #     fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-        #     fcl.Transform(np.array([0,0,0,1]), np.array([-0.999,0,0])),
+        #     fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+        #     fcl.Transform(np.array([1,0,0,0]), np.array([-0.999,0,0])),
         #     True)
 
         # test_shape_self_collide(t1, t2,
-        #     fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-        #     fcl.Transform(np.array([0,0,0,1]), np.array([-1.001,0,0])),
+        #     fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+        #     fcl.Transform(np.array([1,0,0,0]), np.array([-1.001,0,0])),
         #     False)
         
         # @TODO: need tests here
@@ -89,70 +89,70 @@ class TestBox(unittest.TestCase):
     def test_self_collide(self):
         # Seperate on X axis
         test_shape_self_collide(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0.999,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0.999,0,0])),
             True)
 
         test_shape_self_collide(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([1.001,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([1.001,0,0])),
             False)
         
         # Seperate on Y axis
         test_shape_self_collide(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0, 1.499, 0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0, 1.499, 0])),
             True)
 
         test_shape_self_collide(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,1.501, 0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,1.501, 0])),
             False)
 
         # Seperate on Z axis
         test_shape_self_collide(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0, 0,1.999])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0, 0,1.999])),
             True)
 
         test_shape_self_collide(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0, 2.001])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0, 2.001])),
             False)
 
         # Rotate box1 around Z axis for 90 degrees
         # Note that the quaternion is in [w,x,y,z] order.
         rotate_around_z_90_degrees = np.array([0.70710678, 0., 0., 0.70710678])
         test_shape_self_collide(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([1.499,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([1.499,0,0])),
             fcl.Transform(rotate_around_z_90_degrees, np.array([0,0,0])),
             True)
         test_shape_self_collide(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([1.501,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([1.501,0,0])),
             fcl.Transform(rotate_around_z_90_degrees, np.array([0,0,0])),
             False)
 
     def test_self_distance(self):
         # Seperation on X, Y, Z axis
         test_shape_self_distance(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([2,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([2,0,0])),
             1.0)
 
         test_shape_self_distance(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,3,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,3,0])),
             1.5)
 
         test_shape_self_distance(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,3])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,3])),
             1.0)
         
         # If two boxes collide, distance() should return -1.
         test_shape_self_distance(fcl.Box(1,1,1), fcl.Box(1,2,3), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([1,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([1,0,0])),
             -1.0)
 
 class TestSphere(unittest.TestCase):
@@ -170,24 +170,24 @@ class TestSphere(unittest.TestCase):
 
     def test_self_collide(self):
         test_shape_self_collide(fcl.Sphere(1), fcl.Sphere(2), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([2.999,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([2.999,0,0])),
             True)
 
         test_shape_self_collide(fcl.Sphere(1), fcl.Sphere(2), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([3.001,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([3.001,0,0])),
             False)
 
     def test_self_distance(self):
         test_shape_self_distance(fcl.Sphere(1), fcl.Sphere(2), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([4,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([4,0,0])),
             1.)
 
         test_shape_self_distance(fcl.Sphere(1), fcl.Sphere(2), 
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([2,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([2,0,0])),
             -1)
 
 class TestEllipsoid(unittest.TestCase):
@@ -204,39 +204,39 @@ class TestEllipsoid(unittest.TestCase):
         e1, e2 = fcl.Ellipsoid(1, 2, 3), fcl.Ellipsoid(1, 2, 3)
         
         test_shape_self_collide(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([1.999,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([1.999,0,0])),
             True)
         test_shape_self_collide(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([2.001,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([2.001,0,0])),
             False)
 
         test_shape_self_collide(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0, 3.999, 0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0, 3.999, 0])),
             True)
         test_shape_self_collide(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0, 4.001, 0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0, 4.001, 0])),
             False)
 
         test_shape_self_collide(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0, 0, 5.999])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0, 0, 5.999])),
             True)
         test_shape_self_collide(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0, 0, 6.001])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0, 0, 6.001])),
             False)
 
         rotate_around_x_90_degrees = np.array([0.70710678, 0.70710678, 0., 0.])
         test_shape_self_collide(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,2.999,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,2.999,0])),
             fcl.Transform(rotate_around_x_90_degrees, np.array([0, 4.999, 0])),
             True)
         test_shape_self_collide(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
             fcl.Transform(rotate_around_x_90_degrees, np.array([0, 5.001, 0])),
             False)
 
@@ -244,22 +244,22 @@ class TestEllipsoid(unittest.TestCase):
         e1, e2 = fcl.Ellipsoid(1, 1, 1), fcl.Ellipsoid(1, 2, 3)
         
         test_shape_self_distance(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([3,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([3,0,0])),
             1., atol=1e-6)
         test_shape_self_distance(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,4,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,4,0])),
             1., atol=1e-6)
         test_shape_self_distance(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,5])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,5])),
             1., atol=1e-6)
 
         # Two elliposoids collide
         test_shape_self_distance(e1, e2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([1,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([1,0,0])),
             -1)
 
 class TestCapsule(unittest.TestCase):
@@ -280,32 +280,32 @@ class TestCapsule(unittest.TestCase):
         
         # Seperation on X-Y plane
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([1.499,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([1.499,0,0])),
             True)
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([1.501,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([1.501,0,0])),
             False)
         
         # Seperation on Z axis
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0, 0, 4.499])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0, 0, 4.499])),
             True)
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0, 0, 4.501])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0, 0, 4.501])),
             False)
         
         # Rotate c2 around X axis, then move along Y axis
         rotate_around_x_90_degrees = np.array([0.70710678, 0.70710678, 0., 0.])
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
             fcl.Transform(rotate_around_x_90_degrees, np.array([0,2.499,0])),
             True)
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
             fcl.Transform(rotate_around_x_90_degrees, np.array([0,3.501, 0])),
             False)
 
@@ -314,24 +314,24 @@ class TestCapsule(unittest.TestCase):
         
         # Seperation on X, Y, Z axis
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([2,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([2,0,0])),
             0.5)
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,2,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,2,0])),
             0.5)
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,5])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,5])),
             0.5)
 
         # If collide, return -0.5? 
         # It should return -1, @TODO: Why? 
         # Maybe it is easier to compute distance between capsules
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,4])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,4])),
             -0.5)
 
 
@@ -352,33 +352,33 @@ class TestCone(unittest.TestCase):
         c1, c2 = fcl.Cone(1, 2), fcl.Cone(2, 4)
         # Seperation on X-Y plane
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([2.999,0,1])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([2.999,0,1])),
             True)
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([3.001,0,2])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([3.001,0,2])),
             False)
 
         # Seperation on Z axis
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,2.999])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,2.999])),
             True)
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,3.001])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,3.001])),
             False)
         
         # Flip one cone upside down
         c1, c2 = fcl.Cone(1, 2), fcl.Cone(1, 2)
         rotate_around_x_180_degrees = np.array([0,1,0,0])
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,1])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,1])),
             fcl.Transform(rotate_around_x_180_degrees, np.array([0,0.999,1])),
             True)
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,1])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,1])),
             fcl.Transform(rotate_around_x_180_degrees, np.array([0,1.001,1])),
             False)
 
@@ -386,16 +386,16 @@ class TestCone(unittest.TestCase):
         c1, c2 = fcl.Cone(1, 2), fcl.Cone(2, 4)
         # Seperation on X,Y,Z axis
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([4,0,1])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([4,0,1])),
             1.)
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,4,1])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,4,1])),
             1., 1e-6)
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,4])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,4])),
             1.)
 
 class TestCylinder(unittest.TestCase):
@@ -416,49 +416,49 @@ class TestCylinder(unittest.TestCase):
 
         # Seperation on X-Y plane
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([2.499,0,1])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([2.499,0,1])),
             True)
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([2.501,0,2])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([2.501,0,2])),
             False)
 
         # Seperation on Z axis
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,2.499])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,2.499])),
             True)
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,2.501])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,2.501])),
             False) 
 
         # Rotate c2 around X axis, then move along Y axis
         rotate_around_x_90_degrees = np.array([0.70710678, 0.70710678, 0., 0.])
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,2.499,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,2.499,0])),
             True)
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,3.501,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,3.501,0])),
             False) 
 
     def test_self_distance(self):
         c1, c2 = fcl.Cylinder(0.5, 1), fcl.Cylinder(2, 4)
         # Seperation on X,Y,Z axis
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([3,0,1])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([3,0,1])),
             0.5)
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,3.5,1])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,3.5,1])),
             1.0, 1e-5)
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,3])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,3])),
             0.5)
 
 class TestConvex(unittest.TestCase):
