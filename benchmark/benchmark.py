@@ -8,7 +8,6 @@ import numpy as np
 import trimesh
 
 import fcl
-#import fcl
 
 def build_box_object():
     b = fcl.Box(1,1,1)
@@ -46,10 +45,7 @@ def mesh_vs_convex():
     cfaces = [[pair[0]] + pair[1] for pair in zip(nfaces,faces)]
     cfaces = [item for sublist in cfaces for item in sublist]
 
-    if fcl.__package__ == "pyfcl":
-        convex_repr = fcl.Convex(vertices, 4, cfaces)
-    else:
-        convex_repr = None
+    convex_repr = fcl.Convex(vertices, 4, cfaces)
 
     mesh_repr = fcl.BVHModel()
     mesh_repr.beginModel(len(faces), len(vertices))
@@ -105,6 +101,7 @@ if __name__ == '__main__':
 
 
     cocvx, cobvh = mesh_vs_convex()
+    print(cocvx)
     co1 = fcl.CollisionObject(bvh1, fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])))
     co2 = fcl.CollisionObject(cocvx, fcl.Transform(np.array([1,0,0,0]), np.array([0.75, 0, 0.55])))
 
