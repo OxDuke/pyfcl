@@ -9,7 +9,7 @@ Major Upgrades
 ==============
 - Support FCL 0.6.0.
 - Scalar type: float or double
-- Mos of the interface provided by [] is supported. The only difference is `import pyfcl as fcl`
+- Mos of the interface provided by [] is supported. The only difference is `import fcl`
 - No need for id(geom) if you want to extract objects that are in collision.
 
 Differences

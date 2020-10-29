@@ -8,7 +8,7 @@ from __future__ import print_function, division
 import numpy as np
 import unittest
 
-import pyfcl as fcl
+import fcl
 
 class TestContinuousCollision(unittest.TestCase):
     def test_sphere_cc(self):

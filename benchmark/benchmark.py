@@ -7,7 +7,7 @@ import numpy as np
 
 import trimesh
 
-import pyfcl as fcl
+import fcl
 #import fcl
 
 def build_box_object():

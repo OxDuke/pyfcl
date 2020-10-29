@@ -8,7 +8,7 @@ from __future__ import print_function, division
 import numpy as np
 import unittest
 
-import pyfcl as fcl
+import fcl
 
 # @TODO: Need to test 3 types of overloading of the manager.collide & manager.distance
 

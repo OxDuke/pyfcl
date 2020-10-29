@@ -6,7 +6,7 @@ import unittest
 
 import transformations as tfm
 
-import pyfcl as fcl
+import fcl
 
 from common_utils import double_float_difference
 
