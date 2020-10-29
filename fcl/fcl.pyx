@@ -188,6 +188,9 @@ cdef class CollisionObject:
     cdef defs.PyObject *geom
     # @TODO: _no_instance seems useless, and the class only works when it is set to False
     cdef bool _no_instance
+    
+    # @NOTE: This is Weidong's Genius
+    cdef size_t geom_id
 
     def __cinit__(self, CollisionGeometry geom=None, Transform tf=None, _no_instance=False):
         if geom is None:
@@ -195,6 +198,7 @@ cdef class CollisionObject:
         defs.Py_INCREF(<defs.PyObject*> geom)
         self.geom = <defs.PyObject*> geom
         self._no_instance = _no_instance
+        self.geom_id = id(geom) # This is Weidong's Genius
         if geom.getNodeType() is not None and not self._no_instance:
             if tf is not None:
                 self.thisptr = new defs.CollisionObject[Scalar](defs.shared_ptr[defs.CollisionGeometry[Scalar]](geom.thisptr), deref(tf.thisptr))
@@ -216,6 +220,9 @@ cdef class CollisionObject:
 
     def getNodeType(self):
         return self.thisptr.getNodeType()
+
+    def getCollisionGeometryId(self):
+        return self.geom_id
 
     def getTranslation(self):
         return vector3_to_numpy(self.thisptr.getTranslation())

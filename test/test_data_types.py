@@ -165,6 +165,16 @@ class TestCollisionObject(unittest.TestCase):
         co.setTransform(fcl.Transform(rq, rt))
         self.check_transform(co, tmat)
 
+    def test_getCollisionGeometryId(self):
+        b = fcl.Sphere(1)
+        tf = fcl.Transform()
+        co = fcl.CollisionObject(b, tf)
+
+        self.assertTrue(id(b), co.getCollisionGeometryId())
+
+    def test2(self):
+        co = fcl.CollisionObject(_no_instance=True)
+
 
 if __name__ == '__main__':
 
