@@ -418,18 +418,6 @@ cdef class TriangleP(ShapeBase):
         (<defs.TriangleP[Scalar]*> self.thisptr).c[1] = <Scalar?> value[1]
         (<defs.TriangleP[Scalar]*> self.thisptr).c[2] = <Scalar?> value[2]
 
-# cdef class Box(CollisionGeometry):
-#     def __cinit__(self, x, y, z):
-#         self.thisptr = new defs.Box(x, y, z)
-
-#     property side:
-#         def __get__(self):
-#             return vec3f_to_numpy((<defs.Box*> self.thisptr).side)
-#         def __set__(self, value):
-#             (<defs.Box*> self.thisptr).side[0] = <double?> value[0]
-#             (<defs.Box*> self.thisptr).side[1] = <double?> value[1]
-#             (<defs.Box*> self.thisptr).side[2] = <double?> value[2]
-
 cdef class Box(ShapeBase):
     def __cinit__(self, x, y, z):
         self.thisptr = new defs.Box[Scalar](x, y, z)
