@@ -48,12 +48,17 @@ class TestTransform(unittest.TestCase):
     def test_constructors(self):
         """
         We test the below constructors:
+         - fcl.Transform()
          - fcl.Transform(Quaternion, Vector3)
          - fcl.Transform(Matrix3, Vector3)
          - fcl.Transform(Quaternion)
          - fcl.Transform(Matrix3)
          - fcl.Transform(Vector3)
         """
+
+        tf = fcl.Transform()
+        self.is_transform_close(tf, tfm.identity_matrix())
+
         rmat, rq, rv = self.generate_random_transform()
         tf = fcl.Transform(rq, rv)
         self.is_transform_close(tf, rmat)
