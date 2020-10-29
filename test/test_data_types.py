@@ -128,7 +128,7 @@ class TestCollisionObject(unittest.TestCase):
     def test_set_transform(self):
         tmat, rq, rt = self.generate_random_transform()
         
-        # Use more geometries like box, cylinder...
+        # @TODO: Use more geometries like box, cylinder...
         b = fcl.Sphere(1)
         tf = fcl.Transform(rq, rt)
         co = fcl.CollisionObject(b, tf)
