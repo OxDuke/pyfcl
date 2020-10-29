@@ -35,7 +35,7 @@ def test_shape_self_distance(shape1, shape2, tf1, tf2, expected_distance, atol=0
 
     ret = fcl.distance(co1, co2, req, res)
 
-    np.testing.assert_allclose(res.min_distance, expected_distance, rtol=5*1e-6, atol=atol)
+    np.testing.assert_allclose(res.min_distance, expected_distance, rtol=0, atol=atol+double_float_difference)
 
 class TestTriangleP(unittest.TestCase):
     def test_properties(self):        
@@ -58,7 +58,7 @@ class TestTriangleP(unittest.TestCase):
         # test_shape_self_collide(t1, t2,
         #     fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
         #     fcl.Transform(np.array([1,0,0,0]), np.array([-0.999,0,0])),
-        #     True)
+        #     False)
 
         # test_shape_self_collide(t1, t2,
         #     fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
@@ -503,7 +503,7 @@ class TestConvex(unittest.TestCase):
         test_shape_self_distance(c1, c2,
             fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
             fcl.Transform(np.array([1,0,0,0]), np.array([-0.001,0,0])),
-            0.001)
+            0.001, atol=1e-7)
         test_shape_self_distance(c1, c2,
             fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
             fcl.Transform(np.array([1,0,0,0]), np.array([0.001,0,0])),
@@ -561,14 +561,75 @@ class TestPlane(unittest.TestCase):
     
 
 class TestBVHModel(unittest.TestCase):
+    # @TODO: more & more thorough tests for BVH as it is so widely used.
+    def setUp(self):
+        # Create a box centered at [0.5, 1, 1,5] with extents[1, 2, 3]
+        vertices = np.array([[0., 0., 0.],
+              [0., 0., 3.],
+              [0., 2., 0.],
+              [0., 2., 3.],
+              [1., 0., 0.],
+              [1., 0., 3.],
+              [1., 2., 0.],
+              [1., 2., 3.]])
+
+        faces = np.array([[7, 3, 5],
+              [5, 3, 1],
+              [4, 0, 6],
+              [6, 0, 2],
+              [1, 0, 5],
+              [5, 0, 4],
+              [3, 2, 1],
+              [1, 2, 0],
+              [7, 6, 3],
+              [3, 6, 2],
+              [5, 4, 7],
+              [7, 4, 6]])
+
+        bvh = fcl.BVHModel()
+        bvh.beginModel(len(faces), len(vertices))
+        bvh.addSubModel(vertices, faces)
+        bvh.endModel()
+
+        self.box_mesh = bvh
+
     def test_properties(self):
-        
         pass
 
     def test_self_collide(self):
-        pass
+        # Seperation on Y axis
+        test_shape_self_collide(self.box_mesh, self.box_mesh,
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([-0.999,0,0])),
+            True)
 
-    #@TODO: Add tests here, we need a more complex mesh.
+        test_shape_self_collide(self.box_mesh, self.box_mesh,
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([-1.001,0,0])),
+            False)
+        
+        # Reflect the first box around the Z axis
+        test_shape_self_collide(self.box_mesh, self.box_mesh,
+            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,-0.001,0])),
+            True)
+
+        test_shape_self_collide(self.box_mesh, self.box_mesh,
+            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0.001,0])),
+            False)
+
+    def test_self_distance(self):
+        # @TODO: Why FCL returns 0 for two meshes in collision
+        
+        # test_shape_self_distance(self.box_mesh, self.box_mesh,
+        #     fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+        #     fcl.Transform(np.array([1,0,0,0]), np.array([-0.999,0,0])),
+        #     -0.001)
+        test_shape_self_distance(self.box_mesh, self.box_mesh,
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([-1.001,0,0])),
+            0.001, atol=1e-10)
         
 
 if __name__ == '__main__':
