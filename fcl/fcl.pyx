@@ -177,7 +177,7 @@ cdef class Transform:
     def linear(self, value):
         ew.Transform3SetLinear[Scalar](deref(self.thisptr), 
             value[0,0], value[0,1], value[0,2],
-            value[1,0], value[1,1], value[1,1],
+            value[1,0], value[1,1], value[1,2],
             value[2,0], value[2,1], value[2,2])
     
     @property
