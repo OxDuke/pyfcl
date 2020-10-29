@@ -65,8 +65,6 @@ class TestTransform(unittest.TestCase):
         tf = fcl.Transform(tf0)
         self.is_transform_close(tf, rmat)
 
-
-
         rmat, rq, rv = self.generate_random_transform()
         tf = fcl.Transform(rq, rv)
         self.is_transform_close(tf, rmat)
