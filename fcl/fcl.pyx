@@ -156,40 +156,6 @@ cdef class Transform:
         if self.thisptr:
             free(self.thisptr)
 
-    # @property
-    # def linear(self):
-    #     lin = (<defs.Transform3[Scalar]*> self.thisptr).linear()
-    #     mat = Matrix3()
-    #     # @TODO: Make sure that lin is in column major, mat is row major
-    #     mat[0] = lin(0)
-    #     mat[1] = lin(3)
-    #     mat[2] = lin(6)
-    #     mat[3] = lin(1)
-    #     mat[4] = lin(4)
-    #     mat[5] = lin(7)
-    #     mat[6] = lin(2)
-    #     mat[7] = lin(5)
-    #     mat[8] = lin(8)
-        
-    #     return mat
-    
-    # @linear.setter
-    # def linear(self, value):
-    #     ew.Transform3SetLinear[Scalar](deref(self.thisptr), 
-    #         value[0,0], value[0,1], value[0,2],
-    #         value[1,0], value[1,1], value[1,2],
-    #         value[2,0], value[2,1], value[2,2])
-    
-    # @property
-    # def translation(self):
-    #     trans = (<defs.Transform3[Scalar]*> self.thisptr).translation()
-    #     return Vector3(trans[0], trans[1], trans[2])
-
-    # @translation.setter
-    # def translation(self, value):
-    #     # @TODO: This is a hack
-    #     ew.Transform3SetTranslation[Scalar](deref(self.thisptr), value[0], value[1], value[2])
-
     def __getitem__(self, key):
         if isinstance(key, tuple) and len(key) == 2:
             
@@ -278,13 +244,15 @@ cdef class CollisionObject:
         self.thisptr.computeAABB()
 
     def getTransform(self):
-        tf = Transform()
-        tf.linear = self.getRotation()
-        #@TODO: remove numpy_to_vector3
-        tf.translation = self.getTranslation()
+        # tf = numpy.array([vec[0], vec[1], vec[2]])
+        # tf.linear = self.getRotation()
+        # #@TODO: remove numpy_to_vector3
+        # tf.translation = self.getTranslation()
 
-        #@TODO: Make this a constructor
-        return tf
+        # #@TODO: Make this a constructor
+        # return tf
+
+        return transform3_to_numpy(self.thisptr.getTransform())
 
     def setTransform(self, tf):
         #@TODO: If tf.linear is not a rotation matrix, the transform will not be correct
@@ -713,6 +681,13 @@ cdef defs.Matrix3[Scalar] numpy_to_matrix3(a):
     return ew.Matrix3FromNumbers[Scalar](<Scalar?> a[0][0], <Scalar?> a[0][1], <Scalar?> a[0][2],
                                  <Scalar?> a[1][0], <Scalar?> a[1][1], <Scalar?> a[1][2],
                                  <Scalar?> a[2][0], <Scalar?> a[2][1], <Scalar?> a[2][2])
+
+cdef transform3_to_numpy(defs.Transform3[Scalar] tf):
+    return numpy.array([[tf(0,0), tf(0,1), tf(0,2),  tf(0,3)],
+                        [tf(1,0), tf(1,1), tf(1,2),  tf(1,3)],
+                        [tf(2,0), tf(2,1), tf(2,2),  tf(2,3)],
+                        [tf(3,0), tf(3,1), tf(3,2),  tf(3,3)]])
+
 
 # @TODO: defs.const_CollisionGeometry seems the same as defs.CollisionGeomtry
 # I have moved from defs.const_CollisionGeometry to const defs.CollisionGeometry

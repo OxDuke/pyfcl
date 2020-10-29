@@ -14,7 +14,7 @@ class TestCollisionObject(unittest.TestCase):
         co = fcl.CollisionObject(fcl.Sphere(1), fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])))
 
         co.setQuatRotation([1,0,0,0])
-        print(co.getQuatRotation())
+        #print(co.getQuatRotation())
 
 
 if __name__ == "__main__":
