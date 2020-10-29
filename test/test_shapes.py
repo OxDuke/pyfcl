@@ -462,7 +462,7 @@ class TestCylinder(unittest.TestCase):
             0.5)
 
 class TestConvex(unittest.TestCase):
-
+    # @TODO: make this test complete
     def setUp(self):
         vertices = np.array([[0,0,1],
                       [0,0,0],
@@ -490,11 +490,11 @@ class TestConvex(unittest.TestCase):
 
         test_shape_self_collide(c1, c2,
             fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
-            fcl.Transform(np.array([1,0,0,0]), np.array([-0.001,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([-0.0005,0,0])),
             False)
         test_shape_self_collide(c1, c2,
             fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
-            fcl.Transform(np.array([1,0,0,0]), np.array([0.001,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0.0005,0,0])),
             True)
 
     def test_self_distance(self):
@@ -522,9 +522,6 @@ class TestConvex(unittest.TestCase):
         cfaces = [item for sublist in cfaces for item in sublist]
         
         c = fcl.Convex(vertices, 4, cfaces)
-        
-        
-
 
 class TestHalfspace(unittest.TestCase):
     def test_properties(self):
