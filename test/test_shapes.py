@@ -489,25 +489,25 @@ class TestConvex(unittest.TestCase):
         c1, c2 = self.tetrahedron1, self.tetrahedron2
 
         test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([-0.001,0,0])),
-            True)
-        test_shape_self_collide(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0.001,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([-0.001,0,0])),
             False)
+        test_shape_self_collide(c1, c2,
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0.001,0,0])),
+            True)
 
     def test_self_distance(self):
         c1, c2 = self.tetrahedron1, self.tetrahedron2
 
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([-0.001,0,0])),
-            -1)
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([-0.001,0,0])),
+            0.001)
         test_shape_self_distance(c1, c2,
-            fcl.Transform(np.array([0,0,0,1]), np.array([0,0,0])),
-            fcl.Transform(np.array([0,0,0,1]), np.array([0.002,0,0])),
-            0.002)
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0.001,0,0])),
+            -1)
 
     def test_properties(self):
         vertices = np.array([[0,0,1],
