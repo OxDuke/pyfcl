@@ -73,11 +73,6 @@ cdef class Quaternion:
     def w(self):
         return (<defs.Quaternion[Scalar]*>self.thisptr).w()
    
-    #@TODO: The test was successful
-    # @w.setter
-    # def w(self, value):
-    #     ew.QuaternionSetw[Scalar](deref(self.thisptr), <Scalar?> value)
-
     @property
     def x(self):
         return (<defs.Quaternion[Scalar]*>self.thisptr).x()
