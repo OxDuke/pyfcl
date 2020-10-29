@@ -156,39 +156,39 @@ cdef class Transform:
         if self.thisptr:
             free(self.thisptr)
 
-    @property
-    def linear(self):
-        lin = (<defs.Transform3[Scalar]*> self.thisptr).linear()
-        mat = Matrix3()
-        # @TODO: Make sure that lin is in column major, mat is row major
-        mat[0] = lin(0)
-        mat[1] = lin(3)
-        mat[2] = lin(6)
-        mat[3] = lin(1)
-        mat[4] = lin(4)
-        mat[5] = lin(7)
-        mat[6] = lin(2)
-        mat[7] = lin(5)
-        mat[8] = lin(8)
+    # @property
+    # def linear(self):
+    #     lin = (<defs.Transform3[Scalar]*> self.thisptr).linear()
+    #     mat = Matrix3()
+    #     # @TODO: Make sure that lin is in column major, mat is row major
+    #     mat[0] = lin(0)
+    #     mat[1] = lin(3)
+    #     mat[2] = lin(6)
+    #     mat[3] = lin(1)
+    #     mat[4] = lin(4)
+    #     mat[5] = lin(7)
+    #     mat[6] = lin(2)
+    #     mat[7] = lin(5)
+    #     mat[8] = lin(8)
         
-        return mat
+    #     return mat
     
-    @linear.setter
-    def linear(self, value):
-        ew.Transform3SetLinear[Scalar](deref(self.thisptr), 
-            value[0,0], value[0,1], value[0,2],
-            value[1,0], value[1,1], value[1,2],
-            value[2,0], value[2,1], value[2,2])
+    # @linear.setter
+    # def linear(self, value):
+    #     ew.Transform3SetLinear[Scalar](deref(self.thisptr), 
+    #         value[0,0], value[0,1], value[0,2],
+    #         value[1,0], value[1,1], value[1,2],
+    #         value[2,0], value[2,1], value[2,2])
     
-    @property
-    def translation(self):
-        trans = (<defs.Transform3[Scalar]*> self.thisptr).translation()
-        return Vector3(trans[0], trans[1], trans[2])
+    # @property
+    # def translation(self):
+    #     trans = (<defs.Transform3[Scalar]*> self.thisptr).translation()
+    #     return Vector3(trans[0], trans[1], trans[2])
 
-    @translation.setter
-    def translation(self, value):
-        # @TODO: This is a hack
-        ew.Transform3SetTranslation[Scalar](deref(self.thisptr), value[0], value[1], value[2])
+    # @translation.setter
+    # def translation(self, value):
+    #     # @TODO: This is a hack
+    #     ew.Transform3SetTranslation[Scalar](deref(self.thisptr), value[0], value[1], value[2])
 
     def __getitem__(self, key):
         if isinstance(key, tuple) and len(key) == 2:
