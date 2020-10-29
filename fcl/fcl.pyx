@@ -705,9 +705,9 @@ cdef defs.Vector3[Scalar] numpy_to_vector3(a):
     return defs.Vector3[Scalar](<Scalar?> a[0], <Scalar?> a[1], <Scalar?> a[2])
 
 cdef matrix3_to_numpy(defs.Matrix3[Scalar] m):
-    return numpy.array([[m(0), m(1), m(2)],
-                        [m(3), m(4), m(5)],
-                        [m(6), m(7), m(8)]])
+    return numpy.array([[m(0), m(3), m(6)],
+                        [m(1), m(4), m(7)],
+                        [m(2), m(5), m(8)]])
 
 cdef defs.Matrix3[Scalar] numpy_to_matrix3(a):
     return ew.Matrix3FromNumbers[Scalar](<Scalar?> a[0][0], <Scalar?> a[0][1], <Scalar?> a[0][2],
