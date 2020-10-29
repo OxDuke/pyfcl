@@ -26,6 +26,34 @@ def test_shape_self_collide(shape1, shape2, tf1, tf2, is_in_collision):
 
     assert res.is_collision == is_in_collision
 
+def test_shape_self_collide_single_contact(shape1, shape2, 
+        tf1, tf2, normal, pos, penetration_depth, 
+        normal_atol=0, pos_atol=0, depth_atol=0):
+    co1 = fcl.CollisionObject(shape1, tf1)
+    co2 = fcl.CollisionObject(shape2, tf2)
+
+    req = fcl.CollisionRequest(num_max_contacts=1, enable_contact=True)
+    res = fcl.CollisionResult()
+
+    ret = fcl.collide(co1, co2, req, res)
+    
+    # Two objects should be in collision
+    assert res.is_collision == True
+    # Single contact
+    print(len(res.contacts))
+    for cot in res.contacts:
+        print('-----------------')
+        print(cot.normal)
+        print(cot.pos)
+        print(cot.penetration_depth)
+
+    assert len(res.contacts) == 1
+    
+    contact = res.contacts[0]
+    np.testing.assert_allclose(contact.normal, normal, rtol=0, atol=normal_atol+double_float_difference)
+    np.testing.assert_allclose(contact.pos, pos, rtol=0, atol=pos_atol+double_float_difference)
+    np.testing.assert_allclose(contact.penetration_depth, penetration_depth, rtol=0, atol=depth_atol+double_float_difference)
+
 def test_shape_self_distance(shape1, shape2, tf1, tf2, expected_distance, atol=0):
     co1 = fcl.CollisionObject(shape1, tf1)
     co2 = fcl.CollisionObject(shape2, tf2)
@@ -132,6 +160,14 @@ class TestBox(unittest.TestCase):
             fcl.Transform(rotate_around_z_90_degrees, np.array([0,0,0])),
             False)
 
+    def test_self_collide_with_contact(self):
+        # Contact on X axis
+        test_shape_self_collide_single_contact(fcl.Box(1,1,1), fcl.Box(1,2,3), 
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0.8,0,0])),
+            normal=[1,0,0], pos=[0.4,0.5,0.5], penetration_depth=0.2,
+            depth_atol=1e-14)
+
     def test_self_distance(self):
         # Seperation on X, Y, Z axis
         test_shape_self_distance(fcl.Box(1,1,1), fcl.Box(1,2,3), 
@@ -178,6 +214,20 @@ class TestSphere(unittest.TestCase):
             fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
             fcl.Transform(np.array([1,0,0,0]), np.array([3.001,0,0])),
             False)
+
+    def test_self_collide_with_contact(self):
+        # Contact on X axis
+        test_shape_self_collide_single_contact(fcl.Sphere(1), fcl.Sphere(2),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([2,0,0])),
+            normal=[1,0,0], pos=[2./3,0,0], penetration_depth=1,
+            depth_atol=1e-14)
+
+        test_shape_self_collide_single_contact(fcl.Sphere(1), fcl.Sphere(1),
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([1.6,0,0])),
+            normal=[1,0,0], pos=[0.8,0,0], penetration_depth=0.4,
+            depth_atol=1e-14)
 
     def test_self_distance(self):
         test_shape_self_distance(fcl.Sphere(1), fcl.Sphere(2), 
