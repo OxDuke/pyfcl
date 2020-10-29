@@ -32,7 +32,7 @@ setup(
   url="https://github.com/OxDuke/pyfcl",
   author='Weidong Sun',
   author_email='464604837@qq.com',
-  license = "BSD",
+  license = "MIT",
   classifiers=[
       'Development Status :: 2 - Pre-Alpha',
       'License :: OSI Approved :: BSD License',
