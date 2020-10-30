@@ -852,8 +852,8 @@ def collide(CollisionObject o1, CollisionObject o2,
                                        <size_t?> request.num_max_contacts,
                                        <bool?> request.enable_contact,
                                        <size_t?> request.num_max_cost_sources,
-                                       <bool> request.enable_cost,
-                                       <bool> request.use_approximate_cost,
+                                       <bool?> request.enable_cost,
+                                       <bool?> request.use_approximate_cost,
                                        <defs.GJKSolverType?> request.gjk_solver_type
                                    ),
                                    cresult)
