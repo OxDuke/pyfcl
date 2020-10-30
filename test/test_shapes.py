@@ -599,7 +599,7 @@ class TestHalfspace(unittest.TestCase):
 
 
 class TestPlane(unittest.TestCase):
-    
+    # @TODO: Finish this
     def test_properties(self):
         pass
 
