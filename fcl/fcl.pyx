@@ -16,9 +16,6 @@ cimport fcl_defs as defs
 from collision_data import Contact, CostSource, CollisionRequest, ContinuousCollisionRequest, CollisionResult, ContinuousCollisionResult, DistanceRequest, DistanceResult
 # from collision_data import Contact, CostSource, CollisionRequest, ContinuousCollisionRequest, CollisionResult, ContinuousCollisionResult, DistanceRequest, DistanceResult
 
-# @TODO: This is a hack import, remove this one and import in __init__.py
-from collision_data import CollisionData, DistanceData
-
 from fcl_defs cimport Scalar
 
 cimport eigen_wrappers as ew
