@@ -672,10 +672,10 @@ class TestBVHModel(unittest.TestCase):
     def test_self_distance(self):
         # @TODO: Why FCL returns 0 for two meshes in collision
         
-        # test_shape_self_distance(self.box_mesh, self.box_mesh,
-        #     fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
-        #     fcl.Transform(np.array([1,0,0,0]), np.array([-0.999,0,0])),
-        #     -0.001)
+        test_shape_self_distance(self.box_mesh, self.box_mesh,
+            fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
+            fcl.Transform(np.array([1,0,0,0]), np.array([-0.999,0,0])),
+            0)
         test_shape_self_distance(self.box_mesh, self.box_mesh,
             fcl.Transform(np.array([1,0,0,0]), np.array([0,0,0])),
             fcl.Transform(np.array([1,0,0,0]), np.array([-1.001,0,0])),
