@@ -142,3 +142,5 @@ cython_debug/
 fcl.cpp
 # profile artifacts
 *.cprof 
+# VS code settings
+.vscode
