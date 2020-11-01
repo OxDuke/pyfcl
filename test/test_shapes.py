@@ -622,11 +622,11 @@ class TestCylinder(unittest.TestCase):
         rotate_around_x_90_degrees = np.array([0.70710678, 0.70710678, 0., 0.])
         test_shape_self_collide(
             c1, c2, fcl.Transform(np.array([1, 0, 0, 0]), np.array([0, 0, 0])),
-            fcl.Transform(np.array([1, 0, 0, 0]), np.array([0, 2.499, 0])),
+            fcl.Transform(rotate_around_x_90_degrees, np.array([0, 2.499, 0])),
             True)
         test_shape_self_collide(
             c1, c2, fcl.Transform(np.array([1, 0, 0, 0]), np.array([0, 0, 0])),
-            fcl.Transform(np.array([1, 0, 0, 0]), np.array([0, 3.501, 0])),
+            fcl.Transform(rotate_around_x_90_degrees, np.array([0, 3.501, 0])),
             False)
 
     def test_self_distance(self):

@@ -173,6 +173,8 @@ class TestCollisionObject(unittest.TestCase):
         self.assertTrue(id(b), co.getCollisionGeometryId())
 
     def test2(self):
+        # Just make sure fcl.CollisionObject can be instantiated
+        # when _no_instance = True
         co = fcl.CollisionObject(_no_instance=True)
 
 
