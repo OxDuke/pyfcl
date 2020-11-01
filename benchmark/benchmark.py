@@ -45,7 +45,7 @@ def mesh_vs_convex():
     cfaces = [[pair[0]] + pair[1] for pair in zip(nfaces,faces)]
     cfaces = [item for sublist in cfaces for item in sublist]
 
-    convex_repr = fcl.Convex(vertices, 4, cfaces)
+    convex_repr = fcl.Convex(vertices, len(faces), cfaces)
 
     mesh_repr = fcl.BVHModel()
     mesh_repr.beginModel(len(faces), len(vertices))
