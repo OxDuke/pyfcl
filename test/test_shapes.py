@@ -770,13 +770,22 @@ class TestBVHModel(unittest.TestCase):
         bvh.beginModel(len(faces), len(vertices))
         bvh.addSubModel(vertices, faces)
         bvh.endModel()
-
         self.box_mesh = bvh
 
-    def test_properties(self):
-        pass
+        # Create a point cloud with 3 points
+        points = [[0,0,0], [0,0,1], [0, 1, 0]]
+        bvh = fcl.BVHModel()
+        bvh.beginModel(0, len(points))
+        for pt in points:
+            bvh.addVertex(*pt)
+        print("BVH result: ", bvh.endModel())
+        print("#BVs: ", bvh.getNumBVs())
+        self.point_cloud = bvh
 
-    def test_self_collide(self):
+    def test_properties(self):
+        self.assertEqual(self.point_cloud.getModelType(), fcl.BVHModelType.BVH_MODEL_POINTCLOUD)
+
+    def test_mesh_self_collide(self):
         # Seperation on Y axis
         test_shape_self_collide(
             self.box_mesh, self.box_mesh,
@@ -803,7 +812,7 @@ class TestBVHModel(unittest.TestCase):
             fcl.Transform(np.array([1, 0, 0, 0]), np.array([0, 0.001, 0])),
             False)
 
-    def test_self_distance(self):
+    def test_mesh_self_distance(self):
         # @TODO: Why FCL returns 0 for two meshes in collision
 
         test_shape_self_distance(
@@ -818,6 +827,32 @@ class TestBVHModel(unittest.TestCase):
                                                np.array([-1.001, 0, 0])),
                                  0.001,
                                  atol=1e-10)
+
+
+    def test_point_cloud_collide(self):
+        box = fcl.Box(1,1,1)
+
+        point_cloud_co = fcl.CollisionObject(self.point_cloud, fcl.Transform())
+        box_co = fcl.CollisionObject(box, fcl.Transform())
+
+        req = fcl.CollisionRequest()
+        res = fcl.CollisionResult()
+
+        #ret = fcl.collide(point_cloud_co, box_co, req, res)
+
+
+
+        # test_shape_self_collide(
+        #     box, self.point_cloud,
+        #     fcl.Transform(np.array([0, 0, 0, 1]), np.array([0, -0.499, 0])),
+        #     fcl.Transform(np.array([1, 0, 0, 0]), np.array([0, 0, 0])),
+        #     True)
+        
+        # test_shape_self_collide(
+        #     box, self.point_cloud,
+        #     fcl.Transform(np.array([0, 0, 0, 1]), np.array([0, -0.501, 0])),
+        #     fcl.Transform(np.array([1, 0, 0, 0]), np.array([0, 0, 0])),
+        #     False)
 
 
 if __name__ == '__main__':

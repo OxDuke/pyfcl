@@ -548,6 +548,10 @@ cdef extern from "fcl/geometry/bvh/BVH_model.h" namespace "fcl":
     # @TODO: more links on stack-overflow coming
 
     cdef cppclass BVHModel[BV](CollisionGeometry[BV_S]):
+        
+        # Model type described by the instance
+        BVHModelType getModelType()
+
         # Constructing an empty BVH
         BVHModel() except +
         BVHModel(BVHModel& other) except +
@@ -576,6 +580,8 @@ cdef extern from "fcl/geometry/bvh/BVH_model.h" namespace "fcl":
         shared_ptr[BVSplitterBase[BV]] bv_splitter
         # boost::shared_ptr<BVFitterBase<BV> > bv_fitter
         shared_ptr[BVFitterBase[BV]] bv_fitter
+
+        int getNumBVs()
 
         int beginModel(int num_tris_, int num_vertices_)
 

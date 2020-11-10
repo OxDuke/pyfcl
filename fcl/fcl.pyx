@@ -592,6 +592,12 @@ cdef class BVHModel(CollisionGeometry):
 
     def buildState(self):
         return (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).build_state
+
+    def getModelType(self):
+        return (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).getModelType()
+
+    def getNumBVs(self):
+        return (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).getNumBVs()
     
     # @TODO: remove trailing underscore: num_tris_
     def beginModel(self, num_tris_=0, num_vertices_=0):
@@ -602,9 +608,9 @@ cdef class BVHModel(CollisionGeometry):
         n = (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).endModel()
         return n
 
-#     def addVertex(self, x, y, z):
-#         n = (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).addVertex(defs.Vec3f(<double?> x, <double?> y, <double?> z))
-#         return self._check_ret_value(n)
+    def addVertex(self, x, y, z):
+        n = (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).addVertex(<defs.Vector3[defs.BV_S]?> defs.Vector3[Scalar](<Scalar?> x, <Scalar?> y, <Scalar?> z))
+        return self._check_ret_value(n)
 
 #     def addTriangle(self, v1, v2, v3):
 #         n = (<defs.BVHModel[defs.OBBRSS[Scalar]]*> self.thisptr).addTriangle(numpy_to_vec3f(v1),
