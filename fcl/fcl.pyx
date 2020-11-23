@@ -879,32 +879,32 @@ def collide(CollisionObject o1, CollisionObject o2,
     return ret
 
 # @TODO: The following code does not make, I will fix it later.
-# def continuousCollide(CollisionObject o1, Transform tf1_end,
-#                       CollisionObject o2, Transform tf2_end,
-#                       request = None, result = None):
+def continuousCollide(CollisionObject o1, Transform tf1_end,
+                      CollisionObject o2, Transform tf2_end,
+                      request = None, result = None):
 
-#     if request is None:
-#         request = ContinuousCollisionRequest()
-#     if result is None:
-#         result = ContinuousCollisionResult()
+    if request is None:
+        request = ContinuousCollisionRequest()
+    if result is None:
+        result = ContinuousCollisionResult()
 
-#     cdef defs.ContinuousCollisionResult[Scalar] cresult
+    cdef defs.ContinuousCollisionResult[Scalar] cresult
 
-#     cdef defs.Scalar ret = defs.continuousCollide[Scalar](o1.thisptr, deref(tf1_end.thisptr),
-#                                                     o2.thisptr, deref(tf2_end.thisptr),
-#                                                     defs.ContinuousCollisionRequest[Scalar](
-#                                                         <size_t?>             request.num_max_iterations,
-#                                                         <defs.Scalar?>      request.toc_err,
-#                                                         <defs.CCDMotionType?> request.ccd_motion_type,
-#                                                         <defs.GJKSolverType?> request.gjk_solver_type,
-#                                                         <defs.CCDSolverType?> request.ccd_solver_type,
+    cdef defs.Scalar ret = defs.continuousCollide[Scalar](o1.thisptr, deref(tf1_end.thisptr),
+                                                    o2.thisptr, deref(tf2_end.thisptr),
+                                                    defs.ContinuousCollisionRequest[Scalar](
+                                                        <size_t?>             request.num_max_iterations,
+                                                        <defs.Scalar?>      request.toc_err,
+                                                        <defs.CCDMotionType?> request.ccd_motion_type,
+                                                        <defs.GJKSolverType?> request.gjk_solver_type,
+                                                        <defs.CCDSolverType?> request.ccd_solver_type,
 
-#                                                     ),
-#                                                     cresult)
+                                                    ),
+                                                    cresult)
 
-#     result.is_collide = result.is_collide or cresult.is_collide
-#     result.time_of_contact = min(cresult.time_of_contact, result.time_of_contact)
-#     return ret
+    result.is_collide = result.is_collide or cresult.is_collide
+    result.time_of_contact = min(cresult.time_of_contact, result.time_of_contact)
+    return ret
 
 # def continuousCollide(CollisionObject o1, Transform tf1_end,
 #                       CollisionObject o2, Transform tf2_end,
