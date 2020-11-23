@@ -1,7 +1,7 @@
 
 from .fcl import Transform, CollisionGeometry, CollisionObject
 from .fcl import TriangleP, Box, Sphere, Ellipsoid, Capsule, Cone, Cylinder, Convex, Halfspace, Plane, BVHModel
-# from .fcl import OcTree, 
+from .fcl import OcTree
 from .fcl import collide, distance
 from .fcl import continuousCollide
 from .fcl import DynamicAABBTreeCollisionManager, defaultCollisionCallback, defaultDistanceCallback

@@ -7,7 +7,7 @@ from libcpp cimport bool
 from libcpp.vector cimport vector
 # from libcpp.set cimport set
 from libcpp.memory cimport shared_ptr, make_shared
-# cimport octomap_defs as octomap
+cimport octomap_defs as octomap
 
 ctypedef double Scalar
 cdef cppclass BV_S "double"
@@ -655,9 +655,8 @@ cdef extern from "fcl/geometry/bvh/BVH_model.h" namespace "fcl":
 #         # void computeLocalAABB()
 
 
-# cdef extern from "fcl/octree.h" namespace "fcl":
-#     cdef cppclass OcTree(CollisionGeometry):
-#         # Constructing
-#         OcTree(FCL_REAL resolution) except +
-#         OcTree(shared_ptr[octomap.OcTree]& tree_) except +
-
+cdef extern from "fcl/geometry/octree/octree.h" namespace "fcl":
+    cdef cppclass OcTree[S](CollisionGeometry[S]):
+        # Constructing
+        OcTree(S resolution) except +
+        OcTree(shared_ptr[octomap.OcTree]& tree_) except +
