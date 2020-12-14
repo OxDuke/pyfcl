@@ -28,45 +28,24 @@ cdef extern from "Python.h":
        object PyObject_CallObject(object obj, object args)
        object PySequence_Concat(object obj1, object obj2)
 
-# #cdef extern from "boost/shared_ptr.hpp" namespace "boost":
-# #    cppclass shared_ptr[T]:
-# #        shared_ptr() except +
-# #        shared_ptr(T*) except +
-# #        T* get()
-
-# cdef extern from "fcl/data_types.h" namespace "fcl":
-#     ctypedef double FCL_REAL
 
 cdef extern from "fcl/common/types.h" namespace "fcl":
     cdef cppclass Vector3[S]:
         Vector3() except +
         Vector3(S x, S y, S z) except +
+
         S& operator[](size_t i)
 
-# cdef extern from "fcl/math/matrix_3f.h" namespace "fcl":
-#     cdef cppclass Matrix3f:
-#         Matrix3f() except +
-#         Matrix3f(FCL_REAL xx, FCL_REAL xy, FCL_REAL xz,
-#                  FCL_REAL yx, FCL_REAL yy, FCL_REAL yz,
-#                  FCL_REAL zx, FCL_REAL zy, FCL_REAL zz) except +
-#         FCL_REAL operator()(size_t i, size_t j)
-
-    # @TODO: Remove commented original of Matrix3f, Quaternion3f,
     cdef cppclass Matrix3[S]:
         Matrix3() except +
-        # @TODO: Remove this constructor
-        # Matrix3(S xx, S xy, S xz,
-        #         S yx, S yy, S yz,
-        #         S zx, S zy, S zz) except +
+
         S& operator()(size_t i)         
         S& operator()(size_t i, size_t j)
     
-    # @TODO: Quaternion is a little bit hard
     cdef cppclass Quaternion[S]:
         Quaternion() except +
         Quaternion(S w, S x, S y, S z) except +
-        #void fromRotation(Matrix3f& R)
-        #void fromAxisAngle(Vec3f& axis, FCL_REAL angle)
+
         S& w()
         S& x()
         S& y()
@@ -81,33 +60,6 @@ cdef extern from "fcl/common/types.h" namespace "fcl":
         S& operator()(size_t i)         
         S& operator()(size_t i, size_t j)
 
-        
-# cdef extern from "fcl/math/transform.h" namespace "fcl":
-#     cdef cppclass Quaternion3f:
-#         Quaternion3f() except +
-#         Quaternion3f(FCL_REAL a, FCL_REAL b,
-#                      FCL_REAL c, FCL_REAL d) except +
-#         void fromRotation(Matrix3f& R)
-#         void fromAxisAngle(Vec3f& axis, FCL_REAL angle)
-#         FCL_REAL& getW()
-#         FCL_REAL& getX()
-#         FCL_REAL& getY()
-#         FCL_REAL& getZ()
-
-#     cdef cppclass Transform3f:
-#         Transform3f() except +
-#         Transform3f(Matrix3f& R_, Vec3f& T_)
-#         Transform3f(Quaternion3f& q_, Vec3f& T_)
-#         Transform3f(Matrix3f& R_)
-#         Transform3f(Quaternion3f& q_)
-#         Transform3f(Vec3f& T_)
-#         Transform3f(Transform3f& tf_)
-#         Matrix3f& getRotation()
-#         Vec3f& getTranslation()
-#         Quaternion3f& getQuatRotation()
-#         void setRotation(Matrix3f& R_)
-#         void setTranslation(Vec3f& T_)
-#         void setQuatRotation(Quaternion3f & q_)
 
 cdef extern from "fcl/narrowphase/continuous_collision_request.h" namespace "fcl":
     cdef enum CCDMotionType:
@@ -116,13 +68,6 @@ cdef extern from "fcl/narrowphase/continuous_collision_request.h" namespace "fcl
     cdef enum CCDSolverType:
         CCDC_NAIVE, CCDC_CONSERVATIVE_ADVANCEMENT, CCDC_RAY_SHOOTING, CCDC_POLYNOMIAL_SOLVER
 
-# cdef extern from "fcl/collision_data.h" namespace "fcl":
-
-#     cdef enum CCDMotionType:
-#         CCDM_TRANS, CCDM_LINEAR, CCDM_SCREW, CCDM_SPLINE
-
-#     cdef enum CCDSolverType:
-#         CCDC_NAIVE, CCDC_CONSERVATIVE_ADVANCEMENT, CCDC_RAY_SHOOTING, CCDC_POLYNOMIAL_SOLVER
 
 cdef extern from "fcl/narrowphase/gjk_solver_type.h" namespace "fcl":
     cdef enum GJKSolverType:
@@ -142,18 +87,6 @@ cdef extern from "fcl/narrowphase/contact.h" namespace "fcl":
                 CollisionGeometry[S]* o2_,
                 int b1_, int b2_) except +
 
-#     cdef cppclass Contact:
-#         CollisionGeometry *o1
-#         CollisionGeometry *o2
-#         int b1
-#         int b2
-#         Vec3f normal
-#         Vec3f pos
-#         FCL_REAL penetration_depth
-#         Contact() except +
-#         Contact(CollisionGeometry* o1_,
-#                 CollisionGeometry* o2_,
-#                 int b1_, int b2_) except +
 
 cdef extern from "fcl/narrowphase/cost_source.h" namespace "fcl":
     cdef cppclass CostSource[S]:
@@ -162,11 +95,6 @@ cdef extern from "fcl/narrowphase/cost_source.h" namespace "fcl":
         S cost_density
         S total_cost
 
-#     cdef cppclass CostSource:
-#         Vec3f aabb_min
-#         Vec3f aabb_max
-#         FCL_REAL cost_density
-#         FCL_REAL total_cost
 
 cdef extern from "fcl/narrowphase/collision_result.h" namespace "fcl":
     cdef cppclass CollisionResult[S]:
@@ -175,11 +103,6 @@ cdef extern from "fcl/narrowphase/collision_result.h" namespace "fcl":
         void getContacts(vector[Contact[S]]& contacts_)
         void getCostSources(vector[CostSource[S]]& cost_sources_)
 
-#     cdef cppclass CollisionResult:
-#         CollisionResult() except +
-#         bool isCollision()
-#         void getContacts(vector[Contact]& contacts_)
-#         void getCostSources(vector[CostSource]& cost_sources_)
 
 cdef extern from "fcl/narrowphase/continuous_collision_result.h" namespace "fcl":
     cdef cppclass ContinuousCollisionResult[S]:
@@ -188,11 +111,6 @@ cdef extern from "fcl/narrowphase/continuous_collision_result.h" namespace "fcl"
         S time_of_contact
         Transform3[S] contact_tf1, contact_tf2
 
-#     cdef cppclass ContinuousCollisionResult:
-#         ContinuousCollisionResult() except +
-#         bool is_collide
-#         FCL_REAL time_of_contact
-#         Transform3f contact_tf1, contact_tf2
 
 cdef extern from "fcl/narrowphase/collision_request.h" namespace "fcl":
     cdef cppclass CollisionRequest[S]:
@@ -209,19 +127,6 @@ cdef extern from "fcl/narrowphase/collision_request.h" namespace "fcl":
                          bool use_approximate_cost_,
                          GJKSolverType gjk_solver_type_)
 
-#     cdef cppclass CollisionRequest:
-#         size_t num_max_contacts
-#         bool enable_contact
-#         size_t num_max_cost_sources
-#         bool enable_cost
-#         bool use_approximate_cost
-#         GJKSolverType gjk_solver_type
-#         CollisionRequest(size_t num_max_contacts_,
-#                          bool enable_contact_,
-#                          size_t num_max_cost_sources_,
-#                          bool enable_cost_,
-#                          bool use_approximate_cost_,
-#                          GJKSolverType gjk_solver_type_)
 
 cdef extern from "fcl/narrowphase/continuous_collision_request.h" namespace "fcl":
     cdef cppclass ContinuousCollisionRequest[S]:
@@ -239,24 +144,10 @@ cdef extern from "fcl/narrowphase/continuous_collision_request.h" namespace "fcl
                             GJKSolverType gjk_solver_type_,
                             CCDSolverType ccd_solver_type_ )
 
-#     cdef cppclass ContinuousCollisionRequest:
-#          size_t num_max_iterations_,
-#          FCL_REAL toc_err_,
-#          CCDMotionType ccd_motion_type_,
-#          GJKSolverType gjk_solver_type_,
-#          GJKSolverType ccd_solver_type_
-
-#          ContinuousCollisionRequest(
-#                              size_t num_max_iterations_,
-#                              FCL_REAL toc_err_,
-#                              CCDMotionType ccd_motion_type_,
-#                              GJKSolverType gjk_solver_type_,
-#                              CCDSolverType ccd_solver_type_ )
 
 cdef extern from "fcl/narrowphase/distance_result.h" namespace "fcl":
     cdef cppclass DistanceResult[S]:
         S min_distance
-        # @TODO: nearest_points
         Vector3[S]* nearest_points
         CollisionGeometry[S]* o1
         CollisionGeometry[S]* o2
@@ -275,23 +166,14 @@ cdef extern from "fcl/narrowphase/distance_request.h" namespace "fcl":
         S distance_tolerance
         GJKSolverType gjk_solver_type
         # @TODO: Remove trailing underscore
-        DistanceRequest(bool enable_nearest_points_, bool enable_signed_distance_, S rel_err_, S abs_err_, S distance_tolerance, GJKSolverType gjk_solver_type_) except +
+        DistanceRequest(
+            bool enable_nearest_points_, 
+            bool enable_signed_distance_, 
+            S rel_err_, 
+            S abs_err_, 
+            S distance_tolerance, 
+            GJKSolverType gjk_solver_type_) except +
 
-
-#     cdef cppclass DistanceResult:
-#         FCL_REAL min_distance
-#         Vec3f* nearest_points
-#         CollisionGeometry* o1
-#         CollisionGeometry* o2
-#         int b1
-#         int b2
-#         DistanceResult(FCL_REAL min_distance_) except +
-#         DistanceResult() except +
-
-#     cdef cppclass DistanceRequest:
-#         bool enable_nearest_points
-#         GJKSolverType gjk_solver_type
-#         DistanceRequest(bool enable_nearest_points_, GJKSolverType gjk_solver_type_) except +
 
 cdef extern from "fcl/geometry/collision_geometry.h" namespace "fcl":
     cdef enum OBJECT_TYPE:
@@ -343,33 +225,6 @@ cdef extern from "fcl/narrowphase/collision_object.h" namespace "fcl":
     # ctypedef CollisionGeometry const_CollisionGeometry "const fcl::CollisionGeometry"
     # ctypedef CollisionObject const_CollisionObject "const fcl::CollisionObject"
 
-
-#     cdef cppclass CollisionObject:
-#         CollisionObject() except +
-#         CollisionObject(shared_ptr[CollisionGeometry]& cgeom_) except +
-#         CollisionObject(shared_ptr[CollisionGeometry]& cgeom_, Transform3f& tf) except +
-#         OBJECT_TYPE getObjectType()
-#         NODE_TYPE getNodeType()
-#         Vec3f& getTranslation()
-#         Matrix3f& getRotation()
-#         Quaternion3f& getQuatRotation()
-#         Transform3f& getTransform()
-#         CollisionGeometry* getCollisionGeometry()
-#         void setTranslation(Vec3f& T)
-#         void setRotation(Matrix3f& M)
-#         void setQuatRotation(Quaternion3f& q)
-#         void setTransform(Quaternion3f& q, Vec3f& T)
-#         void setTransform(Matrix3f& q, Vec3f& T)
-#         void setTransform(Transform3f& tf)
-#         void setUserData(void *data)
-#         void computeAABB()
-#         void *getUserData()
-#         bool isOccupied()
-#         bool isFree()
-#         bool isUncertain()
-
-#     ctypedef CollisionGeometry const_CollisionGeometry "const fcl::CollisionGeometry"
-#     ctypedef CollisionObject const_CollisionObject "const fcl::CollisionObject"
 
 cdef extern from "fcl/geometry/shape/shape_base.h" namespace "fcl":
     cdef cppclass ShapeBase[S](CollisionGeometry[S]):
@@ -431,10 +286,6 @@ cdef extern from "fcl/geometry/shape/plane.h" namespace "fcl":
         Vector3[S] n
         S d
 
-# @TODO: The 3 lines of code below are useless, I have declared them at the start of this file.
-# cdef extern from "fcl/broadphase/broadphase_collision_manager.h" namespace "fcl":
-#     ctypedef bool (*CollisionCallBack[S])(CollisionObject[S]* o1, CollisionObject[S]* o2, void* cdata)
-#     ctypedef bool (*DistanceCallBack[S])(CollisionObject[S]* o1, CollisionObject[S]* o2, void* cdata, S& dist)
 
 cdef extern from "fcl/broadphase/broadphase_dynamic_AABB_tree.h" namespace "fcl":
     
@@ -527,12 +378,6 @@ cdef extern from "fcl/math/triangle.h" namespace "fcl":
         Triangle(size_t p1, size_t p2, size_t p3) except +
         size_t vids[3]
 
-# cdef extern from "fcl/data_types.h" namespace "fcl":
-#     cdef cppclass Triangle:
-#         Triangle() except +
-#         Triangle(size_t p1, size_t p2, size_t p3) except +
-#         size_t vids[3]
-
 cdef extern from "fcl/geometry/bvh/detail/BV_splitter_base.h" namespace "fcl::detail":
     cdef cppclass BVSplitterBase[BV]:
         pass
@@ -606,59 +451,7 @@ cdef extern from "fcl/geometry/bvh/BVH_model.h" namespace "fcl":
 
         # void computeLocalAABB()
 
-# cdef extern from "fcl/BVH/BVH_model.h" namespace "fcl":
-#     # Cython only accepts type template parameters.
-#     # see https://groups.google.com/forum/#!topic/cython-users/xAZxdCFw6Xs
-#     cdef cppclass BVHModel "fcl::BVHModel<fcl::OBBRSS>" ( CollisionGeometry ):
-#         # Constructing an empty BVH
-#         BVHModel() except +
-#         BVHModel(BVHModel& other) except +
-#         #
-#         #Geometry point data
-#         Vec3f* vertices
-#         #
-#         #Geometry triangle index data, will be NULL for point clouds
-#         Triangle* tri_indices
-#         #
-#         #Geometry point data in previous frame
-#         Vec3f* prev_vertices
-#         #
-#         #Number of triangles
-#         int num_tris
-#         #
-#         #Number of points
-#         int num_vertices
-#         #
-#         #The state of BVH building process
-#         BVHBuildState build_state
-#         #
-#         # # #Split rule to split one BV node into two children
-#         #
-#         # boost::shared_ptr<BVSplitterBase<BV> > bv_splitter
-#         shared_ptr[BVSplitterBase] bv_splitter
-#         # boost::shared_ptr<BVFitterBase<BV> > bv_fitter
-#         shared_ptr[BVFitterBase] bv_fitter
-
-#         int beginModel(int num_tris_, int num_vertices_)
-
-#         int addVertex(const Vec3f& p)
-
-#         int addTriangle(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3)
-
-#         #int addSubModel(const std::vector<Vec3f>& ps)
-#         # void getCostSources(vector[CostSource]& cost_sources_)
-
-#         #int addSubModel(const vector[Vec3f]& ps)
-#         #
-#         int addSubModel(const vector[Vec3f]& ps, const vector[Triangle]& ts)
-
-#         int endModel()
-
-#         int buildTree()
-
-#         # void computeLocalAABB()
-
-
+# @TODO: Support OcTree later
 # cdef extern from "fcl/octree.h" namespace "fcl":
 #     cdef cppclass OcTree(CollisionGeometry):
 #         # Constructing

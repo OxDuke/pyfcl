@@ -38,7 +38,7 @@ class TestTransform(unittest.TestCase):
         np.testing.assert_allclose(transform.toarray(),
                                    ground_truth_transform,
                                    rtol=0,
-                                   atol=3 * sys.float_info.epsilon +
+                                   atol=5 * sys.float_info.epsilon +
                                    double_float_difference)
 
     def test_default_constructor(self):
