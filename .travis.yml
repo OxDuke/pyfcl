@@ -1,0 +1,28 @@
+os: linux
+
+dist: xenial
+
+language: python
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"      
+  - "3.7"
+  - "3.8"
+  - "3.9"
+
+addons:
+  apt:
+    packages:
+      - libeigen3-dev
+
+install:
+  - pip install numpy cython
+
+script:
+
+  - cd requirements && bash clone.bash && bash build.bash && cd ..
+
+  - export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+  - python setup.py build_ext --inplace && python -m unittest discover test/
